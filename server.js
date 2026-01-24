@@ -24,8 +24,8 @@ const writeData = (data) => {
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// 静态文件服务 - 后台管理页面
-app.use('/admin', express.static('public'));
+// 静态文件服务 - 直接访问 public 目录
+app.use(express.static('public'));
 
 // 允许 CORS
 app.use((req, res, next) => {

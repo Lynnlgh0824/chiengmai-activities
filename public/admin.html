@@ -203,6 +203,72 @@
         .status-active { background: #66bb6a; color: white; }
         .status-expired { background: #ef5350; color: white; }
         .status-draft { background: #999; color: white; }
+
+        /* Tab 切换样式 */
+        .tab-container {
+            margin-bottom: 20px;
+        }
+
+        .tab-buttons {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #e0e0e0;
+        }
+
+        .tab-button {
+            padding: 12px 24px;
+            border: none;
+            background: none;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            color: #666;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s;
+        }
+
+        .tab-button:hover {
+            color: #667eea;
+        }
+
+        .tab-button.active {
+            color: #667eea;
+            border-bottom-color: #667eea;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .weekday-selector {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .weekday-checkbox {
+            display: none;
+        }
+
+        .weekday-label {
+            padding: 10px 20px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 14px;
+        }
+
+        .weekday-checkbox:checked + .weekday-label {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-color: #667eea;
+        }
     </style>
 </head>
 <body>
@@ -304,20 +370,92 @@
 
                 <!-- 时间信息 -->
                 <h3 style="margin: 20px 0 15px 0; color: #667eea;">⏰ 时间信息</h3>
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="date">日期</label>
-                        <input type="date" id="date" name="date">
-                    </div>
-                    <div class="form-group">
-                        <label for="time">时间</label>
-                        <input type="text" id="time" name="time" placeholder="例如：09:00-10:30">
-                    </div>
-                </div>
 
-                <div class="form-group">
-                    <label for="duration">持续时间</label>
-                    <input type="text" id="duration" name="duration" placeholder="例如：1.5小时">
+                <!-- Tab 切换 -->
+                <div class="tab-container">
+                    <div class="tab-buttons">
+                        <button type="button" class="tab-button active" onclick="switchTab('fixed')">📅 固定频率活动</button>
+                        <button type="button" class="tab-button" onclick="switchTab('temporary')">📝 临时活动</button>
+                    </div>
+
+                    <!-- 固定频率活动 -->
+                    <div id="fixedTab" class="tab-content active">
+                        <div class="form-group">
+                            <label>选择星期（可多选）</label>
+                            <div class="weekday-selector">
+                                <label>
+                                    <input type="checkbox" class="weekday-checkbox" name="weekdays" value="1">
+                                    <span class="weekday-label">周一</span>
+                                </label>
+                                <label>
+                                    <input type="checkbox" class="weekday-checkbox" name="weekdays" value="2">
+                                    <span class="weekday-label">周二</span>
+                                </label>
+                                <label>
+                                    <input type="checkbox" class="weekday-checkbox" name="weekdays" value="3">
+                                    <span class="weekday-label">周三</span>
+                                </label>
+                                <label>
+                                    <input type="checkbox" class="weekday-checkbox" name="weekdays" value="4">
+                                    <span class="weekday-label">周四</span>
+                                </label>
+                                <label>
+                                    <input type="checkbox" class="weekday-checkbox" name="weekdays" value="5">
+                                    <span class="weekday-label">周五</span>
+                                </label>
+                                <label>
+                                    <input type="checkbox" class="weekday-checkbox" name="weekdays" value="6">
+                                    <span class="weekday-label">周六</span>
+                                </label>
+                                <label>
+                                    <input type="checkbox" class="weekday-checkbox" name="weekdays" value="0">
+                                    <span class="weekday-label">周日</span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="fixedTime">时间</label>
+                                <input type="text" id="fixedTime" name="fixedTime" placeholder="例如：09:00-10:30">
+                            </div>
+                            <div class="form-group">
+                                <label for="duration">持续时间</label>
+                                <input type="text" id="duration" name="duration" placeholder="例如：1.5小时">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label style="color: #666; font-size: 12px;">
+                                💡 固定频率活动：每周在选择的星期几重复进行
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- 临时活动 -->
+                    <div id="temporaryTab" class="tab-content">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="date">具体日期</label>
+                                <input type="date" id="date" name="date">
+                            </div>
+                            <div class="form-group">
+                                <label for="time">时间</label>
+                                <input type="text" id="time" name="time" placeholder="例如：09:00-10:30">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="tempDuration">持续时间</label>
+                            <input type="text" id="tempDuration" name="tempDuration" placeholder="例如：1.5小时">
+                        </div>
+
+                        <div class="form-group">
+                            <label style="color: #666; font-size: 12px;">
+                                💡 临时活动：仅在指定的具体日期进行一次
+                            </label>
+                        </div>
+                    </div>
                 </div>
 
                 <!-- 地点信息 -->
@@ -453,12 +591,26 @@
             `).join('');
         }
 
+        // 切换 Tab
+        function switchTab(tabType) {
+            // 更新按钮状态
+            document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+
+            // 切换内容
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+            document.getElementById(tabType + 'Tab').classList.add('active');
+        }
+
         // 打开表单弹窗
         function openFormModal(item = null) {
             const form = document.getElementById('dataForm');
             form.reset();
             document.getElementById('itemId').value = '';
             document.getElementById('modalTitle').textContent = '新增活动';
+
+            // 默认切换到临时活动Tab
+            switchTabWithoutEvent('temporary');
 
             if (item) {
                 document.getElementById('modalTitle').textContent = '编辑活动';
@@ -467,9 +619,25 @@
                 document.getElementById('category').value = item.category || '其他';
                 document.getElementById('status').value = item.status || 'active';
                 document.getElementById('description').value = item.description || '';
-                document.getElementById('date').value = item.date || '';
-                document.getElementById('time').value = item.time || '';
-                document.getElementById('duration').value = item.duration || '';
+
+                // 根据是否有 weekdays 判断活动类型
+                if (item.weekdays && item.weekdays.length > 0) {
+                    // 固定频率活动
+                    switchTabWithoutEvent('fixed');
+                    // 设置选中的星期
+                    document.querySelectorAll('.weekday-checkbox').forEach(checkbox => {
+                        checkbox.checked = item.weekdays.includes(parseInt(checkbox.value));
+                    });
+                    document.getElementById('fixedTime').value = item.time || '';
+                    document.getElementById('duration').value = item.duration || '';
+                } else {
+                    // 临时活动
+                    switchTabWithoutEvent('temporary');
+                    document.getElementById('date').value = item.date || '';
+                    document.getElementById('time').value = item.time || '';
+                    document.getElementById('tempDuration').value = item.duration || '';
+                }
+
                 document.getElementById('location').value = item.location || '';
                 document.getElementById('address').value = item.address || '';
                 document.getElementById('price').value = item.price || '';
@@ -483,6 +651,19 @@
             }
 
             document.getElementById('formModal').classList.add('active');
+        }
+
+        // 切换 Tab（不触发事件）
+        function switchTabWithoutEvent(tabType) {
+            document.querySelectorAll('.tab-button').forEach((btn, index) => {
+                btn.classList.remove('active');
+                if ((tabType === 'fixed' && index === 0) || (tabType === 'temporary' && index === 1)) {
+                    btn.classList.add('active');
+                }
+            });
+
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+            document.getElementById(tabType + 'Tab').classList.add('active');
         }
 
         // 关闭表单弹窗
@@ -525,6 +706,37 @@
             const formData = new FormData(e.target);
             const data = Object.fromEntries(formData.entries());
 
+            // 判断当前是哪个Tab
+            const isFixedTab = document.getElementById('fixedTab').classList.contains('active');
+
+            if (isFixedTab) {
+                // 固定频率活动
+                const selectedWeekdays = Array.from(document.querySelectorAll('.weekday-checkbox:checked'))
+                    .map(cb => parseInt(cb.value));
+
+                if (selectedWeekdays.length === 0) {
+                    alert('请至少选择一个星期');
+                    return;
+                }
+
+                data.weekdays = selectedWeekdays;
+                data.time = document.getElementById('fixedTime').value;
+                data.duration = document.getElementById('duration').value;
+                data.frequency = 'weekly';
+
+                // 清除临时活动字段
+                delete data.date;
+            } else {
+                // 临时活动
+                data.date = document.getElementById('date').value;
+                data.time = document.getElementById('time').value;
+                data.duration = document.getElementById('tempDuration').value;
+                data.frequency = 'once';
+
+                // 清除固定活动字段
+                delete data.weekdays;
+            }
+
             // 处理复选框
             data.flexibleTime = document.getElementById('flexibleTime').checked;
             data.bookingRequired = document.getElementById('bookingRequired').checked;
@@ -544,6 +756,8 @@
 
             // 删除临时字段
             delete data.sourceUrl;
+            delete data.fixedTime;
+            delete data.tempDuration;
 
             try {
                 const id = document.getElementById('itemId').value;

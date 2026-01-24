@@ -203,7 +203,11 @@ function App() {
   const getActivityImage = (activity) => {
     // 优先使用 images 数组
     if (activity.images && activity.images.length > 0) {
-      return activity.images[0]
+      const imgUrl = activity.images[0]
+      // 验证图片URL是否有效
+      if (imgUrl && (imgUrl.startsWith('http') || imgUrl.startsWith('/'))) {
+        return imgUrl
+      }
     }
     // 其次使用 image 字段（模拟数据）
     if (activity.image) {
@@ -211,6 +215,11 @@ function App() {
     }
     // 使用默认图片
     return 'https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=400&h=300&fit=crop'
+  }
+
+  const handleImageError = (e) => {
+    // 图片加载失败时使用默认图片
+    e.target.src = 'https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=400&h=300&fit=crop'
   }
 
   if (loading && activities.length === 0) {
@@ -322,7 +331,12 @@ function App() {
                 </svg>
               </button>
               <div className="detail-header">
-                <img src={getActivityImage(selectedActivity)} alt={selectedActivity.title} className="detail-image" />
+                <img
+                  src={getActivityImage(selectedActivity)}
+                  alt={selectedActivity.title}
+                  className="detail-image"
+                  onError={handleImageError}
+                />
                 <div className="detail-badge" style={{ backgroundColor: getCategoryColor(selectedActivity.category) }}>
                   {selectedActivity.category}
                 </div>
