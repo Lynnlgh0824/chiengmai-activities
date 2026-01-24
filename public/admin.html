@@ -332,16 +332,6 @@
                     <input type="text" id="address" name="address" placeholder="详细地址">
                 </div>
 
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="latitude">纬度</label>
-                        <input type="number" id="latitude" name="latitude" step="any" placeholder="例如：18.7883">
-                    </div>
-                    <div class="form-group">
-                        <label for="longitude">经度</label>
-                        <input type="number" id="longitude" name="longitude" step="any" placeholder="例如：98.9853">
-                    </div>
-                </div>
 
                 <!-- 价格信息 -->
                 <h3 style="margin: 20px 0 15px 0; color: #667eea;">💰 价格信息</h3>
@@ -363,15 +353,9 @@
 
                 <!-- 参与人数 -->
                 <h3 style="margin: 20px 0 15px 0; color: #667eea;">👥 参与信息</h3>
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="maxParticipants">最大人数</label>
-                        <input type="number" id="maxParticipants" name="maxParticipants" placeholder="0表示不限">
-                    </div>
-                    <div class="form-group">
-                        <label for="currentParticipants">当前人数</label>
-                        <input type="number" id="currentParticipants" name="currentParticipants" value="0">
-                    </div>
+                <div class="form-group">
+                    <label for="maxParticipants">最大人数</label>
+                    <input type="number" id="maxParticipants" name="maxParticipants" placeholder="0表示不限">
                 </div>
 
                 <!-- 其他选项 -->
@@ -488,13 +472,10 @@
                 document.getElementById('duration').value = item.duration || '';
                 document.getElementById('location').value = item.location || '';
                 document.getElementById('address').value = item.address || '';
-                document.getElementById('latitude').value = item.latitude || '';
-                document.getElementById('longitude').value = item.longitude || '';
                 document.getElementById('price').value = item.price || '';
                 document.getElementById('priceMin').value = item.priceMin || '';
                 document.getElementById('priceMax').value = item.priceMax || '';
                 document.getElementById('maxParticipants').value = item.maxParticipants || '';
-                document.getElementById('currentParticipants').value = item.currentParticipants || '';
                 document.getElementById('flexibleTime').checked = item.flexibleTime || false;
                 document.getElementById('bookingRequired').checked = item.bookingRequired !== undefined ? item.bookingRequired : true;
                 document.getElementById('images').value = (item.images || []).join('\n');
