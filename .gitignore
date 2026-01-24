@@ -1,9 +1,7 @@
 node_modules/
-dist/
-.env.local
-.env.*.local
-.DS_Store
+.env
+data/*.json
+uploads/
 *.log
-.vscode/
-.idea/
-*.backup
+.DS_Store
+debug_admin.html

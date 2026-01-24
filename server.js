@@ -1,10 +1,37 @@
 const express = require('express');
 const fs = require('fs');
 const path = require('path');
+const multer = require('multer');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
 const DATA_FILE = path.join(__dirname, 'data', 'items.json');
+
+// 配置 multer 文件上传
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, path.join(__dirname, 'uploads'));
+  },
+  filename: function (req, file, cb) {
+    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+    cb(null, file.fieldname + '-' + uniqueSuffix + path.extname(file.originalname));
+  }
+});
+
+const upload = multer({
+  storage: storage,
+  limits: {
+    fileSize: 5 * 1024 * 1024 // 5MB
+  },
+  fileFilter: function (req, file, cb) {
+    const allowedTypes = /jpeg|jpg|png|gif|webp/;
+    if (allowedTypes.test(file.mimetype)) {
+      cb(null, true);
+    } else {
+      cb(new Error('只支持图片文件 (jpeg, jpg, png, gif, webp)'));
+    }
+  }
+});
 
 // 读取数据
 const readData = () => {
@@ -26,6 +53,7 @@ app.use(express.urlencoded({ extended: true }));
 
 // 静态文件服务 - 直接访问 public 目录
 app.use(express.static('public'));
+app.use('/uploads', express.static('uploads'));
 
 // 允许 CORS
 app.use((req, res, next) => {
@@ -236,7 +264,8 @@ app.delete('/api/activities/:id', (req, res) => {
 // GET /api/activities/stats/categories - 分类统计
 app.get('/api/activities/stats/categories', (req, res) => {
   const items = readData();
-  const activeItems = items.filter(item => item.status === 'active');
+  // 统计非草稿的活动（包括：待开始、进行中、已过期）
+  const activeItems = items.filter(item => item.status !== 'draft');
 
   const stats = activeItems.reduce((acc, item) => {
     acc[item.category] = (acc[item.category] || 0) + 1;
@@ -328,6 +357,51 @@ app.delete('/api/items/:id', (req, res) => {
   writeData(items);
 
   res.json({ success: true, message: '删除成功' });
+});
+
+// ========== 文件上传 API ==========
+
+// POST /api/upload - 上传单个图片
+app.post('/api/upload', upload.single('image'), (req, res) => {
+  try {
+    if (!req.file) {
+      return res.status(400).json({ success: false, message: '没有上传文件' });
+    }
+
+    const imageUrl = `/uploads/${req.file.filename}`;
+
+    res.json({
+      success: true,
+      message: '上传成功',
+      data: {
+        url: imageUrl,
+        filename: req.file.filename,
+        size: req.file.size
+      }
+    });
+  } catch (error) {
+    console.error('上传失败:', error);
+    res.status(500).json({ success: false, message: '上传失败: ' + error.message });
+  }
+});
+
+// DELETE /api/upload/:filename - 删除上传的图片
+app.delete('/api/upload/:filename', (req, res) => {
+  try {
+    const filename = req.params.filename;
+    const filePath = path.join(__dirname, 'uploads', filename);
+
+    // 检查文件是否存在
+    if (fs.existsSync(filePath)) {
+      fs.unlinkSync(filePath);
+      res.json({ success: true, message: '删除成功' });
+    } else {
+      res.status(404).json({ success: false, message: '文件不存在' });
+    }
+  } catch (error) {
+    console.error('删除失败:', error);
+    res.status(500).json({ success: false, message: '删除失败' });
+  }
 });
 
 // 根路由 - 项目信息
