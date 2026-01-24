@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>活动管理后台 - Chiengmai</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            padding: 40px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            color: #333;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .toolbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 14px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-success {
+            background: #66bb6a;
+            color: white;
+        }
+
+        .btn-danger {
+            background: #ef5350;
+            color: white;
+        }
+
+        .btn-secondary {
+            background: #e0e0e0;
+            color: #333;
+        }
+
+        /* 表格样式 */
+        .table-container {
+            overflow-x: auto;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        thead {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        tbody tr:hover {
+            background-color: #f5f5f5;
+        }
+
+        /* 弹窗样式 */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            overflow-y: auto;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            max-width: 800px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            font-size: 1.5em;
+            font-weight: 700;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+            color: #333;
+            font-size: 14px;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .modal-footer {
+            display: flex;
+            gap: 15px;
+            justify-content: flex-end;
+            margin-top: 20px;
+        }
+
+        /* 分类标签颜色 */
+        .category-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .badge-瑜伽 { background: #FF6B6B; color: white; }
+        .badge-冥想 { background: #4ECDC4; color: white; }
+        .badge-户外探险 { background: #FFE66D; color: #333; }
+        .badge-文化艺术 { background: #95E1D3; color: #333; }
+        .badge-美食体验 { background: #F38181; color: white; }
+        .badge-节庆活动 { background: #AA96DA; color: white; }
+        .badge-其他 { background: #667eea; color: white; }
+
+        .status-badge {
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+        }
+
+        .status-active { background: #66bb6a; color: white; }
+        .status-expired { background: #ef5350; color: white; }
+        .status-draft { background: #999; color: white; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🏝️ 活动管理后台</h1>
+        <p style="color: #666; margin-bottom: 20px;">清迈活动查询平台 - 数据管理</p>
+
+        <div class="toolbar">
+            <div style="display: flex; gap: 15px; align-items: center;">
+                <select id="categoryFilter" class="btn btn-secondary">
+                    <option value="">全部分类</option>
+                    <option value="瑜伽">瑜伽</option>
+                    <option value="冥想">冥想</option>
+                    <option value="户外探险">户外探险</option>
+                    <option value="文化艺术">文化艺术</option>
+                    <option value="美食体验">美食体验</option>
+                    <option value="节庆活动">节庆活动</option>
+                    <option value="其他">其他</option>
+                </select>
+                <select id="statusFilter" class="btn btn-secondary">
+                    <option value="">全部状态</option>
+                    <option value="active">活跃</option>
+                    <option value="expired">已过期</option>
+                    <option value="draft">草稿</option>
+                </select>
+            </div>
+            <button class="btn btn-primary" onclick="openFormModal()">
+                ➕ 新增活动
+            </button>
+        </div>
+
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th style="width: 50px;">#</th>
+                        <th>标题</th>
+                        <th style="width: 100px;">分类</th>
+                        <th style="width: 120px;">日期</th>
+                        <th style="width: 100px;">时间</th>
+                        <th style="width: 100px;">地点</th>
+                        <th style="width: 100px;">价格</th>
+                        <th style="width: 80px;">状态</th>
+                        <th style="width: 150px;">操作</th>
+                    </tr>
+                </thead>
+                <tbody id="tableBody">
+                    <tr>
+                        <td colspan="9" style="text-align: center; padding: 40px; color: #999;">
+                            加载中...
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- 编辑弹窗 -->
+    <div class="modal" id="formModal">
+        <div class="modal-content">
+            <div class="modal-header" id="modalTitle">新增活动</div>
+            <form id="dataForm">
+                <input type="hidden" id="itemId">
+
+                <!-- 基本信息 -->
+                <h3 style="margin: 20px 0 15px 0; color: #667eea;">📋 基本信息</h3>
+                <div class="form-group">
+                    <label for="title">活动标题 *</label>
+                    <input type="text" id="title" name="title" placeholder="请输入活动标题" required>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="category">分类 *</label>
+                        <select id="category" name="category" required>
+                            <option value="瑜伽">瑜伽</option>
+                            <option value="冥想">冥想</option>
+                            <option value="户外探险">户外探险</option>
+                            <option value="文化艺术">文化艺术</option>
+                            <option value="美食体验">美食体验</option>
+                            <option value="节庆活动">节庆活动</option>
+                            <option value="其他">其他</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="status">状态</label>
+                        <select id="status" name="status">
+                            <option value="active">活跃</option>
+                            <option value="expired">已过期</option>
+                            <option value="draft">草稿</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="description">活动描述 *</label>
+                    <textarea id="description" name="description" rows="3" placeholder="请输入活动描述" required></textarea>
+                </div>
+
+                <!-- 时间信息 -->
+                <h3 style="margin: 20px 0 15px 0; color: #667eea;">⏰ 时间信息</h3>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="date">日期</label>
+                        <input type="date" id="date" name="date">
+                    </div>
+                    <div class="form-group">
+                        <label for="time">时间</label>
+                        <input type="text" id="time" name="time" placeholder="例如：09:00-10:30">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="duration">持续时间</label>
+                    <input type="text" id="duration" name="duration" placeholder="例如：1.5小时">
+                </div>
+
+                <!-- 地点信息 -->
+                <h3 style="margin: 20px 0 15px 0; color: #667eea;">📍 地点信息</h3>
+                <div class="form-group">
+                    <label for="location">地点名称 *</label>
+                    <input type="text" id="location" name="location" placeholder="例如：宁曼一号瑜伽馆" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="address">详细地址</label>
+                    <input type="text" id="address" name="address" placeholder="详细地址">
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="latitude">纬度</label>
+                        <input type="number" id="latitude" name="latitude" step="any" placeholder="例如：18.7883">
+                    </div>
+                    <div class="form-group">
+                        <label for="longitude">经度</label>
+                        <input type="number" id="longitude" name="longitude" step="any" placeholder="例如：98.9853">
+                    </div>
+                </div>
+
+                <!-- 价格信息 -->
+                <h3 style="margin: 20px 0 15px 0; color: #667eea;">💰 价格信息</h3>
+                <div class="form-group">
+                    <label for="price">价格显示</label>
+                    <input type="text" id="price" name="price" placeholder="例如：免费、500฿">
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="priceMin">最低价格</label>
+                        <input type="number" id="priceMin" name="priceMin" placeholder="0">
+                    </div>
+                    <div class="form-group">
+                        <label for="priceMax">最高价格</label>
+                        <input type="number" id="priceMax" name="priceMax" placeholder="0">
+                    </div>
+                </div>
+
+                <!-- 参与人数 -->
+                <h3 style="margin: 20px 0 15px 0; color: #667eea;">👥 参与信息</h3>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="maxParticipants">最大人数</label>
+                        <input type="number" id="maxParticipants" name="maxParticipants" placeholder="0表示不限">
+                    </div>
+                    <div class="form-group">
+                        <label for="currentParticipants">当前人数</label>
+                        <input type="number" id="currentParticipants" name="currentParticipants" value="0">
+                    </div>
+                </div>
+
+                <!-- 其他选项 -->
+                <h3 style="margin: 20px 0 15px 0; color: #667eea;">⚙️ 其他选项</h3>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>
+                            <input type="checkbox" id="flexibleTime" name="flexibleTime">
+                            灵活时间活动
+                        </label>
+                    </div>
+                    <div class="form-group">
+                        <label>
+                            <input type="checkbox" id="bookingRequired" name="bookingRequired" checked>
+                            需要预约
+                        </label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="images">图片 URL（每行一个）</label>
+                    <textarea id="images" name="images" rows="3" placeholder="https://example.com/image1.jpg&#10;https://example.com/image2.jpg"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="sourceUrl">来源链接</label>
+                    <input type="url" id="sourceUrl" name="sourceUrl" placeholder="https://...">
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" onclick="closeFormModal()">取消</button>
+                    <button type="submit" class="btn btn-success">💾 保存</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = 'http://localhost:3000/api';
+        let items = [];
+
+        // 初始化
+        document.addEventListener('DOMContentLoaded', () => {
+            loadItems();
+        });
+
+        // 加载数据
+        async function loadItems() {
+            try {
+                const response = await fetch(`${API_BASE}/items`);
+                const result = await response.json();
+                items = result.data || [];
+                renderTable();
+            } catch (error) {
+                console.error('加载失败:', error);
+                document.getElementById('tableBody').innerHTML = '<tr><td colspan="9" style="text-align: center; color: #999;">加载失败</td></tr>';
+            }
+        }
+
+        // 渲染表格
+        function renderTable() {
+            const categoryFilter = document.getElementById('categoryFilter').value;
+            const statusFilter = document.getElementById('statusFilter').value;
+
+            let filteredItems = items;
+
+            if (categoryFilter) {
+                filteredItems = filteredItems.filter(item => item.category === categoryFilter);
+            }
+
+            if (statusFilter) {
+                filteredItems = filteredItems.filter(item => item.status === statusFilter);
+            }
+
+            if (filteredItems.length === 0) {
+                document.getElementById('tableBody').innerHTML = '<tr><td colspan="9" style="text-align: center; padding: 40px; color: #999;">暂无数据</td></tr>';
+                return;
+            }
+
+            document.getElementById('tableBody').innerHTML = filteredItems.map((item, index) => `
+                <tr>
+                    <td>${index + 1}</td>
+                    <td><strong>${escapeHtml(item.title)}</strong></td>
+                    <td><span class="category-badge badge-${item.category}">${item.category}</span></td>
+                    <td>${item.date || '-'}</td>
+                    <td>${item.time || '-'}</td>
+                    <td>${escapeHtml(item.location || '-').substring(0, 15)}</td>
+                    <td>${item.price || '-'}</td>
+                    <td><span class="status-badge status-${item.status}">${item.status === 'active' ? '活跃' : item.status === 'expired' ? '已过期' : '草稿'}</span></td>
+                    <td>
+                        <button class="btn btn-primary" onclick="editItem('${item.id}')" style="padding: 6px 12px; font-size: 12px;">编辑</button>
+                        <button class="btn btn-danger" onclick="deleteItem('${item.id}')" style="padding: 6px 12px; font-size: 12px;">删除</button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        // 打开表单弹窗
+        function openFormModal(item = null) {
+            const form = document.getElementById('dataForm');
+            form.reset();
+            document.getElementById('itemId').value = '';
+            document.getElementById('modalTitle').textContent = '新增活动';
+
+            if (item) {
+                document.getElementById('modalTitle').textContent = '编辑活动';
+                document.getElementById('itemId').value = item.id || item._id;
+                document.getElementById('title').value = item.title || '';
+                document.getElementById('category').value = item.category || '其他';
+                document.getElementById('status').value = item.status || 'active';
+                document.getElementById('description').value = item.description || '';
+                document.getElementById('date').value = item.date || '';
+                document.getElementById('time').value = item.time || '';
+                document.getElementById('duration').value = item.duration || '';
+                document.getElementById('location').value = item.location || '';
+                document.getElementById('address').value = item.address || '';
+                document.getElementById('latitude').value = item.latitude || '';
+                document.getElementById('longitude').value = item.longitude || '';
+                document.getElementById('price').value = item.price || '';
+                document.getElementById('priceMin').value = item.priceMin || '';
+                document.getElementById('priceMax').value = item.priceMax || '';
+                document.getElementById('maxParticipants').value = item.maxParticipants || '';
+                document.getElementById('currentParticipants').value = item.currentParticipants || '';
+                document.getElementById('flexibleTime').checked = item.flexibleTime || false;
+                document.getElementById('bookingRequired').checked = item.bookingRequired !== undefined ? item.bookingRequired : true;
+                document.getElementById('images').value = (item.images || []).join('\n');
+                document.getElementById('sourceUrl').value = item.source?.url || '';
+            }
+
+            document.getElementById('formModal').classList.add('active');
+        }
+
+        // 关闭表单弹窗
+        function closeFormModal() {
+            document.getElementById('formModal').classList.remove('active');
+        }
+
+        // 编辑项目
+        function editItem(id) {
+            const item = items.find(i => (i.id === id || i._id === id));
+            if (item) {
+                openFormModal(item);
+            }
+        }
+
+        // 删除项目
+        async function deleteItem(id) {
+            if (!confirm('确定要删除这个活动吗？')) return;
+
+            try {
+                const response = await fetch(`${API_BASE}/items/${id}`, { method: 'DELETE' });
+                const result = await response.json();
+
+                if (result.success) {
+                    alert('删除成功');
+                    await loadItems();
+                } else {
+                    alert('删除失败：' + result.message);
+                }
+            } catch (error) {
+                console.error('删除失败:', error);
+                alert('删除失败');
+            }
+        }
+
+        // 表单提交
+        document.getElementById('dataForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const formData = new FormData(e.target);
+            const data = Object.fromEntries(formData.entries());
+
+            // 处理复选框
+            data.flexibleTime = document.getElementById('flexibleTime').checked;
+            data.bookingRequired = document.getElementById('bookingRequired').checked;
+
+            // 处理图片数组
+            data.images = document.getElementById('images').value.split('\n').filter(url => url.trim());
+
+            // 处理来源信息
+            if (data.sourceUrl) {
+                data.source = {
+                    name: '手动添加',
+                    url: data.sourceUrl,
+                    type: 'manual',
+                    lastUpdated: new Date()
+                };
+            }
+
+            // 删除临时字段
+            delete data.sourceUrl;
+
+            try {
+                const id = document.getElementById('itemId').value;
+                const url = id ? `${API_BASE}/items/${id}` : `${API_BASE}/items`;
+                const method = id ? 'PUT' : 'POST';
+
+                const response = await fetch(url, {
+                    method,
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    alert(id ? '更新成功' : '创建成功');
+                    closeFormModal();
+                    await loadItems();
+                } else {
+                    alert('操作失败：' + result.message);
+                }
+            } catch (error) {
+                console.error('保存失败:', error);
+                alert('保存失败');
+            }
+        });
+
+        // 筛选事件
+        document.getElementById('categoryFilter').addEventListener('change', renderTable);
+        document.getElementById('statusFilter').addEventListener('change', renderTable);
+
+        // 点击弹窗外部关闭
+        document.getElementById('formModal').addEventListener('click', (e) => {
+            if (e.target.id === 'formModal') {
+                closeFormModal();
+            }
+        });
+
+        // 工具函数
+        function escapeHtml(text) {
+            if (!text) return '';
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+    </script>
+</body>
+</html>
