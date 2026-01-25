@@ -3,9 +3,6 @@ import axios from 'axios'
 import { activitiesData, getCategories } from './data/activities'
 import './App.css'
 
-// 导入无固定时间活动数据
-import { flexibleActivitiesData } from './data/flexibleActivities'
-
 // API 基础地址
 const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:3000'
 
@@ -192,12 +189,25 @@ function App() {
   }
 
   const formatDate = (dateStr) => {
+    if (!dateStr) {
+      return '随时可预约'
+    }
     const date = new Date(dateStr)
+    if (isNaN(date.getTime())) {
+      return '随时可预约'
+    }
     return date.toLocaleDateString('zh-CN', {
       year: 'numeric',
       month: '2-digit',
       day: '2-digit'
     })
+  }
+
+  const formatTime = (activity) => {
+    if (activity.flexibleTime) {
+      return activity.duration || '灵活时间'
+    }
+    return activity.time || ''
   }
 
   const getActivityImage = (activity) => {
@@ -316,7 +326,7 @@ function App() {
           </div>
 
           <div className="results-count">
-            <span className="count-number">{totalItems}</span>
+            <span className="count-number">{totalItems || filteredActivities.length}</span>
             <span>个活动</span>
           </div>
         </div>
@@ -352,7 +362,7 @@ function App() {
                   </div>
                   <div className="info-item">
                     <span className="info-icon">⏰</span>
-                    <span className="info-value">{selectedActivity.time}</span>
+                    <span className="info-value">{formatTime(selectedActivity)}</span>
                   </div>
                   <div className="info-item">
                     <span className="info-icon">📍</span>
@@ -435,7 +445,7 @@ function App() {
                     </div>
                     <div className="meta-item">
                       <span>⏰</span>
-                      <span>{activity.time}</span>
+                      <span>{formatTime(activity)}</span>
                     </div>
                   </div>
                   <div className="card-location">📍 {activity.location}</div>
