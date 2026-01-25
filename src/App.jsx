@@ -35,6 +35,9 @@ function App() {
   useEffect(() => {
     // 只有在使用 API 时才在翻页时重新获取
     // 本地筛选由 useMemo 自动处理
+    if (totalItems > 0) {
+      window.scrollTo({ top: 0, behavior: 'smooth' })
+    }
   }, [currentPage, sortBy])
 
   const fetchActivities = async () => {
@@ -161,6 +164,42 @@ function App() {
     setSortBy(sort)
   }
 
+  // 清除筛选
+  const handleClearFilter = (filterType) => {
+    if (filterType === 'category') {
+      setSelectedCategory('全部')
+    } else if (filterType === 'price') {
+      setPriceRange('all')
+    } else if (filterType === 'search') {
+      setSearchTerm('')
+    } else if (filterType === 'all') {
+      setSelectedCategory('全部')
+      setPriceRange('all')
+      setSearchTerm('')
+    }
+    setCurrentPage(1)
+  }
+
+  // 获取当前筛选条件
+  const getActiveFilters = () => {
+    const filters = []
+    if (selectedCategory !== '全部') {
+      filters.push({ type: 'category', label: selectedCategory, key: '分类' })
+    }
+    if (priceRange !== 'all') {
+      const priceLabels = {
+        'free': '免费',
+        'low': '1500฿以下',
+        'high': '1500฿以上'
+      }
+      filters.push({ type: 'price', label: priceLabels[priceRange], key: '价格' })
+    }
+    if (searchTerm) {
+      filters.push({ type: 'search', label: searchTerm, key: '搜索' })
+    }
+    return filters
+  }
+
   const handlePageChange = (page) => {
     setCurrentPage(page)
     window.scrollTo({ top: 0, behavior: 'smooth' })
@@ -196,11 +235,39 @@ function App() {
     if (isNaN(date.getTime())) {
       return '随时可预约'
     }
-    return date.toLocaleDateString('zh-CN', {
-      year: 'numeric',
-      month: '2-digit',
-      day: '2-digit'
-    })
+
+    const today = new Date()
+    today.setHours(0, 0, 0, 0)
+    const targetDate = new Date(dateStr)
+    targetDate.setHours(0, 0, 0, 0)
+
+    const diffTime = targetDate - today
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))
+
+    // 获取星期几
+    const weekdays = ['周日', '周一', '周二', '周三', '周四', '周五', '周六']
+    const weekday = weekdays[targetDate.getDay()]
+    const month = date.getMonth() + 1
+    const day = date.getDate()
+    const dateStrFormatted = `${month}月${day}日`
+
+    if (diffDays === 0) {
+      return `今天 ${dateStrFormatted}`
+    } else if (diffDays === 1) {
+      return `明天 ${dateStrFormatted}`
+    } else if (diffDays === -1) {
+      return `昨天 ${dateStrFormatted}`
+    } else if (diffDays > 1 && diffDays <= 7) {
+      return `本周${weekday} ${dateStrFormatted}`
+    } else if (diffDays < 0 && diffDays >= -7) {
+      return `上周${weekday} ${dateStrFormatted}`
+    } else {
+      return date.toLocaleDateString('zh-CN', {
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit'
+      })
+    }
   }
 
   const formatTime = (activity) => {
@@ -224,12 +291,37 @@ function App() {
       return activity.image
     }
     // 使用默认图片
-    return 'https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=400&h=300&fit=crop'
+    return 'https://images.unsplash.com/photo-1555396273-367ea4eb4db5'
+  }
+
+  // 获取响应式图片源
+  const getImageSrcSet = (baseUrl) => {
+    if (!baseUrl) return undefined
+    // 如果是 Unsplash 图片，生成不同尺寸
+    if (baseUrl.includes('unsplash.com')) {
+      const separator = baseUrl.includes('?') ? '&' : '?'
+      return {
+        srcSet: `${baseUrl}${separator}w=400 400w, ${baseUrl}${separator}w=800 800w, ${baseUrl}${separator}w=1200 1200w`,
+        sizes: '(max-width: 600px) 400px, (max-width: 1200px) 800px, 1200px'
+      }
+    }
+    return undefined
   }
 
   const handleImageError = (e) => {
     // 图片加载失败时使用默认图片
-    e.target.src = 'https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=400&h=300&fit=crop'
+    e.target.src = 'https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=800&h=450&fit=crop'
+  }
+
+  // 图片加载状态管理
+  const [imageLoadStatus, setImageLoadStatus] = useState({})
+
+  const handleImageLoad = (activityId) => {
+    setImageLoadStatus(prev => ({ ...prev, [activityId]: true }))
+  }
+
+  const handleImageLoadStart = (activityId) => {
+    setImageLoadStatus(prev => ({ ...prev, [activityId]: false }))
   }
 
   if (loading && activities.length === 0) {
@@ -331,6 +423,32 @@ function App() {
           </div>
         </div>
 
+        {/* 筛选条件标签 */}
+        {getActiveFilters().length > 0 && (
+          <div className="active-filters">
+            <div className="filter-tags">
+              {getActiveFilters().map(filter => (
+                <div key={filter.type} className="filter-tag">
+                  <span className="tag-label">{filter.key}: {filter.label}</span>
+                  <button
+                    className="tag-remove"
+                    onClick={() => handleClearFilter(filter.type)}
+                    aria-label={`清除${filter.key}筛选`}
+                  >
+                    ✕
+                  </button>
+                </div>
+              ))}
+              <button
+                className="clear-all-btn"
+                onClick={() => handleClearFilter('all')}
+              >
+                清除全部
+              </button>
+            </div>
+          </div>
+        )}
+
         {/* 活动详情弹窗 */}
         {selectedActivity && (
           <div className="activity-detail-overlay" onClick={handleCloseDetail}>
@@ -422,12 +540,21 @@ function App() {
                 onClick={() => handleActivityClick(activity)}
               >
                 <div className="card-image-container">
+                  {!imageLoadStatus[activity.id || activity._id] && (
+                    <div className="image-placeholder">
+                      <div className="placeholder-spinner"></div>
+                    </div>
+                  )}
                   <img
                     src={getActivityImage(activity)}
                     alt={activity.title}
-                    className="activity-image"
+                    className={`activity-image ${imageLoadStatus[activity.id || activity._id] ? 'loaded' : 'loading'}`}
                     onError={handleImageError}
+                    onLoadStart={() => handleImageLoadStart(activity.id || activity._id)}
+                    onLoad={() => handleImageLoad(activity.id || activity._id)}
                     loading="lazy"
+                    decoding="async"
+                    {...getImageSrcSet(getActivityImage(activity))}
                   />
                   <div
                     className="category-badge"
