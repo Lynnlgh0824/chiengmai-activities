@@ -1,6 +1,7 @@
 import { useState, useEffect, useMemo } from 'react'
 import axios from 'axios'
 import { activitiesData, getCategories } from './data/activities'
+import { weeklyScheduleData, dayNames } from './data/weeklySchedule'
 import './App.css'
 
 // API 基础地址
@@ -22,6 +23,8 @@ function App() {
   const [currentPage, setCurrentPage] = useState(1)
   const [selectedActivity, setSelectedActivity] = useState(null)
   const [totalItems, setTotalItems] = useState(0)
+  const [showSchedule, setShowSchedule] = useState(false) // 控制周课表面板显示
+  const [scheduleView, setScheduleView] = useState('list') // list 或 calendar
   const itemsPerPage = 6
 
   const categories = getCategories()
@@ -324,6 +327,76 @@ function App() {
     setImageLoadStatus(prev => ({ ...prev, [activityId]: false }))
   }
 
+  // 渲染列表视图
+  const renderListView = () => {
+    const allActivities = weeklyScheduleData.flatMap(week => week.activities)
+
+    return (
+      <div className="schedule-list-compact">
+        {allActivities.map(activity => (
+          <div key={activity.id} className="schedule-item-compact">
+            <div className="activity-info">
+              <div className="activity-header-row">
+                <span
+                  className="category-tag-mini"
+                  style={{ backgroundColor: getCategoryColor(activity.category) }}
+                >
+                  {activity.category}
+                </span>
+                <span className="activity-time-mini">{activity.time}</span>
+              </div>
+              <h4 className="activity-title-mini">{activity.title}</h4>
+              <div className="activity-location-mini">📍 {activity.location}</div>
+              <div className="activity-price-mini">{activity.price}</div>
+            </div>
+            {activity.enrolled && activity.capacity && (
+              <div className="enrollment-mini">
+                {activity.enrolled}/{activity.capacity}
+              </div>
+            )}
+          </div>
+        ))}
+      </div>
+    )
+  }
+
+  // 渲染日历视图
+  const renderCalendarView = () => {
+    return (
+      <div className="schedule-calendar-compact">
+        {weeklyScheduleData.map((week, weekIndex) => (
+          <div key={weekIndex} className="week-section">
+            <div className="week-title">{week.week}</div>
+            <div className="days-grid">
+              {dayNames.map((dayName, dayIndex) => {
+                const dayActivities = week.activities.filter(a => a.dayOfWeek === dayIndex)
+                return (
+                  <div
+                    key={dayName}
+                    className={`day-cell ${dayActivities.length > 0 ? 'has-activities' : ''}`}
+                  >
+                    <div className="day-name">{dayName}</div>
+                    {dayActivities.map(activity => (
+                      <div
+                        key={activity.id}
+                        className="activity-chip"
+                        style={{ borderLeftColor: getCategoryColor(activity.category) }}
+                        onClick={() => handleActivityClick(activity)}
+                      >
+                        <div className="chip-time">{activity.time}</div>
+                        <div className="chip-title">{activity.title}</div>
+                      </div>
+                    ))}
+                  </div>
+                )
+              })}
+            </div>
+          </div>
+        ))}
+      </div>
+    )
+  }
+
   if (loading && activities.length === 0) {
     return (
       <div className="app">
@@ -358,10 +431,40 @@ function App() {
           </div>
 
           {/* 查看课表按钮 */}
-          <a href="/schedule.html" className="schedule-link-inline" target="_blank" rel="noopener noreferrer">
-            📅 查看周课表
-          </a>
+          <button
+            className={`schedule-link-inline ${showSchedule ? 'active' : ''}`}
+            onClick={() => setShowSchedule(!showSchedule)}
+          >
+            📅 {showSchedule ? '隐藏课表' : '查看周课表'}
+          </button>
         </div>
+
+        {/* 周课表面板 */}
+        {showSchedule && (
+          <div className="schedule-panel">
+            <div className="schedule-panel-header">
+              <h3>🗓️ 本周课程安排</h3>
+              <div className="view-toggle">
+                <button
+                  className={`view-btn ${scheduleView === 'list' ? 'active' : ''}`}
+                  onClick={() => setScheduleView('list')}
+                >
+                  📋 列表
+                </button>
+                <button
+                  className={`view-btn ${scheduleView === 'calendar' ? 'active' : ''}`}
+                  onClick={() => setScheduleView('calendar')}
+                >
+                  📅 日历
+                </button>
+              </div>
+            </div>
+
+            <div className="schedule-panel-content">
+              {scheduleView === 'list' ? renderListView() : renderCalendarView()}
+            </div>
+          </div>
+        )}
 
         <div className="header-decoration"></div>
       </header>

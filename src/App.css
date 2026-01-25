@@ -125,6 +125,262 @@ header {
   }
 }
 
+/* 周课表面板 */
+.schedule-panel {
+  max-width: 900px;
+  margin: 20px auto 0;
+  background: rgba(255, 255, 255, 0.98);
+  backdrop-filter: blur(20px);
+  border-radius: 16px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+  overflow: hidden;
+  animation: slideDown 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.schedule-panel-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 24px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+}
+
+.schedule-panel-header h3 {
+  margin: 0;
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
+.view-toggle {
+  display: flex;
+  gap: 8px;
+  background: rgba(255, 255, 255, 0.2);
+  padding: 4px;
+  border-radius: 8px;
+}
+
+.view-btn {
+  padding: 8px 16px;
+  border: none;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.8);
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.view-btn.active {
+  background: white;
+  color: #667eea;
+}
+
+.view-btn:hover:not(.active) {
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+}
+
+.schedule-panel-content {
+  padding: 20px 24px;
+  max-height: 600px;
+  overflow-y: auto;
+}
+
+/* 列表视图 */
+.schedule-list-compact {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.schedule-item-compact {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px;
+  background: #f8f9fa;
+  border-radius: 12px;
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+.schedule-item-compact:hover {
+  background: #f0f0f0;
+  transform: translateX(4px);
+}
+
+.activity-info {
+  flex: 1;
+}
+
+.activity-header-row {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 8px;
+  align-items: center;
+}
+
+.category-tag-mini {
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 600;
+  color: white;
+}
+
+.activity-time-mini {
+  font-size: 13px;
+  color: #666;
+}
+
+.activity-title-mini {
+  margin: 0 0 6px 0;
+  font-size: 15px;
+  font-weight: 600;
+  color: #333;
+}
+
+.activity-location-mini {
+  font-size: 13px;
+  color: #666;
+  margin-bottom: 4px;
+}
+
+.activity-price-mini {
+  font-size: 13px;
+  font-weight: 600;
+  color: #667eea;
+}
+
+.enrollment-mini {
+  padding: 6px 12px;
+  background: white;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #667eea;
+  border: 1px solid #667eea;
+}
+
+/* 日历视图 */
+.schedule-calendar-compact {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.week-section {
+  background: #f8f9fa;
+  border-radius: 12px;
+  padding: 16px;
+}
+
+.week-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 12px;
+}
+
+.days-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 8px;
+}
+
+.day-cell {
+  min-height: 80px;
+  background: white;
+  border-radius: 8px;
+  padding: 8px;
+  border: 1px solid #e0e0e0;
+}
+
+.day-cell.has-activities {
+  border-color: #667eea;
+  background: #f8f9ff;
+}
+
+.day-name {
+  font-size: 12px;
+  font-weight: 600;
+  color: #666;
+  margin-bottom: 6px;
+  text-align: center;
+}
+
+.activity-chip {
+  padding: 6px 8px;
+  margin-bottom: 4px;
+  background: white;
+  border-left-width: 3px;
+  border-left-style: solid;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.activity-chip:hover {
+  background: #f0f0f0;
+  transform: scale(1.02);
+}
+
+.chip-time {
+  font-size: 11px;
+  color: #666;
+  margin-bottom: 2px;
+}
+
+.chip-title {
+  font-size: 12px;
+  font-weight: 600;
+  color: #333;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* 按钮激活状态 */
+.schedule-link-inline.active {
+  background: rgba(255, 255, 255, 0.4);
+  border-color: rgba(255, 255, 255, 0.6);
+}
+
+/* 响应式 */
+@media (max-width: 768px) {
+  .schedule-panel {
+    margin: 12px 0 0;
+    border-radius: 12px;
+  }
+
+  .schedule-panel-header {
+    flex-direction: column;
+    gap: 12px;
+    text-align: center;
+  }
+
+  .schedule-panel-content {
+    max-height: 400px;
+  }
+
+  .days-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
 .schedule-link,
 .flexible-link {
   position: absolute;
