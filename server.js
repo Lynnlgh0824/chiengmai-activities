@@ -57,9 +57,26 @@ app.use('/uploads', express.static('uploads'));
 
 // 允许 CORS
 app.use((req, res, next) => {
-  res.header('Access-Control-Allow-Origin', '*');
+  const allowedOrigins = [
+    'http://localhost:5173',
+    'http://localhost:3000',
+    'https://chiengmai-activities.vercel.app',
+    'https://*.vercel.app'
+  ];
+
+  const origin = req.headers.origin;
+
+  // 允许的源
+  if (allowedOrigins.includes(origin) || origin?.endsWith('.vercel.app')) {
+    res.header('Access-Control-Allow-Origin', origin);
+  } else {
+    res.header('Access-Control-Allow-Origin', '*');
+  }
+
   res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
   res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  res.header('Access-Control-Allow-Credentials', 'true');
+
   if (req.method === 'OPTIONS') {
     return res.sendStatus(200);
   }
