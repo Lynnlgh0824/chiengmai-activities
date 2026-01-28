@@ -1,0 +1,99 @@
+name: 每日自动提交和测试
+
+on:
+  # 每天0点（UTC时间16:00 = 泰国时间0:00）
+  schedule:
+    - cron: '0 16 * * *'
+
+  # 手动触发
+  workflow_dispatch:
+
+  # 当有push到main分支时也触发（用于CI/CD）
+  push:
+    branches: [ main ]
+
+  # 当有PR时触发
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  # Job 1: 运行测试
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: 检出代码
+      uses: actions/checkout@v3
+
+    - name: 设置Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '18'
+
+    - name: 安装依赖
+      run: |
+        if [ -f package.json ]; then
+          npm ci
+        fi
+
+    - name: 运行音乐Tab测试
+      run: |
+        if [ -f test-music-tab.cjs ]; then
+          node test-music-tab.cjs
+        fi
+
+    - name: 生成测试报告
+      if: always()
+      run: |
+        echo "## 测试结果" >> $GITHUB_STEP_SUMMARY
+        echo "- 音乐Tab测试: 运行完成" >> $GITHUB_STEP_SUMMARY
+        echo "- 时间排序测试: 需要本地验证" >> $GITHUB_STEP_SUMMARY
+
+  # Job 2: 检查代码变更
+  check-changes:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'schedule'
+
+    steps:
+    - name: 检出代码
+      uses: actions/checkout@v3
+
+    - name: 检查未提交的更改
+      run: |
+        echo "## 代码变更检查" >> $GITHUB_STEP_SUMMARY
+        echo "检查时间: $(date)" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "⚠️ GitHub Actions无法直接访问本地未提交的更改" >> $GITHUB_STEP_SUMMARY
+        echo "此检查需要在本地运行自动提交脚本" >> $GITHUB_STEP_SUMMARY
+
+  # Job 3: 生成每日报告
+  daily-report:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'schedule'
+
+    steps:
+    - name: 检出代码
+      uses: actions/checkout@v3
+
+    - name: 生成每日报告
+      run: |
+        echo "# 每日自动提交报告" > daily-report.md
+        echo "" >> daily-report.md
+        echo "**生成时间**: $(date '+%Y-%m-%d %H:%M:%S UTC')" >> daily-report.md
+        echo "" >> daily-report.md
+        echo "## 代码状态" >> daily-report.md
+        echo "- 最新提交: $(git log -1 --pretty=format:'%h - %s')" >> daily-report.md
+        echo "- 提交时间: $(git log -1 --pretty=format:'%ad')" >> daily-report.md
+        echo "" >> daily-report.md
+        echo "## 建议" >> daily-report.md
+        echo "1. 检查本地是否有未提交的更改" >> daily-report.md
+        echo "2. 运行测试验证功能" >> daily-report.md
+        echo "3. 如果有重要更新，请手动提交" >> daily-report.md
+        echo "" >> daily-report.md
+        cat daily-report.md
+
+    - name: 上传报告
+      uses: actions/upload-artifact@v3
+      with:
+        name: daily-report
+        path: daily-report.md
