@@ -1,30 +1,27 @@
-# 清迈活动查询平台 🏝️
+# 清迈活动查询平台
 
-**版本**: 2.0.0 (Pure HTML Edition)  
-**状态**: ✅ 生产就绪
+> 🏝️ **版本**：v2.5.0
+> 📅 **最后更新**：2026-01-28
+> 🎯 **状态**：✅ 活跃开发中
 
-## 🎯 项目概述
+---
 
-清迈活动查询平台 - 一个简单、快速、稳定的活动展示系统。使用纯 HTML + CSS + JavaScript 构建，无需复杂的构建工具。
+## 🌟 项目简介
 
-### 技术栈
+清迈活动查询平台是一个现代化的活动信息查询系统，帮助用户快速找到清迈的各类活动，包括瑜伽、冥想、户外探险、文化艺术、美食体验等。
 
-- **前端**: 纯 HTML + CSS + Vanilla JavaScript
-- **后端**: Node.js + Express
-- **数据**: JSON 文件存储
-- **测试**: Playwright (E2E) + Vitest (单元测试)
-
-### 为什么选择纯 HTML？
-
-✅ **极简架构** - 无需构建工具，开箱即用  
-✅ **极速加载** - 页面大小仅 5KB，0.5秒加载  
-✅ **稳定可靠** - 不会出现编译错误  
-✅ **易于维护** - 代码简单，任何人都能看懂  
-✅ **零依赖** - 不需要 npm、webpack、vite 等  
+**技术栈**：
+- 前端：React + Vite
+- 后端：Express.js
+- 数据：JSON文件存储
 
 ---
 
 ## 🚀 快速开始
+
+### 前置要求
+- Node.js >= 16.x
+- npm 或 yarn
 
 ### 安装依赖
 
@@ -283,3 +280,92 @@ ISC
 **最后更新**: 2025-01-26  
 **当前版本**: 2.0.0 (Pure HTML Edition)  
 **状态**: ✅ 生产就绪
+
+---
+
+## 🐛 常见问题
+
+### Q: 前端页面无法访问？
+
+**A**: 检查开发服务器是否正在运行：
+
+```bash
+# 方法1：运行检查脚本
+node scripts/check-dev-env.mjs
+
+# 方法2：手动检查端口
+lsof -i :5173  # 检查前端
+lsof -i :3000  # 检查后端
+```
+
+如果端口未被占用，启动服务：
+
+```bash
+# 启动前端（如果只有前端未运行）
+npm run dev:client
+
+# 启动后端（如果只有后端未运行）
+npm run dev:server
+
+# 启动全部（推荐）
+npm run dev
+```
+
+### Q: 后端API无法访问？
+
+**A**: 检查后端服务器是否运行：
+
+```bash
+# 检查端口3000
+lsof -i :3000
+
+# 查看服务器日志
+npm run dev:server
+```
+
+### Q: 端口被占用怎么办？
+
+**A**: 关闭占用端口的进程：
+
+```bash
+# 关闭占用5173端口的进程
+lsof -ti :5173 | xargs kill -9
+
+# 关闭占用3000端口的进程
+lsof -ti :3000 | xargs kill -9
+
+# 然后重新启动
+npm run dev
+```
+
+### Q: 数据更新后不显示？
+
+**A**: 刷新浏览器页面或清除缓存：
+
+- Windows/Linux: `Ctrl + Shift + R`
+- Mac: `Cmd + Shift + R`
+
+### Q: 如何只启动前端或后端？
+
+**A**: 使用单独的启动命令：
+
+```bash
+# 只启动前端
+npm run dev:client
+
+# 只启动后端
+npm run dev:server
+```
+
+---
+
+## 📚 更多文档
+
+- [项目问题记录](docs/project-issues-log.md) - 历史问题和解决方案
+- [描述优化总结](docs/description-optimization-summary.md) - 描述质量优化详情
+- [移动端优化方案](docs/mobile-optimization-plan.md) - 移动端优化文档
+- [PC端优化方案](docs/pc-optimization-detailed-plan.md) - PC端优化文档
+
+---
+
+**最后更新**：2026-01-28

@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>调试检查页面</title>
+    <style>
+        body {
+            font-family: monospace;
+            padding: 20px;
+            background: #1e1e1e;
+            color: #d4d4d4;
+        }
+        .section {
+            background: #252526;
+            padding: 15px;
+            margin: 10px 0;
+            border-left: 3px solid #007acc;
+        }
+        .pass { color: #4ec9b0; }
+        .fail { color: #f48771; }
+        .info { color: #9cdcfe; }
+        button {
+            background: #007acc;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover { background: #005a9e; }
+        pre {
+            background: #1e1e1e;
+            padding: 10px;
+            overflow-x: auto;
+        }
+    </style>
+</head>
+<body>
+    <h1>🔍 清迈活动平台 - 调试检查</h1>
+
+    <div class="section">
+        <h2>步骤1：检查版本</h2>
+        <button onclick="checkVersion()">检查版本</button>
+        <pre id="versionResult">等待检查...</pre>
+    </div>
+
+    <div class="section">
+        <h2>步骤2：检查筛选逻辑</h2>
+        <button onclick="checkFiltering()">检查筛选</button>
+        <pre id="filterResult">等待检查...</pre>
+    </div>
+
+    <div class="section">
+        <h2>步骤3：检查Tab数据</h2>
+        <button onclick="checkTabData()">检查所有Tab</button>
+        <pre id="tabResult">等待检查...</pre>
+    </div>
+
+    <div class="section">
+        <h2>步骤4：测试API</h2>
+        <button onclick="testAPI()">测试API</button>
+        <pre id="apiResult">等待测试...</pre>
+    </div>
+
+    <div class="section">
+        <h2>完整诊断报告</h2>
+        <button onclick="runFullDiagnostics()">运行完整诊断</button>
+        <pre id="fullResult">点击按钮开始...</pre>
+    </div>
+
+    <script>
+        // 检查版本
+        function checkVersion() {
+            const title = document.title;
+            const result = {
+                '页面标题': title,
+                '是否包含v2.3': title.includes('v2.3'),
+                '检查时间': new Date().toLocaleString()
+            };
+            document.getElementById('versionResult').textContent = JSON.stringify(result, null, 2);
+        }
+
+        // 检查筛选逻辑
+        function checkFiltering() {
+            fetch('/api/activities')
+                .then(r => r.json())
+                .then(data => {
+                    const all = data.data;
+
+                    // Tab 0 筛选
+                    const tab0 = all.filter(item => {
+                        if (item.category === '市集') return false;
+                        if (item.flexibleTime === '是' || item.time === '灵活时间') return false;
+                        return true;
+                    });
+
+                    // Tab 1 筛选
+                    const tab1 = all.filter(item => item.category === '市集');
+
+                    // Tab 2 筛选
+                    const tab2 = all.filter(item => item.flexibleTime === '是' || item.time === '灵活时间');
+
+                    const result = {
+                        '总活动数': all.length,
+                        'Tab 0 兴趣班': tab0.length + '个',
+                        'Tab 1 市集': tab1.length + '个',
+                        'Tab 2 灵活时间': tab2.length + '个',
+                        '检查': {
+                            '兴趣班+市集+灵活时间': (tab0.length + tab1.length + tab2.length) + '个',
+                            '是否等于总数': (tab0.length + tab1.length + tab2.length) === all.length
+                        }
+                    };
+
+                    document.getElementById('filterResult').textContent = JSON.stringify(result, null, 2);
+                });
+        }
+
+        // 检查Tab数据
+        function checkTabData() {
+            fetch('/api/activities')
+                .then(r => r.json())
+                .then(data => {
+                    const all = data.data;
+
+                    // 兴趣班中的市集
+                    const tab0 = all.filter(item => {
+                        if (item.category === '市集') return false;
+                        if (item.flexibleTime === '是' || item.time === '灵活时间') return false;
+                        return true;
+                    });
+
+                    const marketsInTab0 = tab0.filter(item => item.category === '市集');
+
+                    // 市集中的兴趣班
+                    const tab1 = all.filter(item => item.category === '市集');
+
+                    const interestInTab1 = tab1.filter(item =>
+                        item.category !== '市集' &&
+                        (item.flexibleTime !== '是' && item.time !== '灵活时间')
+                    );
+
+                    const result = {
+                        '❓ 兴趣班Tab中包含市集': marketsInTab0.length + '个',
+                        '市集名称': marketsInTab0.map(m => m.title),
+                        '❓ 市集Tab中包含兴趣班': interestInTab1.length + '个',
+                        '兴趣班名称': interestInTab1.map(i => i.title)
+                    };
+
+                    document.getElementById('tabResult').textContent = JSON.stringify(result, null, 2);
+                });
+        }
+
+        // 测试API
+        function testAPI() {
+            fetch('/api/activities')
+                .then(r => r.json())
+                .then(data => {
+                    const result = {
+                        'API状态': '正常',
+                        '返回活动数': data.data.length,
+                        '响应时间': new Date().toLocaleString()
+                    };
+                    document.getElementById('apiResult').textContent = JSON.stringify(result, null, 2);
+                })
+                .catch(err => {
+                    document.getElementById('apiResult').textContent = 'API错误: ' + err.message;
+                });
+        }
+
+        // 完整诊断
+        async function runFullDiagnostics() {
+            const results = {
+                '=== 步骤1：版本检查 ===': {},
+                '=== 步骤2：API检查 ===': {},
+                '=== 步骤3：数据筛选检查 ===': {},
+                '=== 步骤4：数据隔离检查 ===': {},
+                '=== 结论 ===': {}
+            };
+
+            // 步骤1
+            results['=== 步骤1：版本检查 ==='] = {
+                '页面标题': document.title,
+                '是否v2.3': document.title.includes('v2.3')
+            };
+
+            // 步骤2
+            try {
+                const response = await fetch('/api/activities');
+                const data = await response.json();
+                results['=== 步骤2：API检查 ==='] = {
+                    'API状态': '✅ 正常',
+                    '活动总数': data.data.length
+                };
+
+                const all = data.data;
+
+                // 步骤3
+                const tab0 = all.filter(item => {
+                    if (item.category === '市集') return false;
+                    if (item.flexibleTime === '是' || item.time === '灵活时间') return false;
+                    return true;
+                });
+                const tab1 = all.filter(item => item.category === '市集');
+                const tab2 = all.filter(item => item.flexibleTime === '是' || item.time === '灵活时间');
+
+                results['=== 步骤3：数据筛选检查 ==='] = {
+                    'Tab 0 兴趣班': tab0.length + '个',
+                    'Tab 1 市集': tab1.length + '个',
+                    'Tab 2 灵活时间': tab2.length + '个',
+                    '预期': 'Tab 0: 21, Tab 1: 17, Tab 2: 9',
+                    '匹配': tab0.length === 21 && tab1.length === 17 && tab2.length === 9
+                };
+
+                // 步骤4
+                const marketsInTab0 = tab0.filter(i => i.category === '市集');
+                const interestInTab1 = tab1.filter(i =>
+                    i.category !== '市集' &&
+                    (i.flexibleTime !== '是' && i.time !== '灵活时间')
+                );
+
+                results['=== 步骤4：数据隔离检查 ==='] = {
+                    '兴趣班中包含市集': marketsInTab0.length > 0 ? '❌ 是' : '✅ 否',
+                    '市集中包含兴趣班': interestInTab1.length > 0 ? '❌ 是' : '✅ 否'
+                };
+
+                // 结论
+                const allPass =
+                    results['=== 步骤3：数据筛选检查 ==='].匹配 &&
+                    results['=== 步骤4：数据隔离检查 ===']['兴趣班中包含市集'] === '✅ 否';
+
+                results['=== 结论 ==='] = {
+                    '整体状态': allPass ? '✅ 全部通过' : '❌ 有问题',
+                    '建议': allPass ? '数据正确，问题可能是浏览器缓存' : '数据筛选逻辑有问题'
+                };
+
+            } catch (error) {
+                results['=== 步骤2：API检查 ==='] = {
+                    'API状态': '❌ 错误',
+                    '错误信息': error.message
+                };
+            }
+
+            document.getElementById('fullResult').textContent = JSON.stringify(results, null, 2);
+        }
+    </script>
+</body>
+</html>

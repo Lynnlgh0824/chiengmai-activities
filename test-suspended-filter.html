@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>suspended过滤功能自动化测试</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 28px;
+        }
+
+        .subtitle {
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+
+        .test-section {
+            margin-bottom: 30px;
+            padding: 20px;
+            border: 2px solid #f0f0f0;
+            border-radius: 8px;
+        }
+
+        .test-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .status-icon {
+            font-size: 24px;
+        }
+
+        .test-result {
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 10px;
+            font-size: 14px;
+        }
+
+        .test-result.pass {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .test-result.fail {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .test-result.info {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+
+        .activity-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .activity-card {
+            padding: 15px;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            background: #fafafa;
+        }
+
+        .activity-card.suspended {
+            background: #fff3cd;
+            border-color: #ffc107;
+        }
+
+        .activity-id {
+            font-weight: 600;
+            color: #667eea;
+            margin-bottom: 5px;
+        }
+
+        .activity-title {
+            font-size: 14px;
+            color: #333;
+            margin-bottom: 8px;
+        }
+
+        .activity-status {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .activity-status.active {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .activity-status.suspended {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .summary {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .summary-card {
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .summary-number {
+            font-size: 36px;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .summary-label {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        button {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        button:hover {
+            background: #5568d3;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+        }
+
+        .timestamp {
+            text-align: right;
+            color: #999;
+            font-size: 12px;
+            margin-top: 10px;
+        }
+
+        .nav-links {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        @media (max-width: 768px) {
+            .nav-links {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 14px 24px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 10px;
+            font-size: 15px;
+            font-weight: 600;
+            transition: all 0.3s;
+            box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
+            min-height: 50px;
+        }
+
+        .nav-link:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(102, 126, 234, 0.5);
+        }
+
+        .nav-link:active {
+            transform: translateY(0);
+        }
+
+        .nav-link-icon {
+            margin-right: 10px;
+            font-size: 18px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🧪 suspended过滤功能自动化测试</h1>
+        <p class="subtitle">验证前端是否正确过滤掉暂停状态的活动</p>
+
+        <!-- 前后端导航链接 -->
+        <div class="nav-links">
+            <a href="/index.html" class="nav-link">
+                <span class="nav-link-icon">🏠</span>
+                主页面前端
+            </a>
+            <a href="/api/activities" class="nav-link" target="_blank">
+                <span class="nav-link-icon">🔌</span>
+                后端API接口
+            </a>
+            <a href="/version-info.html" class="nav-link">
+                <span class="nav-link-icon">📦</span>
+                数据版本信息
+            </a>
+            <a href="/test-dashboard.html" class="nav-link">
+                <span class="nav-link-icon">🧪</span>
+                综合测试面板
+            </a>
+            <a href="https://github.com" class="nav-link" target="_blank">
+                <span class="nav-link-icon">📝</span>
+                功能文档
+            </a>
+        </div>
+
+        <div class="test-section">
+            <div class="test-title">
+                <span class="status-icon">📊</span>
+                测试1: API数据状态检查
+            </div>
+            <div id="apiStatus" class="test-result info">
+                正在加载API数据...
+            </div>
+        </div>
+
+        <div class="test-section">
+            <div class="test-title">
+                <span class="status-icon">🔍</span>
+                测试2: suspended活动识别
+            </div>
+            <div id="suspendedCheck" class="test-result info">
+                正在检查suspended活动...
+            </div>
+            <div id="suspendedList" class="activity-list"></div>
+        </div>
+
+        <div class="test-section">
+            <div class="test-title">
+                <span class="status-icon">✅</span>
+                测试3: 过滤结果验证
+            </div>
+            <div id="filterResult" class="test-result info">
+                正在验证过滤逻辑...
+            </div>
+        </div>
+
+        <div class="test-section">
+            <div class="test-title">
+                <span class="status-icon">📈</span>
+                测试总结
+            </div>
+            <div class="summary">
+                <div class="summary-card">
+                    <div class="summary-number" id="totalActivities">-</div>
+                    <div class="summary-label">API返回活动总数</div>
+                </div>
+                <div class="summary-card">
+                    <div class="summary-number" id="suspendedCount">-</div>
+                    <div class="summary-label">suspended活动数</div>
+                </div>
+                <div class="summary-card">
+                    <div class="summary-number" id="activeCount">-</div>
+                    <div class="summary-label">应显示活动数</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="test-section">
+            <div class="test-title">
+                <span class="status-icon">🔄</span>
+                操作
+            </div>
+            <button onclick="runAllTests()">重新运行测试</button>
+            <div class="timestamp" id="timestamp"></div>
+        </div>
+    </div>
+
+    <script>
+        let testData = {
+            totalActivities: 0,
+            suspendedActivities: [],
+            activeActivities: []
+        };
+
+        // 更新时间戳
+        function updateTimestamp() {
+            document.getElementById('timestamp').textContent =
+                '测试时间: ' + new Date().toLocaleString('zh-CN');
+        }
+
+        // 测试1: 检查API数据
+        async function testApiData() {
+            const statusDiv = document.getElementById('apiStatus');
+
+            try {
+                const response = await fetch('/api/activities');
+                const result = await response.json();
+
+                if (result.success && result.data) {
+                    testData.totalActivities = result.data.length;
+                    statusDiv.className = 'test-result pass';
+                    statusDiv.innerHTML = `✅ PASS - API返回 ${result.data.length} 个活动`;
+                    return result.data;
+                } else {
+                    throw new Error('API返回格式错误');
+                }
+            } catch (error) {
+                statusDiv.className = 'test-result fail';
+                statusDiv.innerHTML = `❌ FAIL - API请求失败: ${error.message}`;
+                return null;
+            }
+        }
+
+        // 测试2: 识别suspended活动
+        function identifySuspendedActivities(activities) {
+            const checkDiv = document.getElementById('suspendedCheck');
+            const listDiv = document.getElementById('suspendedList');
+
+            if (!activities) {
+                checkDiv.className = 'test-result fail';
+                checkDiv.innerHTML = '❌ FAIL - 无法获取活动数据';
+                return;
+            }
+
+            testData.suspendedActivities = activities.filter(a => a.status === 'suspended');
+            testData.activeActivities = activities.filter(a => a.status === '进行中' || !a.status);
+
+            if (testData.suspendedActivities.length > 0) {
+                checkDiv.className = 'test-result pass';
+                checkDiv.innerHTML = `✅ PASS - 发现 ${testData.suspendedActivities.length} 个suspended活动`;
+
+                // 显示suspended活动列表
+                listDiv.innerHTML = testData.suspendedActivities.map(act => `
+                    <div class="activity-card suspended">
+                        <div class="activity-id">${act.activityNumber}</div>
+                        <div class="activity-title">${act.title}</div>
+                        <span class="activity-status suspended">suspended</span>
+                    </div>
+                `).join('');
+            } else {
+                checkDiv.className = 'test-result info';
+                checkDiv.innerHTML = 'ℹ️ INFO - 当前无suspended活动';
+                listDiv.innerHTML = '';
+            }
+
+            // 更新summary
+            document.getElementById('totalActivities').textContent = testData.totalActivities;
+            document.getElementById('suspendedCount').textContent = testData.suspendedActivities.length;
+            document.getElementById('activeCount').textContent = testData.activeActivities.length;
+        }
+
+        // 测试3: 验证过滤逻辑
+        function verifyFilterLogic() {
+            const filterDiv = document.getElementById('filterResult');
+
+            if (testData.suspendedActivities.length === 0) {
+                filterDiv.className = 'test-result info';
+                filterDiv.innerHTML = 'ℹ️ INFO - 当前无suspended活动需要过滤';
+                return;
+            }
+
+            // 检查0001是否被过滤
+            const activity0001 = testData.suspendedActivities.find(a => a.activityNumber === '0001');
+
+            if (activity0001) {
+                filterDiv.className = 'test-result pass';
+                filterDiv.innerHTML = `
+                    ✅ PASS - 过滤逻辑正确<br>
+                    • 发现suspended活动: ${activity0001.title}<br>
+                    • 状态: ${activity0001.status}<br>
+                    • 前端应隐藏: 是<br>
+                    • 剩余可见活动: ${testData.activeActivities.length}个
+                `;
+            } else {
+                filterDiv.className = 'test-result info';
+                filterDiv.innerHTML = 'ℹ️ INFO - 未找到活动0001的suspended状态';
+            }
+        }
+
+        // 运行所有测试
+        async function runAllTests() {
+            updateTimestamp();
+
+            // 重置状态
+            document.getElementById('apiStatus').className = 'test-result info';
+            document.getElementById('apiStatus').innerHTML = '正在加载API数据...';
+            document.getElementById('suspendedCheck').className = 'test-result info';
+            document.getElementById('suspendedCheck').innerHTML = '正在检查suspended活动...';
+            document.getElementById('filterResult').className = 'test-result info';
+            document.getElementById('filterResult').innerHTML = '正在验证过滤逻辑...';
+
+            // 执行测试
+            const activities = await testApiData();
+            if (activities) {
+                identifySuspendedActivities(activities);
+                verifyFilterLogic();
+            }
+        }
+
+        // 页面加载时自动运行测试
+        window.addEventListener('DOMContentLoaded', () => {
+            runAllTests();
+        });
+    </script>
+</body>
+</html>

@@ -19,10 +19,14 @@
     "export-to-excel": "node scripts/export-json-to-excel.mjs",
     "validate-data": "node examples/validation-example.mjs",
     "import-excel": "node scripts/import-excel-enhanced.mjs",
+    "import-excel:smart": "node scripts/smart-auto-import.mjs",
     "watch-excel": "node scripts/watch-excel.mjs"
   },
   "dependencies": {
-    "axios": "^1.7.7",
+    "@renmu/bili-api": "^2.12.0",
+    "axios": "^1.13.3",
+    "bilibili-api-ts": "^11.11.2",
+    "bilibili-save-nodejs": "^1.0.0",
     "cors": "^2.8.5",
     "dotenv": "^16.4.1",
     "express": "^4.18.2",

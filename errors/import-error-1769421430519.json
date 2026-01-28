@@ -1,0 +1,81 @@
+{
+  "timestamp": "2026-01-26T09:57:10.519Z",
+  "filename": "清迈活动数据.xlsx",
+  "summary": {
+    "total": 14,
+    "success": 0,
+    "failed": 14
+  },
+  "errors": [
+    {
+      "row": 2,
+      "title": "未知",
+      "suggestion": ""
+    },
+    {
+      "row": 3,
+      "title": "未知",
+      "suggestion": ""
+    },
+    {
+      "row": 6,
+      "title": "未知",
+      "suggestion": ""
+    },
+    {
+      "row": 8,
+      "title": "未知",
+      "suggestion": ""
+    },
+    {
+      "row": 9,
+      "title": "未知",
+      "suggestion": ""
+    },
+    {
+      "row": 10,
+      "title": "未知",
+      "suggestion": ""
+    },
+    {
+      "row": 11,
+      "title": "未知",
+      "suggestion": ""
+    },
+    {
+      "row": 12,
+      "title": "未知",
+      "suggestion": ""
+    },
+    {
+      "row": 13,
+      "title": "未知",
+      "suggestion": ""
+    },
+    {
+      "row": 14,
+      "title": "未知",
+      "suggestion": ""
+    },
+    {
+      "row": 15,
+      "title": "未知",
+      "suggestion": ""
+    },
+    {
+      "row": 16,
+      "title": "未知",
+      "suggestion": ""
+    },
+    {
+      "row": 17,
+      "title": "未知",
+      "suggestion": ""
+    },
+    {
+      "row": 18,
+      "title": "未知",
+      "suggestion": ""
+    }
+  ]
+}

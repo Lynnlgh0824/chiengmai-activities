@@ -1,0 +1,15 @@
+{
+  "version": "v1.0.7",
+  "fullVersion": "1.0.7",
+  "codeName": "Unified Platform",
+  "buildDate": "2026-01-28",
+  "features": [
+    "suspended状态过滤功能",
+    "版本号机制（前后端统一）",
+    "综合测试面板（17项测试）",
+    "H5模式自动切换",
+    "PC/H5导航区分",
+    "测试思维方法论文档"
+  ],
+  "changelog": "实现H5模式自动切换，统一项目代码结构"
+}

@@ -367,6 +367,23 @@ function generateActivityNumber(existingItems) {
 // ==================== UI交互函数 ====================
 
 /**
+ * 切换标签页
+ */
+function switchTab(tabName, clickedTab) {
+  // 切换标签按钮状态
+  document.querySelectorAll('.tab').forEach(tab => {
+    tab.classList.remove('active');
+  });
+  clickedTab.classList.add('active');
+
+  // 切换内容显示
+  document.querySelectorAll('.tab-content').forEach(content => {
+    content.classList.remove('active');
+  });
+  document.getElementById(tabName + '-tab').classList.add('active');
+}
+
+/**
  * 解析按钮点击
  */
 function parseText() {
@@ -394,23 +411,74 @@ function parseText() {
 }
 
 /**
- * 显示解析结果
+ * 显示解析结果（可编辑表单）
  */
 function displayResult(activity) {
   const resultDiv = document.getElementById('result');
 
   resultDiv.innerHTML = `
-    <div class="result-item">
-      <h3>📝 活动信息</h3>
-      <p><strong>标题：</strong>${activity.title}</p>
-      <p><strong>分类：</strong>${activity.category}</p>
-      <p><strong>地点：</strong>${activity.location}</p>
-      <p><strong>价格：</strong>${activity.price}</p>
-      <p><strong>时间：</strong>${activity.time}</p>
-      <p><strong>时长：</strong>${activity.duration}</p>
-      ${activity.weekdays.length > 0 ? `<p><strong>星期：</strong>${activity.weekdays.join(', ')}</p>` : ''}
-      <p><strong>类型：</strong>${activity.timeInfo}</p>
-      ${activity.description ? `<p><strong>描述：</strong>${activity.description}</p>` : ''}
+    <div class="result-item" style="border-left-color: #667eea;">
+      <h3>📝 活动信息 - 可编辑</h3>
+      <p style="color: #666; font-size: 14px; margin-bottom: 15px;">💡 您可以直接编辑以下内容，修正不准确的信息</p>
+
+      <div class="form-group" style="margin-bottom: 15px;">
+        <label style="display: block; font-weight: 600; margin-bottom: 5px; color: #333;">标题：</label>
+        <input type="text" id="edit-title" value="${escapeHtml(activity.title)}"
+          style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px; font-size: 14px;">
+      </div>
+
+      <div class="form-group" style="margin-bottom: 15px;">
+        <label style="display: block; font-weight: 600; margin-bottom: 5px; color: #333;">分类：</label>
+        <select id="edit-category" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px; font-size: 14px;">
+          ${Object.keys(CONFIG.categoryKeywords).map(cat =>
+            `<option value="${cat}" ${activity.category === cat ? 'selected' : ''}>${cat}</option>`
+          ).join('')}
+        </select>
+      </div>
+
+      <div class="form-group" style="margin-bottom: 15px;">
+        <label style="display: block; font-weight: 600; margin-bottom: 5px; color: #333;">地点：</label>
+        <input type="text" id="edit-location" value="${escapeHtml(activity.location)}"
+          style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px; font-size: 14px;">
+      </div>
+
+      <div class="form-group" style="margin-bottom: 15px;">
+        <label style="display: block; font-weight: 600; margin-bottom: 5px; color: #333;">价格：</label>
+        <input type="text" id="edit-price" value="${escapeHtml(activity.price)}"
+          style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px; font-size: 14px;">
+      </div>
+
+      <div class="form-group" style="margin-bottom: 15px;">
+        <label style="display: block; font-weight: 600; margin-bottom: 5px; color: #333;">时间：</label>
+        <input type="text" id="edit-time" value="${escapeHtml(activity.time)}"
+          style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px; font-size: 14px;">
+      </div>
+
+      <div class="form-group" style="margin-bottom: 15px;">
+        <label style="display: block; font-weight: 600; margin-bottom: 5px; color: #333;">时长：</label>
+        <input type="text" id="edit-duration" value="${escapeHtml(activity.duration)}"
+          style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px; font-size: 14px;">
+      </div>
+
+      <div class="form-group" style="margin-bottom: 15px;">
+        <label style="display: block; font-weight: 600; margin-bottom: 5px; color: #333;">星期（逗号分隔）：</label>
+        <input type="text" id="edit-weekdays" value="${activity.weekdays.join(', ')}"
+          style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px; font-size: 14px;">
+      </div>
+
+      <div class="form-group" style="margin-bottom: 15px;">
+        <label style="display: block; font-weight: 600; margin-bottom: 5px; color: #333;">类型：</label>
+        <select id="edit-timeInfo" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px; font-size: 14px;">
+          <option value="固定频率活动" ${activity.timeInfo === '固定频率活动' ? 'selected' : ''}>固定频率活动</option>
+          <option value="临时活动" ${activity.timeInfo === '临时活动' ? 'selected' : ''}>临时活动</option>
+        </select>
+      </div>
+
+      <div class="form-group" style="margin-bottom: 15px;">
+        <label style="display: block; font-weight: 600; margin-bottom: 5px; color: #333;">描述：</label>
+        <textarea id="edit-description" rows="4"
+          style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px; font-size: 14px; resize: vertical;">${escapeHtml(activity.description)}</textarea>
+      </div>
     </div>
     <button class="export-btn" onclick="exportToJSON()">
       💾 导出为JSON格式
@@ -419,6 +487,39 @@ function displayResult(activity) {
       📊 保存到Excel文件
     </button>
   `;
+}
+
+/**
+ * 获取编辑后的活动数据
+ */
+function getEditedActivity() {
+  if (!window.parsedActivity) return null;
+
+  const weekdaysText = document.getElementById('edit-weekdays').value;
+  const weekdays = weekdaysText ? weekdaysText.split(',').map(w => w.trim()).filter(w => w) : [];
+
+  return {
+    ...window.parsedActivity,
+    title: document.getElementById('edit-title').value,
+    category: document.getElementById('edit-category').value,
+    location: document.getElementById('edit-location').value,
+    price: document.getElementById('edit-price').value,
+    time: document.getElementById('edit-time').value,
+    duration: document.getElementById('edit-duration').value,
+    weekdays: weekdays,
+    timeInfo: document.getElementById('edit-timeInfo').value,
+    description: document.getElementById('edit-description').value
+  };
+}
+
+/**
+ * HTML转义，防止XSS
+ */
+function escapeHtml(text) {
+  if (!text) return '';
+  const div = document.createElement('div');
+  div.textContent = text;
+  return div.innerHTML;
 }
 
 /**
@@ -458,14 +559,15 @@ function parseBatch() {
 }
 
 /**
- * 显示批量解析结果
+ * 显示批量解析结果（可编辑表单 - 简洁版）
  */
 function displayBatchResults(result) {
   const resultDiv = document.getElementById('result');
 
   let html = `
     <div style="background: #e3f2fd; padding: 20px; border-radius: 8px; margin-bottom: 20px;">
-      <h3 style="margin: 0 0 10px 0; color: #1976d2;">📊 批量解析统计</h3>
+      <h3 style="margin: 0 0 10px 0; color: #1976d2;">📊 批量解析统计 - 可直接编辑</h3>
+      <p style="color: #666; font-size: 14px; margin: 5px 0;">💡 修改后直接点击导出按钮即可</p>
       <p style="margin: 5px 0;">🔍 识别活动总数：<strong>${result.total}</strong></p>
       <p style="margin: 5px 0;">✅ 成功解析：<strong style="color: #4caf50;">${result.activities.length}</strong></p>
       ${result.failedSections.length > 0 ?
@@ -474,24 +576,57 @@ function displayBatchResults(result) {
     </div>
   `;
 
-  // 显示每个活动
+  // 显示每个活动（默认显示可编辑表单）
   result.activities.forEach((activity, index) => {
+    const borderColor = index === 0 ? '#667eea' :
+                        index === 1 ? '#4ECDC4' :
+                        index === 2 ? '#FF6B6B' :
+                        index === 3 ? '#FFE66D' : '#95E1D3';
+
     html += `
-      <div class="result-item" style="border-left-color: ${
-        index === 0 ? '#667eea' :
-        index === 1 ? '#4ECDC4' :
-        index === 2 ? '#FF6B6B' :
-        index === 3 ? '#FFE66D' :
-        '#95E1D3'
-      };">
-        <h3>🎯 活动 ${index + 1}</h3>
-        <p><strong>标题：</strong>${activity.title}</p>
-        <p><strong>分类：</strong>${activity.category}</p>
-        <p><strong>地点：</strong>${activity.location}</p>
-        <p><strong>价格：</strong>${activity.price}</p>
-        <p><strong>时间：</strong>${activity.time}</p>
-        ${activity.weekdays.length > 0 ? `<p><strong>星期：</strong>${activity.weekdays.join(', ')}</p>` : ''}
-        ${activity.description ? `<p style="font-size: 12px; color: #666; margin-top: 8px;"><strong>原始文本：</strong><br>${activity._rawText.substring(0, 100)}...</p>` : ''}
+      <div class="result-item" style="border-left-color: ${borderColor};">
+        <h3 style="margin: 0 0 15px 0;">🎯 活动 ${index + 1}</h3>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+          <div>
+            <label style="font-size: 11px; color: #666; font-weight: 600;">标题</label>
+            <input type="text" id="batch-${index}-title" value="${escapeHtml(activity.title)}"
+              style="width: 100%; padding: 6px 8px; border: 1px solid #ddd; border-radius: 4px; font-size: 13px;">
+          </div>
+
+          <div>
+            <label style="font-size: 11px; color: #666; font-weight: 600;">分类</label>
+            <select id="batch-${index}-category" style="width: 100%; padding: 6px 8px; border: 1px solid #ddd; border-radius: 4px; font-size: 13px;">
+              ${Object.keys(CONFIG.categoryKeywords).map(cat =>
+                `<option value="${cat}" ${activity.category === cat ? 'selected' : ''}>${cat}</option>`
+              ).join('')}
+            </select>
+          </div>
+
+          <div>
+            <label style="font-size: 11px; color: #666; font-weight: 600;">地点</label>
+            <input type="text" id="batch-${index}-location" value="${escapeHtml(activity.location)}"
+              style="width: 100%; padding: 6px 8px; border: 1px solid #ddd; border-radius: 4px; font-size: 13px;">
+          </div>
+
+          <div>
+            <label style="font-size: 11px; color: #666; font-weight: 600;">价格</label>
+            <input type="text" id="batch-${index}-price" value="${escapeHtml(activity.price)}"
+              style="width: 100%; padding: 6px 8px; border: 1px solid #ddd; border-radius: 4px; font-size: 13px;">
+          </div>
+
+          <div>
+            <label style="font-size: 11px; color: #666; font-weight: 600;">时间</label>
+            <input type="text" id="batch-${index}-time" value="${escapeHtml(activity.time)}"
+              style="width: 100%; padding: 6px 8px; border: 1px solid #ddd; border-radius: 4px; font-size: 13px;">
+          </div>
+
+          <div>
+            <label style="font-size: 11px; color: #666; font-weight: 600;">星期</label>
+            <input type="text" id="batch-${index}-weekdays" value="${activity.weekdays.join(', ')}"
+              style="width: 100%; padding: 6px 8px; border: 1px solid #ddd; border-radius: 4px; font-size: 13px;">
+          </div>
+        </div>
       </div>
     `;
   });
@@ -590,7 +725,7 @@ function retrySingleActivity(failedIndex) {
 }
 
 /**
- * 导出为JSON
+ * 导出为JSON（使用编辑后的值）
  */
 function exportToJSON() {
   if (!window.parsedActivity) {
@@ -598,7 +733,10 @@ function exportToJSON() {
     return;
   }
 
-  const json = JSON.stringify(window.parsedActivity, null, 2);
+  // 获取编辑后的数据
+  const activity = getEditedActivity() || window.parsedActivity;
+
+  const json = JSON.stringify(activity, null, 2);
   const blob = new Blob([json], { type: 'application/json' });
   const url = URL.createObjectURL(blob);
 
@@ -643,22 +781,122 @@ function clearAll() {
 // ==================== 图片上传功能 ====================
 
 /**
- * 处理图片上传
+ * 处理图片上传 + OCR识别
  */
-function handleImageUpload(event) {
+async function handleImageUpload(event) {
   const file = event.target.files[0];
   if (!file) return;
 
   // 显示预览
   const reader = new FileReader();
-  reader.onload = function(e) {
+  reader.onload = async function(e) {
     document.getElementById('previewImg').src = e.target.result;
     document.getElementById('imagePreview').style.display = 'block';
     document.getElementById('uploadArea').style.display = 'none';
+
+    // 开始 OCR 识别
+    await performOCR(e.target.result);
   };
   reader.readAsDataURL(file);
+}
 
-  alert('⚠️ 图片上传成功！\n\n请查看图片内容，然后手动复制文字到输入框进行解析。\n\n（OCR文字识别功能需要后端API支持）');
+/**
+ * 执行 OCR 文字识别
+ */
+async function performOCR(imageDataUrl) {
+  // 显示加载提示
+  const loadingHtml = `
+    <div id="ocr-loading" style="background: #e3f2fd; padding: 20px; border-radius: 8px; margin-bottom: 20px; text-align: center;">
+      <div style="font-size: 48px; margin-bottom: 10px;">🔍</div>
+      <h3 style="color: #1976d2; margin: 0 0 10px 0;">正在识别图片中的文字...</h3>
+      <p style="color: #666; margin: 5px 0;">请稍候，这可能需要几秒钟</p>
+      <div style="margin-top: 15px; height: 4px; background: #ddd; border-radius: 2px; overflow: hidden;">
+        <div id="ocr-progress" style="height: 100%; background: #667eea; width: 0%; transition: width 0.3s;"></div>
+      </div>
+      <p id="ocr-status" style="color: #667eea; margin-top: 10px; font-size: 14px;">初始化中...</p>
+    </div>
+  `;
+
+  const resultDiv = document.getElementById('result');
+  resultDiv.innerHTML = loadingHtml;
+
+  try {
+    // 使用 Tesseract.js 进行 OCR 识别
+    const worker = await Tesseract.createWorker('chi_sim+eng', 1, {
+      logger: m => {
+        if (m.status === 'recognizing text') {
+          const progress = Math.round(m.progress * 100);
+          const progressBar = document.getElementById('ocr-progress');
+          const statusText = document.getElementById('ocr-status');
+
+          if (progressBar) progressBar.style.width = progress + '%';
+          if (statusText) statusText.textContent = `识别中... ${progress}%`;
+        } else if (m.status === 'loading language traineddata') {
+          const statusText = document.getElementById('ocr-status');
+          if (statusText) statusText.textContent = '加载语言包...';
+        }
+      }
+    });
+
+    const { data: { text } } = await worker.recognize(imageDataUrl);
+    await worker.terminate();
+
+    // 识别完成，将文字填入输入框
+    const cleanedText = cleanOCRText(text);
+    document.getElementById('inputText').value = cleanedText;
+
+    // 显示成功提示
+    resultDiv.innerHTML = `
+      <div style="background: #e8f5e9; padding: 20px; border-radius: 8px; margin-bottom: 20px; text-align: center;">
+        <div style="font-size: 48px; margin-bottom: 10px;">✅</div>
+        <h3 style="color: #4caf50; margin: 0 0 10px 0;">文字识别完成！</h3>
+        <p style="color: #666; margin: 5px 0;">识别的文字已自动填入输入框</p>
+        <p style="color: #666; margin: 5px 0;">您可以查看并修正后，点击"🚀 批量智能解析"按钮</p>
+        <button onclick="document.getElementById('inputText').scrollIntoView({behavior: 'smooth'})"
+          style="margin-top: 15px; padding: 10px 24px; background: #667eea; color: white; border: none; border-radius: 6px; cursor: pointer;">
+          📝 查看并编辑识别的文字
+        </button>
+      </div>
+      <div style="background: #f5f5f5; padding: 15px; border-radius: 8px;">
+        <h4 style="margin: 0 0 10px 0; color: #333;">识别的文字预览：</h4>
+        <pre style="white-space: pre-wrap; word-wrap: break-word; font-size: 12px; color: #666; margin: 0;">${escapeHtml(cleanedText.substring(0, 500))}${cleanedText.length > 500 ? '...' : ''}</pre>
+      </div>
+    `;
+
+    // 滚动到输入框
+    setTimeout(() => {
+      document.getElementById('inputText').scrollIntoView({ behavior: 'smooth' });
+    }, 500);
+
+  } catch (error) {
+    console.error('OCR 识别失败:', error);
+
+    // 显示错误提示
+    resultDiv.innerHTML = `
+      <div style="background: #ffebee; padding: 20px; border-radius: 8px; text-align: center;">
+        <div style="font-size: 48px; margin-bottom: 10px;">❌</div>
+        <h3 style="color: #c62828; margin: 0 0 10px 0;">识别失败</h3>
+        <p style="color: #666; margin: 5px 0;">错误信息: ${escapeHtml(error.message)}</p>
+        <p style="color: #666; margin: 5px 0;">请确保网络连接正常，或尝试上传更清晰的图片</p>
+      </div>
+    `;
+  }
+}
+
+/**
+ * 清理 OCR 识别的文本
+ */
+function cleanOCRText(text) {
+  return text
+    // 移除多余的空行
+    .split('\n')
+    .map(line => line.trim())
+    .filter(line => line.length > 0)
+    .join('\n')
+    // 修复常见的 OCR 错误
+    .replace(/[|l](?=[a-zA-Z])/g, ' ')  // 修复竖线误识别
+    .replace(/\s+/g, ' ')               // 合并多余空格
+    .trim();
 }
 
 /**
@@ -860,7 +1098,7 @@ function parseMultipleActivities(text, autoSplit = true) {
 // ==================== 导出功能 ====================
 
 /**
- * 批量导出为JSON
+ * 批量导出为JSON（从编辑框获取最新值）
  */
 function exportBatchToJSON() {
   if (!window.parsedBatch || !window.parsedBatch.activities.length) {
@@ -868,24 +1106,30 @@ function exportBatchToJSON() {
     return;
   }
 
-  const activities = window.parsedBatch.activities.map(a => ({
-    id: generateId(),
-    activityNumber: String(window.parsedBatch.activities.indexOf(a) + 1).padStart(4, '0'),
-    title: a.title,
-    category: a.category,
-    location: a.location,
-    price: a.price,
-    time: a.time,
-    duration: a.duration,
-    timeInfo: a.timeInfo,
-    weekdays: a.weekdays,
-    minPrice: a.minPrice,
-    maxPrice: a.maxPrice,
-    description: a.description,
-    flexibleTime: a.flexibleTime,
-    status: a.status,
-    requireBooking: a.requireBooking
-  }));
+  // 从编辑框获取最新数据
+  const activities = window.parsedBatch.activities.map((a, index) => {
+    const weekdaysText = document.getElementById(`batch-${index}-weekdays`)?.value || '';
+    const weekdays = weekdaysText ? weekdaysText.split(',').map(w => w.trim()).filter(w => w) : a.weekdays;
+
+    return {
+      id: generateId(),
+      activityNumber: String(index + 1).padStart(4, '0'),
+      title: document.getElementById(`batch-${index}-title`)?.value || a.title,
+      category: document.getElementById(`batch-${index}-category`)?.value || a.category,
+      location: document.getElementById(`batch-${index}-location`)?.value || a.location,
+      price: document.getElementById(`batch-${index}-price`)?.value || a.price,
+      time: document.getElementById(`batch-${index}-time`)?.value || a.time,
+      duration: a.duration,
+      timeInfo: a.timeInfo,
+      weekdays: weekdays,
+      minPrice: a.minPrice,
+      maxPrice: a.maxPrice,
+      description: a.description,
+      flexibleTime: a.flexibleTime,
+      status: a.status,
+      requireBooking: a.requireBooking
+    };
+  });
 
   const json = JSON.stringify(activities, null, 2);
   const blob = new Blob([json], { type: 'application/json' });

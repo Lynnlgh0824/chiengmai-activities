@@ -44,13 +44,20 @@
 
     .content {
       display: grid;
-      grid-template-columns: 1fr 1fr;
+      grid-template-columns: 1fr;
       gap: 20px;
       margin-bottom: 30px;
     }
 
+    .input-section {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      margin-bottom: 20px;
+    }
+
     @media (max-width: 1024px) {
-      .content {
+      .input-section {
         grid-template-columns: 1fr;
       }
     }
@@ -266,6 +273,65 @@
     .back-link:hover {
       box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
     }
+
+    /* 标签页样式 */
+    .tabs {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
+      border-bottom: 2px solid #e0e0e0;
+    }
+
+    .tab {
+      padding: 12px 24px;
+      background: transparent;
+      border: none;
+      border-bottom: 3px solid transparent;
+      cursor: pointer;
+      font-size: 16px;
+      font-weight: 600;
+      color: #666;
+      transition: all 0.3s ease;
+    }
+
+    .tab:hover {
+      color: #667eea;
+    }
+
+    .tab.active {
+      color: #667eea;
+      border-bottom-color: #667eea;
+    }
+
+    .tab-content {
+      display: none;
+    }
+
+    .tab-content.active {
+      display: block;
+    }
+      .example-card {
+      background: #f9f9f9;
+      padding: 15px;
+      border-radius: 6px;
+      margin-bottom: 15px;
+      border-left: 3px solid #667eea;
+    }
+    .example-card h3 {
+      margin: 0 0 10px 0;
+      color: #667eea;
+      font-size: 14px;
+    }
+    .example-card pre {
+      background: #2d2d2d;
+      color: #f8f8f2;
+      padding: 12px;
+      border-radius: 4px;
+      overflow-x: auto;
+      font-size: 12px;
+      line-height: 1.5;
+      margin: 0;
+    }
   </style>
 </head>
 <body>
@@ -276,11 +342,12 @@
     </div>
 
     <div class="content">
+      <!-- 输入区域 -->
       <div class="panel">
         <h2>📸 上传截图或粘贴文本</h2>
-
+        
         <!-- 图片上传区域 -->
-        <div class="upload-section">
+        <div class="upload-section" style="margin-bottom: 20px;">
           <div class="upload-area" id="uploadArea">
             <div class="upload-icon">📷</div>
             <p><strong>拖放图片到这里</strong> 或点击上传</p>
@@ -296,43 +363,75 @@
           </div>
         </div>
 
-        <div class="divider" style="margin: 20px 0; text-align: center; color: #999;">— 或 —</div>
-
-        <div class="tips">
-          <p><strong>方法 1: 粘贴单个活动</strong></p>
-          <ol>
+        <!-- 文本输入区域 -->
+        <div class="tips" style="margin-bottom: 15px;">
+          <p><strong>快速输入流程：</strong></p>
+          <ol style="display: flex; gap: 30px; flex-wrap: wrap;">
             <li>复制活动文本（Ctrl+C / Cmd+C）</li>
             <li>粘贴到下方输入框</li>
-            <li>点击"单个解析"按钮</li>
-          </ol>
-
-          <p style="margin-top: 15px;"><strong>方法 2: 批量粘贴多个活动 ⭐</strong></p>
-          <ol>
-            <li>复制多个活动的文本（可直接粘贴聊天记录、文档等）</li>
-            <li>粘贴到下方输入框</li>
-            <li>点击"🚀 批量智能解析"按钮</li>
-            <li>系统会自动识别并分割每个活动</li>
-          </ol>
-          <p style="color: #667eea; margin-top: 10px;">💡 提示：批量模式会自动识别活动边界，格式可以不统一、不规律</p>
-
-          <p style="margin-top: 15px;"><strong>方法 3: 上传截图</strong></p>
-          <ol>
-            <li>上传活动截图或照片</li>
-            <li>查看图片后，手动复制文字</li>
-            <li>粘贴到输入框进行解析</li>
+            <li>点击"单个解析"或"批量智能解析"</li>
           </ol>
         </div>
 
         <textarea id="inputText" placeholder="在此粘贴活动文本...
 
-【单个活动示例】
-清迈流瑜伽早课
+支持单个活动或批量粘贴多个活动
+系统会自动识别并提取所有字段"></textarea>
+
+        <!-- 按钮组 -->
+        <div class="button-group" style="margin-top: 15px;">
+          <button class="parse-btn" onclick="parseText()">🤖 单个解析</button>
+          <button class="parse-btn" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);" onclick="parseBatch()">🚀 批量智能解析</button>
+          <button class="clear-btn" onclick="clearAll()">🗑️ 清空</button>
+        </div>
+      </div>
+    </div>
+
+          <!-- 上传截图内容 -->
+          <div id="upload-tab" class="tab-content">
+            <div class="upload-section">
+              <div class="upload-area" id="uploadArea">
+                <div class="upload-icon">📷</div>
+                <p><strong>拖放图片到这里</strong> 或点击上传</p>
+                <p style="font-size: 12px; color: #999;">支持截图、照片等图片格式，AI 会自动识别文字</p>
+                <input type="file" id="imageInput" accept="image/*" style="display: none;" onchange="handleImageUpload(event)">
+                <button class="upload-btn" onclick="document.getElementById('imageInput').click()">选择图片</button>
+              </div>
+              <div id="imagePreview" style="display: none; margin-top: 20px;">
+                <img id="previewImg" style="max-width: 100%; max-height: 300px; border-radius: 8px;">
+                <div style="margin-top: 10px;">
+                  <button class="clear-btn" onclick="clearImage()" style="padding: 8px 16px; font-size: 14px;">❌ 移除图片</button>
+                </div>
+              </div>
+            </div>
+
+            <div class="tips">
+              <p><strong>使用说明</strong></p>
+              <ol>
+                <li>上传活动截图或照片</li>
+                <li>AI 会自动识别图片中的文字（支持中英文）</li>
+                <li>识别完成后，文字会自动填入"粘贴文本"输入框</li>
+                <li>您可以查看并修正后，点击解析按钮</li>
+              </ol>
+              <p style="color: #667eea; margin-top: 10px;">💡 提示：请上传清晰、文字完整的图片以获得最佳识别效果</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- 右侧：解析结果 -->
+        <!-- 示例文本区域 -->
+    <div class="panel" style="margin-bottom: 20px;">
+      <h2>💡 输入示例</h2>
+      <div class="example-card">
+        <h3>示例 1：固定频率活动</h3>
+        <pre>清迈流瑜伽早课
 时间：每周一三五 9:00-11:00
 地点：宁曼路瑜伽馆
-价格：500฿/节
-
-【批量活动示例 - 可直接粘贴多个活动】
-清迈流瑜伽早课
+价格：500฿/节</pre>
+      </div>
+      <div class="example-card">
+        <h3>示例 2：批量活动（多个活动）</h3>
+        <pre>清迈流瑜伽早课
 时间：每周一三五 9:00-11:00
 地点：宁曼路瑜伽馆
 价格：500฿/节
@@ -345,52 +444,31 @@
 泰拳体验课
 时间灵活
 清迈多处拳馆
-免费体验"></textarea>
-
-        <div class="button-group">
-          <button class="parse-btn" onclick="parseText()">🤖 单个解析</button>
-          <button class="parse-btn" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);" onclick="parseBatch()">🚀 批量智能解析</button>
-          <button class="clear-btn" onclick="clearAll()">🗑️ 清空</button>
-        </div>
+免费体验</pre>
       </div>
+    </div>
 
-      <div class="panel">
-        <h2>👁️ 解析结果</h2>
-        <div id="result">
-          <p style="color: #999; text-align: center; padding: 50px 0;">
-            解析结果将显示在这里...
-          </p>
+    <!-- 解析结果 -->
+    <div class="panel">
+      <h2>👁️ 解析结果</h2>
+          <div id="result">
+            <p style="color: #999; text-align: center; padding: 50px 0;">
+              解析结果将显示在这里...
+            </p>
+          </div>
         </div>
       </div>
     </div>
 
-    <div class="examples">
-      <h2>💡 使用示例</h2>
-      <div class="example-card">
-        <h3>示例 1：固定频率活动</h3>
-        <pre>清迈流瑜伽早课
-时间：每周一三五上午9-11点
-地点：宁曼路瑜伽馆，清迈宁曼路1号
-价格：500฿/节，首次免费体验
-适合所有级别的瑜伽爱好者
-包含瑜伽垫和茶点</pre>
-      </div>
-
-      <div class="example-card">
-        <h3>示例 2：临时活动</h3>
-        <pre>泰式烹饪工作坊
-时间：2025年2月1日下午2-5点
-地点：清迈烹饪学校，老城中心
-价格：500฿/人
-学习制作冬阴功汤和泰式炒河粉</pre>
-      </div>
-    </div>
+    <!-- 示例区域已移除 -->
 
     <div style="text-align: center;">
       <a href="index.html" class="back-link">← 返回首页</a>
     </div>
   </div>
 
+  <!-- Tesseract.js OCR Library -->
+  <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
   <script src="ai-import.js"></script>
 </body>
 </html>

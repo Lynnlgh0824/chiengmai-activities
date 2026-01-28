@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>清迈活动查询平台 - 文档中心</title>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* 左侧导航栏 */
+        .sidebar {
+            width: 280px;
+            background: #2c3e50;
+            color: white;
+            overflow-y: auto;
+            flex-shrink: 0;
+        }
+
+        .sidebar-header {
+            padding: 20px;
+            background: #34495e;
+            border-bottom: 1px solid #465a6e;
+        }
+
+        .sidebar-header h1 {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .sidebar-header p {
+            font-size: 12px;
+            color: #95a5a6;
+        }
+
+        .nav-section {
+            padding: 15px 0;
+            border-bottom: 1px solid #465a6e;
+        }
+
+        .nav-section-title {
+            padding: 0 20px 10px;
+            font-size: 12px;
+            color: #95a5a6;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .nav-item {
+            padding: 10px 20px;
+            cursor: pointer;
+            transition: all 0.2s;
+            border-left: 3px solid transparent;
+            font-size: 14px;
+        }
+
+        .nav-item:hover {
+            background: #34495e;
+            border-left-color: #3498db;
+        }
+
+        .nav-item.active {
+            background: #3498db;
+            border-left-color: #2980b9;
+            font-weight: 500;
+        }
+
+        .nav-item-sub {
+            padding-left: 40px;
+            font-size: 13px;
+            color: #bdc3c7;
+        }
+
+        /* 右侧内容区 */
+        .main-content {
+            flex: 1;
+            overflow-y: auto;
+            background: #ecf0f1;
+        }
+
+        .content-frame {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px;
+            background: white;
+            min-height: 100%;
+        }
+
+        /* Markdown样式 */
+        .markdown-body {
+            line-height: 1.6;
+            color: #333;
+        }
+
+        .markdown-body h1 {
+            font-size: 32px;
+            font-weight: 600;
+            margin: 40px 0 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e0e0e0;
+        }
+
+        .markdown-body h2 {
+            font-size: 24px;
+            font-weight: 600;
+            margin: 30px 0 15px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .markdown-body h3 {
+            font-size: 20px;
+            font-weight: 600;
+            margin: 25px 0 12px;
+        }
+
+        .markdown-body h4 {
+            font-size: 16px;
+            font-weight: 600;
+            margin: 20px 0 10px;
+        }
+
+        .markdown-body p {
+            margin: 15px 0;
+            line-height: 1.8;
+        }
+
+        .markdown-body ul, .markdown-body ol {
+            margin: 15px 0;
+            padding-left: 30px;
+        }
+
+        .markdown-body li {
+            margin: 8px 0;
+            line-height: 1.6;
+        }
+
+        .markdown-body code {
+            background: #f4f4f4;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: "Courier New", monospace;
+            font-size: 14px;
+        }
+
+        .markdown-body pre {
+            background: #2c3e50;
+            color: #ecf0f1;
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+            margin: 15px 0;
+        }
+
+        .markdown-body pre code {
+            background: transparent;
+            padding: 0;
+            color: inherit;
+        }
+
+        .markdown-body table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+        }
+
+        .markdown-body th,
+        .markdown-body td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: left;
+        }
+
+        .markdown-body th {
+            background: #f4f4f4;
+            font-weight: 600;
+        }
+
+        .markdown-body blockquote {
+            border-left: 4px solid #3498db;
+            padding-left: 15px;
+            margin: 15px 0;
+            color: #7f8c8d;
+        }
+
+        .markdown-body a {
+            color: #3498db;
+            text-decoration: none;
+        }
+
+        .markdown-body a:hover {
+            text-decoration: underline;
+        }
+
+        .markdown-body strong {
+            font-weight: 600;
+        }
+
+        /* 加载动画 */
+        .loading {
+            text-align: center;
+            padding: 100px;
+            color: #7f8c8d;
+        }
+
+        /* 响应式 */
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 200px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 左侧导航栏 -->
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <h1>📚 文档中心</h1>
+            <p>清迈活动查询平台 v2.0</p>
+        </div>
+
+        <div class="nav-section">
+            <div class="nav-section-title">快速导航</div>
+            <div class="nav-item active" data-file="PROJECT_REQUIREMENTS.md">
+                📖 项目需求文档
+            </div>
+            <div class="nav-item" data-file="TAB_REQUIREMENTS.md">
+                📋 Tab需求文档
+            </div>
+        </div>
+
+        <div class="nav-section">
+            <div class="nav-section-title">主要章节</div>
+            <div class="nav-item" data-file="PROJECT_REQUIREMENTS.md" data-section="项目概述">
+                项目概述
+            </div>
+            <div class="nav-item" data-file="PROJECT_REQUIREMENTS.md" data-section="技术栈">
+                技术栈
+            </div>
+            <div class="nav-item" data-file="PROJECT_REQUIREMENTS.md" data-section="前端页面">
+                前端页面
+            </div>
+            <div class="nav-item" data-file="PROJECT_REQUIREMENTS.md" data-section="API端点">
+                API端点
+            </div>
+            <div class="nav-item" data-file="PROJECT_REQUIREMENTS.md" data-section="数据结构">
+                数据结构
+            </div>
+            <div class="nav-item" data-file="PROJECT_REQUIREMENTS.md" data-section="最新优化记录">
+                最新优化记录
+            </div>
+        </div>
+
+        <div class="nav-section">
+            <div class="nav-section-title">Tab说明</div>
+            <div class="nav-item" data-file="TAB_REQUIREMENTS.md" data-section="兴趣班">
+                📅 兴趣班
+            </div>
+            <div class="nav-item" data-file="TAB_REQUIREMENTS.md" data-section="市集">
+                📋 市集
+            </div>
+            <div class="nav-item" data-file="TAB_REQUIREMENTS.md" data-section="灵活时间活动">
+                ⏰ 灵活时间活动
+            </div>
+            <div class="nav-item" data-file="TAB_REQUIREMENTS.md" data-section="活动网站">
+                🏪 活动网站
+            </div>
+            <div class="nav-item" data-file="TAB_REQUIREMENTS.md" data-section="攻略信息">
+                📖 攻略信息
+            </div>
+        </div>
+    </div>
+
+    <!-- 右侧内容区 -->
+    <div class="main-content">
+        <div class="content-frame">
+            <div id="markdown-content" class="markdown-body">
+                <div class="loading">⏳ 加载中...</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentFile = 'PROJECT_REQUIREMENTS.md';
+
+        // 加载Markdown文件
+        async function loadMarkdown(filename) {
+            const contentDiv = document.getElementById('markdown-content');
+            contentDiv.innerHTML = '<div class="loading">⏳ 加载中...</div>';
+
+            try {
+                const response = await fetch(filename);
+                const markdown = await response.text();
+
+                // 渲染Markdown
+                contentDiv.innerHTML = marked.parse(markdown);
+
+                // 处理章节跳转
+                setTimeout(() => {
+                    if (window.location.hash) {
+                        const element = document.querySelector(window.location.hash);
+                        if (element) {
+                            element.scrollIntoView({ behavior: 'smooth' });
+                        }
+                    }
+                }, 100);
+            } catch (error) {
+                contentDiv.innerHTML = `<div style="color: #e74c3c; padding: 40px;">
+                    ❌ 加载失败: ${error.message}<br><br>
+                    请确保在服务器环境中运行此页面
+                </div>`;
+            }
+        }
+
+        // 导航点击事件
+        document.querySelectorAll('.nav-item').forEach(item => {
+            item.addEventListener('click', function(e) {
+                const file = this.dataset.file;
+                const section = this.dataset.section;
+
+                // 更新激活状态
+                document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+                this.classList.add('active');
+
+                // 如果是文件切换
+                if (file && file !== currentFile) {
+                    currentFile = file;
+                    loadMarkdown(file);
+                }
+
+                // 如果是章节跳转
+                if (section) {
+                    setTimeout(() => {
+                        const heading = Array.from(document.querySelectorAll('h1, h2, h3, h4'))
+                            .find(h => h.textContent.includes(section));
+                        if (heading) {
+                            heading.scrollIntoView({ behavior: 'smooth' });
+                        }
+                    }, 300);
+                }
+            });
+        });
+
+        // 初始加载
+        loadMarkdown('PROJECT_REQUIREMENTS.md');
+    </script>
+</body>
+</html>

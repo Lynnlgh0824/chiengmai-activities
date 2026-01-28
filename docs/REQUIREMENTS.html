@@ -1,0 +1,1658 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>清迈活动平台 - 需求说明文档</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 20px 40px;
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header h1 {
+            font-size: 28px;
+            color: #667eea;
+            font-weight: 700;
+        }
+
+        .header-info {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .last-update {
+            font-size: 14px;
+            color: #666;
+            background: #f0f0f0;
+            padding: 8px 16px;
+            border-radius: 20px;
+        }
+
+        .container {
+            display: flex;
+            max-width: 1800px;
+            margin: 0 auto;
+            padding: 20px;
+            gap: 20px;
+        }
+
+        .sidebar {
+            width: 280px;
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            height: calc(100vh - 120px);
+            position: sticky;
+            top: 100px;
+            overflow-y: auto;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .sidebar h3 {
+            color: #667eea;
+            margin-bottom: 15px;
+            font-size: 18px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #667eea;
+        }
+
+        .nav-item {
+            padding: 12px 16px;
+            margin: 8px 0;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            color: #333;
+            font-size: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .nav-item:hover {
+            background: #f0f0f0;
+            transform: translateX(5px);
+        }
+
+        .nav-item.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            font-weight: 600;
+        }
+
+        .main-content {
+            flex: 1;
+            background: white;
+            border-radius: 12px;
+            padding: 40px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            overflow-y: auto;
+            max-height: calc(100vh - 120px);
+        }
+
+        .section {
+            margin-bottom: 60px;
+            scroll-margin-top: 100px;
+        }
+
+        .section-title {
+            font-size: 32px;
+            color: #333;
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 3px solid #667eea;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .section-title .icon {
+            font-size: 36px;
+        }
+
+        .content-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            margin-top: 30px;
+        }
+
+        .prototype-panel, .requirement-panel {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 25px;
+            border: 2px solid #e9ecef;
+        }
+
+        .panel-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #495057;
+            margin-bottom: 20px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid #dee2e6;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .prototype {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            min-height: 300px;
+            border: 1px solid #e0e0e0;
+        }
+
+        .requirement-list {
+            list-style: none;
+        }
+
+        .requirement-item {
+            margin-bottom: 20px;
+            padding: 15px;
+            background: white;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+        }
+
+        .requirement-item h4 {
+            color: #667eea;
+            font-size: 16px;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .requirement-item p {
+            color: #555;
+            line-height: 1.6;
+            font-size: 14px;
+        }
+
+        .requirement-item ul {
+            margin-left: 20px;
+            margin-top: 8px;
+        }
+
+        .requirement-item li {
+            color: #666;
+            margin: 5px 0;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .priority {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-left: 10px;
+        }
+
+        .priority-high {
+            background: #ffebee;
+            color: #c62828;
+        }
+
+        .priority-medium {
+            background: #fff3e0;
+            color: #ef6c00;
+        }
+
+        .priority-low {
+            background: #e8f5e9;
+            color: #2e7d32;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+            margin-left: 10px;
+        }
+
+        .status-done {
+            background: #e8f5e9;
+            color: #2e7d32;
+        }
+
+        .status-progress {
+            background: #fff3e0;
+            color: #ef6c00;
+        }
+
+        .status-todo {
+            background: #ffebee;
+            color: #c62828;
+        }
+
+        .mockup-element {
+            background: #f5f5f5;
+            border: 2px dashed #ccc;
+            border-radius: 4px;
+            padding: 10px;
+            margin: 10px 0;
+            text-align: center;
+            color: #999;
+            font-size: 14px;
+        }
+
+        .mockup-button {
+            display: inline-block;
+            background: #667eea;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 6px;
+            margin: 5px;
+            font-size: 14px;
+        }
+
+        .mockup-input {
+            border: 1px solid #ddd;
+            padding: 8px 12px;
+            border-radius: 4px;
+            margin: 5px;
+            font-size: 14px;
+            background: white;
+        }
+
+        .mockup-card {
+            background: white;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 10px 0;
+        }
+
+        .update-log {
+            background: #fff3cd;
+            border: 1px solid #ffc107;
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 20px;
+        }
+
+        .update-log h4 {
+            color: #856404;
+            margin-bottom: 10px;
+        }
+
+        .update-log ul {
+            margin-left: 20px;
+            color: #856404;
+        }
+
+        @media (max-width: 1200px) {
+            .content-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+            }
+
+            .sidebar {
+                width: 100%;
+                height: auto;
+                position: relative;
+                top: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>📋 清迈活动平台 - 需求说明文档</h1>
+        <div class="header-info">
+            <span class="last-update" id="lastUpdate">最后更新: 加载中...</span>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="sidebar">
+            <h3>📑 目录导航</h3>
+            <div class="nav-item active" onclick="scrollToSection('overview')">
+                <span>📊</span> 项目概述
+            </div>
+            <div class="nav-item" onclick="scrollToSection('user-main')">
+                <span>🏠</span> 用户主页
+            </div>
+            <div class="nav-item" onclick="scrollToSection('filter')">
+                <span>🔍</span> 筛选搜索
+            </div>
+            <div class="nav-item" onclick="scrollToSection('activity-detail')">
+                <span>📝</span> 活动详情
+            </div>
+            <div class="nav-item" onclick="scrollToSection('flexible-time')">
+                <span>⏰</span> 灵活时间活动
+            </div>
+            <div class="nav-item" onclick="scrollToSection('market')">
+                <span>📋</span> 市集活动
+            </div>
+            <div class="nav-item" onclick="scrollToSection('guide')">
+                <span>📖</span> 活动攻略
+            </div>
+            <div class="nav-item" onclick="scrollToSection('admin')">
+                <span>⚙️</span> 管理后台
+            </div>
+            <div class="nav-item" onclick="scrollToSection('api')">
+                <span>🔌</span> API接口
+            </div>
+            <div class="nav-item" onclick="scrollToSection('data')">
+                <span>💾</span> 数据管理
+            </div>
+            <div class="nav-item" onclick="scrollToSection('requirements-log')">
+                <span>📜</span> 需求日志
+            </div>
+        </div>
+
+        <div class="main-content">
+            <!-- 项目概述 -->
+            <div class="section" id="overview">
+                <h2 class="section-title">
+                    <span class="icon">📊</span>
+                    项目概述
+                </h2>
+                <div class="content-grid">
+                    <div class="prototype-panel">
+                        <div class="panel-title">🎨 原型图</div>
+                        <div class="prototype">
+                            <div style="text-align: center; padding: 40px;">
+                                <div style="font-size: 48px; margin-bottom: 20px;">🏔️</div>
+                                <h3 style="color: #667eea; margin-bottom: 15px;">清迈活动平台</h3>
+                                <p style="color: #666; margin-bottom: 30px;">发现清迈的精彩活动</p>
+                                <div style="display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;">
+                                    <span class="mockup-button">瑜伽课程</span>
+                                    <span class="mockup-button">冥想静修</span>
+                                    <span class="mockup-button">户外探险</span>
+                                    <span class="mockup-button">泰式按摩</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="requirement-panel">
+                        <div class="panel-title">📋 详细需求</div>
+                        <ul class="requirement-list">
+                            <li class="requirement-item">
+                                <h4>项目定位 <span class="status-badge status-done">已完成</span></h4>
+                                <p>为在清迈的游客和本地居民提供活动信息聚合平台，帮助用户快速找到感兴趣的活动。</p>
+                            </li>
+                            <li class="requirement-item">
+                                <h4>目标用户 <span class="priority priority-high">高优先级</span></h4>
+                                <ul>
+                                    <li>来清迈旅游的游客（短期停留）</li>
+                                    <li>在清迈长期居住的数字游民</li>
+                                    <li>本地居民</li>
+                                </ul>
+                            </li>
+                            <li class="requirement-item">
+                                <h4>核心价值</h4>
+                                <ul>
+                                    <li>信息聚合：整合多个来源的活动信息</li>
+                                    <li>快速筛选：支持多维度筛选和搜索</li>
+                                    <li>实时更新：保持数据最新状态</li>
+                                </ul>
+                            </li>
+                            <li class="requirement-item">
+                                <h4>技术栈</h4>
+                                <ul>
+                                    <li>前端：纯HTML + CSS + JavaScript（无框架）</li>
+                                    <li>后端：Node.js + Express</li>
+                                    <li>数据存储：JSON文件</li>
+                                    <li>部署：Vercel / 本地服务器</li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 用户主页 -->
+            <div class="section" id="user-main">
+                <h2 class="section-title">
+                    <span class="icon">🏠</span>
+                    用户主页 - 周课表视图
+                </h2>
+                <div class="content-grid">
+                    <div class="prototype-panel">
+                        <div class="panel-title">🎨 原型图</div>
+                        <div class="prototype">
+                            <div style="margin-bottom: 15px;">
+                                <div style="display: flex; gap: 10px; margin-bottom: 10px;">
+                                    <span class="mockup-button" style="background: #667eea;">周课表</span>
+                                    <span class="mockup-button" style="background: #e0e0e0;">灵活时间</span>
+                                    <span class="mockup-button" style="background: #e0e0e0;">活动网站</span>
+                                    <span class="mockup-button" style="background: #e0e0e0;">攻略</span>
+                                </div>
+                            </div>
+                            <div style="display: grid; grid-template-columns: repeat(7, 1fr); gap: 5px; margin-bottom: 15px;">
+                                <div style="background: #f5f5f5; padding: 8px; text-align: center; font-size: 12px; border-radius: 4px;">周一</div>
+                                <div style="background: #f5f5f5; padding: 8px; text-align: center; font-size: 12px; border-radius: 4px;">周二</div>
+                                <div style="background: #f5f5f5; padding: 8px; text-align: center; font-size: 12px; border-radius: 4px;">周三</div>
+                                <div style="background: #f5f5f5; padding: 8px; text-align: center; font-size: 12px; border-radius: 4px;">周四</div>
+                                <div style="background: #f5f5f5; padding: 8px; text-align: center; font-size: 12px; border-radius: 4px;">周五</div>
+                                <div style="background: #f5f5f5; padding: 8px; text-align: center; font-size: 12px; border-radius: 4px;">周六</div>
+                                <div style="background: #667eea; color: white; padding: 8px; text-align: center; font-size: 12px; border-radius: 4px;">周日</div>
+                            </div>
+                            <div class="mockup-card">
+                                <div style="font-weight: 600; margin-bottom: 5px;">🧘 瑜伽课程</div>
+                                <div style="font-size: 12px; color: #666;">09:00-10:30 | 瑜伽馆A</div>
+                                <div style="font-size: 12px; color: #667eea;">500฿</div>
+                            </div>
+                            <div class="mockup-card">
+                                <div style="font-weight: 600; margin-bottom: 5px;">🧘 冥想课程</div>
+                                <div style="font-size: 12px; color: #666;">14:00-15:30 | 冥想中心</div>
+                                <div style="font-size: 12px; color: #667eea;">免费</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="requirement-panel">
+                        <div class="panel-title">📋 详细需求</div>
+                        <ul class="requirement-list">
+                            <li class="requirement-item">
+                                <h4>布局设计 <span class="status-badge status-done">已完成</span></h4>
+                                <ul>
+                                    <li>顶部Tab切换：周课表、灵活时间、活动网站、攻略</li>
+                                    <li>周视图日历：横向展示周一到周日</li>
+                                    <li>活动卡片：展示在对应日期下方</li>
+                                    <li>响应式设计：适配桌面和移动设备</li>
+                                </ul>
+                            </li>
+                            <li class="requirement-item">
+                                <h4>交互功能 <span class="status-badge status-done">已完成</span></h4>
+                                <ul>
+                                    <li>点击日期：筛选显示该日期的所有活动</li>
+                                    <li>点击活动卡片：弹出详情对话框</li>
+                                    <li>ESC键：关闭详情对话框</li>
+                                    <li>点击空白区域：关闭对话框</li>
+                                </ul>
+                            </li>
+                            <li class="requirement-item">
+                                <h4>显示信息 <span class="priority priority-high">高优先级</span></h4>
+                                <ul>
+                                    <li>活动标题、分类图标、时间、地点</li>
+                                    <li>价格信息（泰铢）</li>
+                                    <li>活动状态（进行中、已过期等）</li>
+                                    <li>灵活时间标识</li>
+                                </ul>
+                            </li>
+                            <li class="requirement-item">
+                                <h4>视觉设计</h4>
+                                <ul>
+                                    <li>使用颜色区分不同分类</li>
+                                    <li>卡片阴影和圆角提升质感</li>
+                                    <li>当前日期高亮显示</li>
+                                    <li>活动卡片hover效果</li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 筛选搜索 -->
+            <div class="section" id="filter">
+                <h2 class="section-title">
+                    <span class="icon">🔍</span>
+                    筛选和搜索功能
+                </h2>
+                <div class="content-grid">
+                    <div class="prototype-panel">
+                        <div class="panel-title">🎨 原型图</div>
+                        <div class="prototype">
+                            <div style="margin-bottom: 15px;">
+                                <span class="mockup-input" style="width: 200px;">🔍 搜索活动、地点...</span>
+                            </div>
+                            <div style="margin-bottom: 10px;">
+                                <div style="font-size: 12px; color: #666; margin-bottom: 5px;">活动分类</div>
+                                <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                                    <span class="mockup-button" style="background: #667eea;">全部</span>
+                                    <span class="mockup-button" style="background: #f0f0f0; color: #333;">瑜伽</span>
+                                    <span class="mockup-button" style="background: #f0f0f0; color: #333;">冥想</span>
+                                    <span class="mockup-button" style="background: #f0f0f0; color: #333;">运动</span>
+                                    <span class="mockup-button" style="background: #f0f0f0; color: #333;">户外</span>
+                                </div>
+                            </div>
+                            <div>
+                                <div style="font-size: 12px; color: #666; margin-bottom: 5px;">价格筛选</div>
+                                <div style="display: flex; gap: 8px;">
+                                    <span class="mockup-button" style="background: #667eea;">全部</span>
+                                    <span class="mockup-button" style="background: #f0f0f0; color: #333;">免费</span>
+                                    <span class="mockup-button" style="background: #f0f0f0; color: #333;">≤1500฿</span>
+                                    <span class="mockup-button" style="background: #f0f0f0; color: #333;">>1500฿</span>
+                                </div>
+                            </div>
+                            <div style="margin-top: 15px; padding: 10px; background: #e3f2fd; border-radius: 4px; font-size: 13px;">
+                                找到 24 个活动
+                            </div>
+                        </div>
+                    </div>
+                    <div class="requirement-panel">
+                        <div class="panel-title">📋 详细需求</div>
+                        <ul class="requirement-list">
+                            <li class="requirement-item">
+                                <h4>搜索功能 <span class="status-badge status-done">已完成</span></h4>
+                                <ul>
+                                    <li>支持搜索活动名称、地点、描述</li>
+                                    <li>实时搜索，输入即筛选</li>
+                                    <li>搜索结果高亮显示</li>
+                                    <li>支持中英文搜索</li>
+                                </ul>
+                            </li>
+                            <li class="requirement-item">
+                                <h4>分类筛选 <span class="status-badge status-done">已完成</span></h4>
+                                <ul>
+                                    <li>活动分类：瑜伽、冥想、运动、户外探险、泰式按摩、市场、其他</li>
+                                    <li>单选模式，每次只能选择一个分类</li>
+                                    <li>点击"全部"清除分类筛选</li>
+                                    <li>分类按钮显示该分类的活动数量</li>
+                                </ul>
+                            </li>
+                            <li class="requirement-item">
+                                <h4>价格筛选 <span class="status-badge status-done">已完成</span></h4>
+                                <ul>
+                                    <li>全部价格</li>
+                                    <li>仅免费活动</li>
+                                    <li>1500泰铢以下</li>
+                                    <li>1500泰铢以上</li>
+                                </ul>
+                            </li>
+                            <li class="requirement-item">
+                                <h4>组合筛选 <span class="priority priority-medium">中优先级</span></h4>
+                                <ul>
+                                    <li>分类 + 价格 + 搜索可同时生效</li>
+                                    <li>显示当前筛选结果数量</li>
+                                    <li>筛选结果实时更新</li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 活动详情 -->
+            <div class="section" id="activity-detail">
+                <h2 class="section-title">
+                    <span class="icon">📝</span>
+                    活动详情弹窗
+                </h2>
+                <div class="content-grid">
+                    <div class="prototype-panel">
+                        <div class="panel-title">🎨 原型图</div>
+                        <div class="prototype">
+                            <div style="border: 2px solid #667eea; border-radius: 8px; padding: 20px; position: relative;">
+                                <div style="position: absolute; top: 10px; right: 10px; cursor: pointer;">✕</div>
+                                <h3 style="color: #667eea; margin-bottom: 15px;">🧘 瑜伽晨练课程</h3>
+                                <div style="font-size: 13px; line-height: 1.8;">
+                                    <div><strong>📅 时间：</strong>周一、三、五 09:00-10:30</div>
+                                    <div><strong>📍 地点：</strong>Yoga Center Chiang Mai</div>
+                                    <div><strong>💰 价格：</strong>500฿/次</div>
+                                    <div><strong>👥 人数：</strong>最多10人</div>
+                                    <div><strong>📝 状态：</strong><span style="color: green;">进行中</span></div>
+                                    <div style="margin-top: 10px; padding: 10px; background: #f5f5f5; border-radius: 4px;">
+                                        <strong>📖 描述：</strong><br>
+                                        适合所有水平的瑜伽课程，专业的老师指导，提供瑜伽垫。
+                                    </div>
+                                    <div style="margin-top: 10px;">
+                                        <strong>🔗 来源：</strong>
+                                        <a href="#" style="color: #667eea;">查看详情</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="requirement-panel">
+                        <div class="panel-title">📋 详细需求</div>
+                        <ul class="requirement-list">
+                            <li class="requirement-item">
+                                <h4>弹窗设计 <span class="status-badge status-done">已完成</span></h4>
+                                <ul>
+                                    <li>居中显示，带遮罩层</li>
+                                    <li>最大宽度600px，自适应高度</li>
+                                    <li>关闭按钮：右上角X + ESC键 + 点击遮罩</li>
+                                    <li>平滑动画效果</li>
+                                </ul>
+                            </li>
+                            <li class="requirement-item">
+                                <h4>显示内容 <span class="priority priority-high">高优先级</span></h4>
+                                <ul>
+                                    <li>活动标题 + 分类图标</li>
+                                    <li>时间信息（星期、时间段）</li>
+                                    <li>地点名称</li>
+                                    <li>价格（范围或固定价格）</li>
+                                    <li>最大参与人数</li>
+                                    <li>活动状态标签</li>
+                                    <li>活动详细描述</li>
+                                    <li>来源链接（如果有）<span class="status-badge status-done">已完成</span></li>
+                                </ul>
+                            </li>
+                            <li class="requirement-item">
+                                <h4>交互体验</h4>
+                                <ul>
+                                    <li>点击活动卡片打开弹窗</li>
+                                    <li>支持键盘操作（ESC关闭）</li>
+                                    <li>移动端适配（全屏显示）</li>
+                                    <li>防止背景滚动</li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 灵活时间活动 -->
+            <div class="section" id="flexible-time">
+                <h2 class="section-title">
+                    <span class="icon">⏰</span>
+                    灵活时间活动列表
+                </h2>
+                <div class="content-grid">
+                    <div class="prototype-panel">
+                        <div class="panel-title">🎨 原型图</div>
+                        <div class="prototype">
+                            <div style="display: flex; gap: 10px; margin-bottom: 15px;">
+                                <span class="mockup-button" style="background: #e0e0e0;">周课表</span>
+                                <span class="mockup-button" style="background: #667eea;">灵活时间</span>
+                                <span class="mockup-button" style="background: #e0e0e0;">活动网站</span>
+                                <span class="mockup-button" style="background: #e0e0e0;">攻略</span>
+                            </div>
+                            <div style="padding: 10px; background: #fff3e0; border-radius: 4px; margin-bottom: 15px; font-size: 13px;">
+                                ⏰ 这些活动时间灵活，可根据预约安排
+                            </div>
+                            <div class="mockup-card">
+                                <div style="display: flex; justify-content: space-between; align-items: start;">
+                                    <div>
+                                        <div style="font-weight: 600; margin-bottom: 5px;">🚣 划船</div>
+                                        <div style="font-size: 12px; color: #666; margin-bottom: 3px;">📍 Wat Fa Ham</div>
+                                        <div style="font-size: 12px; color: #666;">⏰ 08:00-20:00（灵活）</div>
+                                    </div>
+                                    <div style="text-align: right;">
+                                        <div style="color: #667eea; font-weight: 600;">50฿</div>
+                                        <div style="font-size: 11px; color: #999;">需要预约</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mockup-card">
+                                <div style="display: flex; justify-content: space-between; align-items: start;">
+                                    <div>
+                                        <div style="font-weight: 600; margin-bottom: 5px;">💆 泰式按摩</div>
+                                        <div style="font-size: 12px; color: #666; margin-bottom: 3px;">📍 老城按摩店</div>
+                                        <div style="font-size: 12px; color: #666;">⏰ 营业时间 10:00-22:00</div>
+                                    </div>
+                                    <div style="text-align: right;">
+                                        <div style="color: #667eea; font-weight: 600;">300฿/小时</div>
+                                        <div style="font-size: 11px; color: #999;">建议预约</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="requirement-panel">
+                        <div class="panel-title">📋 详细需求</div>
+                        <ul class="requirement-list">
+                            <li class="requirement-item">
+                                <h4>列表展示 <span class="status-badge status-done">已完成</span></h4>
+                                <ul>
+                                    <li>独立Tab页面展示</li>
+                                    <li>列表形式（卡片式）</li>
+                                    <li>显示所有时间灵活的活动</li>
+                                    <li>同样支持分类和价格筛选</li>
+                                </ul>
+                            </li>
+                            <li class="requirement-item">
+                                <h4>卡片信息 <span class="priority priority-high">高优先级</span></h4>
+                                <ul>
+                                    <li>活动标题和分类图标</li>
+                                    <li>地点位置</li>
+                                    <li>灵活时间说明（营业时间范围）</li>
+                                    <li>价格信息</li>
+                                    <li>预约提示（需要/建议预约）</li>
+                                </ul>
+                            </li>
+                            <li class="requirement-item">
+                                <h4>交互功能</h4>
+                                <ul>
+                                    <li>点击卡片打开详情弹窗</li>
+                                    <li>支持搜索和筛选</li>
+                                    <li>显示筛选结果数量</li>
+                                </ul>
+                            </li>
+                            <li class="requirement-item">
+                                <h4>特殊标识</h4>
+                                <ul>
+                                    <li>顶部提示说明灵活时间特点</li>
+                                    <li>使用时钟图标标识</li>
+                                    <li>卡片显示"灵活"标签</li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 市集活动 -->
+            <div class="section" id="market">
+                <h2 class="section-title">
+                    <span class="icon">📋</span>
+                    市集活动视图
+                </h2>
+                <div class="content-grid">
+                    <div class="prototype-panel">
+                        <div class="panel-title">🎨 原型图</div>
+                        <div class="prototype">
+                            <div style="margin-bottom: 15px;">
+                                <div style="display: flex; gap: 10px; margin-bottom: 10px;">
+                                    <span class="mockup-button" style="background: #e0e0e0;">周课表</span>
+                                    <span class="mockup-button" style="background: #e0e0e0;">灵活时间</span>
+                                    <span class="mockup-button" style="background: #667eea;">市集</span>
+                                    <span class="mockup-button" style="background: #e0e0e0;">活动网站</span>
+                                    <span class="mockup-button" style="background: #e0e0e0;">攻略</span>
+                                </div>
+                            </div>
+                            <div style="padding: 10px; background: #e3f2fd; border-radius: 4px; margin-bottom: 15px; font-size: 13px;">
+                                🛒 清迈特色市集，体验当地文化
+                            </div>
+                            <div class="mockup-card">
+                                <div style="display: flex; justify-content: space-between; align-items: start;">
+                                    <div>
+                                        <div style="font-weight: 600; margin-bottom: 5px;">🎨 JING JAI 市集</div>
+                                        <div style="font-size: 12px; color: #666; margin-bottom: 3px;">📍 JING JAI Art Market</div>
+                                        <div style="font-size: 12px; color: #666;">📅 周六 09:00-15:00</div>
+                                    </div>
+                                    <div style="text-align: right;">
+                                        <div style="color: #667eea; font-weight: 600;">免费入场</div>
+                                        <div style="font-size: 11px; color: #999;">手工艺品·美食</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mockup-card">
+                                <div style="display: flex; justify-content: space-between; align-items: start;">
+                                    <div>
+                                        <div style="font-weight: 600; margin-bottom: 5px;">🌴 艺术村市集</div>
+                                        <div style="font-size: 12px; color: #666; margin-bottom: 3px;">📍 Baan Kang Wat</div>
+                                        <div style="font-size: 12px; color: #666;">📅 周末 10:00-17:00</div>
+                                    </div>
+                                    <div style="text-align: right;">
+                                        <div style="color: #667eea; font-weight: 600;">免费入场</div>
+                                        <div style="font-size: 11px; color: #999;">艺术·咖啡·工作坊</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="requirement-panel">
+                        <div class="panel-title">📋 详细需求</div>
+                        <ul class="requirement-list">
+                            <li class="requirement-item">
+                                <h4>列表展示 <span class="status-badge status-done">已完成</span></h4>
+                                <ul>
+                                    <li>独立Tab页面展示市集活动</li>
+                                    <li>周视图日历格式，与兴趣班视图一致</li>
+                                    <li>显示所有市集类型的活动</li>
+                                    <li>支持分类和价格筛选</li>
+                                </ul>
+                            </li>
+                            <li class="requirement-item">
+                                <h4>卡片信息 <span class="priority priority-high">高优先级</span></h4>
+                                <ul>
+                                    <li>市集名称和图标</li>
+                                    <li>地点位置（中英文名称）</li>
+                                    <li>时间信息（固定日期+营业时间）</li>
+                                    <li>价格信息（入场费用）</li>
+                                    <li>特色标签（手工艺品、美食、艺术品等）</li>
+                                </ul>
+                            </li>
+                            <li class="requirement-item">
+                                <h4>交互功能 <span class="status-badge status-done">已完成</span></h4>
+                                <ul>
+                                    <li>点击卡片打开详情弹窗</li>
+                                    <li>支持搜索和筛选</li>
+                                    <li>显示筛选结果数量</li>
+                                    <li>点击日期筛选当日市集</li>
+                                </ul>
+                            </li>
+                            <li class="requirement-item">
+                                <h4>特殊标识</h4>
+                                <ul>
+                                    <li>顶部提示说明市集特色</li>
+                                    <li>使用购物篮或购物图标标识</li>
+                                    <li>卡片显示"市集"标签</li>
+                                    <li>高亮显示周末市集</li>
+                                </ul>
+                            </li>
+                            <li class="requirement-item">
+                                <h4>数据来源 <span class="status-badge status-done">已完成</span></h4>
+                                <ul>
+                                    <li>JING JAI Market（周六市集）</li>
+                                    <li>Baan Kang Wat（艺术村市集）</li>
+                                    <li>Coconut Market（椰子市集）</li>
+                                    <li>Warorot Market（华人市集）</li>
+                                    <li>其他当地特色市集</li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 活动攻略 -->
+            <div class="section" id="guide">
+                <h2 class="section-title">
+                    <span class="icon">📖</span>
+                    清迈活动攻略
+                </h2>
+                <div class="content-grid">
+                    <div class="prototype-panel">
+                        <div class="panel-title">🎨 原型图</div>
+                        <div class="prototype">
+                            <div style="display: flex; gap: 10px; margin-bottom: 15px;">
+                                <span class="mockup-button" style="background: #e0e0e0;">周课表</span>
+                                <span class="mockup-button" style="background: #e0e0e0;">灵活时间</span>
+                                <span class="mockup-button" style="background: #e0e0e0;">活动网站</span>
+                                <span class="mockup-button" style="background: #667eea;">攻略</span>
+                            </div>
+                            <div style="padding: 20px; background: white; border-radius: 8px; border: 1px solid #e0e0e0;">
+                                <h4 style="color: #667eea; margin-bottom: 10px;">🌴 清迈活动指南</h4>
+                                <div style="font-size: 13px; line-height: 1.8; color: #555;">
+                                    <p style="margin-bottom: 10px;"><strong>推荐活动：</strong></p>
+                                    <ul style="margin-left: 20px;">
+                                        <li>🧘 瑜伽课程：适合所有水平</li>
+                                        <li>🧘 冥想静修：体验内心平静</li>
+                                        <li>🏃 户外运动：徒步、骑行、划船</li>
+                                        <li>💆 泰式按摩：放松身心</li>
+                                    </ul>
+                                    <p style="margin-top: 10px;"><strong>最佳季节：</strong>11月-2月</p>
+                                    <p style="margin-top: 5px;"><strong>交通建议：</strong>租用摩托车或使用Grab</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="requirement-panel">
+                        <div class="panel-title">📋 详细需求</div>
+                        <ul class="requirement-list">
+                            <li class="requirement-item">
+                                <h4>内容展示 <span class="status-badge status-done">已完成</span></h4>
+                                <ul>
+                                    <li>独立Tab页面展示攻略内容</li>
+                                    <li>支持富文本格式（标题、列表、链接）</li>
+                                    <li>可包含图片和视频</li>
+                                    <li>响应式排版</li>
+                                </ul>
+                            </li>
+                            <li class="requirement-item">
+                                <h4>内容分类</h4>
+                                <ul>
+                                    <li>活动推荐和介绍</li>
+                                    <li>最佳参与时间</li>
+                                    <li>交通指南</li>
+                                    <li>注意事项</li>
+                                    <li>联系方式</li>
+                                </ul>
+                            </li>
+                            <li class="requirement-item">
+                                <h4>管理功能 <span class="priority priority-medium">中优先级</span></h4>
+                                <ul>
+                                    <li>后台可编辑攻略内容</li>
+                                    <li>支持Markdown格式</li>
+                                    <li>版本历史记录</li>
+                                    <li>实时预览</li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 管理后台 -->
+            <div class="section" id="admin">
+                <h2 class="section-title">
+                    <span class="icon">⚙️</span>
+                    管理后台
+                </h2>
+                <div class="content-grid">
+                    <div class="prototype-panel">
+                        <div class="panel-title">🎨 原型图</div>
+                        <div class="prototype">
+                            <div style="display: flex; gap: 10px; margin-bottom: 15px;">
+                                <span class="mockup-button" style="background: #667eea;">+ 新增活动</span>
+                                <span class="mockup-button" style="background: #4caf50;">📥 导入Excel</span>
+                                <span class="mockup-button" style="background: #ff9800;">📤 导出</span>
+                            </div>
+                            <div style="margin-bottom: 10px;">
+                                <span class="mockup-input">🔍 搜索...</span>
+                            </div>
+                            <table style="width: 100%; font-size: 12px; border-collapse: collapse;">
+                                <tr style="background: #f5f5f5;">
+                                    <th style="padding: 8px; text-align: left; border: 1px solid #ddd;">ID</th>
+                                    <th style="padding: 8px; text-align: left; border: 1px solid #ddd;">标题</th>
+                                    <th style="padding: 8px; text-align: left; border: 1px solid #ddd;">分类</th>
+                                    <th style="padding: 8px; text-align: left; border: 1px solid #ddd;">状态</th>
+                                    <th style="padding: 8px; text-align: left; border: 1px solid #ddd;">操作</th>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 8px; border: 1px solid #ddd;">0014</td>
+                                    <td style="padding: 8px; border: 1px solid #ddd;">划船</td>
+                                    <td style="padding: 8px; border: 1px solid #ddd;">运动</td>
+                                    <td style="padding: 8px; border: 1px solid #ddd;">进行中</td>
+                                    <td style="padding: 8px; border: 1px solid #ddd;">
+                                        <span style="color: #667eea;">编辑</span> |
+                                        <span style="color: #f44336;">删除</span>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="requirement-panel">
+                        <div class="panel-title">📋 详细需求</div>
+                        <ul class="requirement-list">
+                            <li class="requirement-item">
+                                <h4>CRUD功能 <span class="status-badge status-done">已完成</span></h4>
+                                <ul>
+                                    <li><strong>新增：</strong>表单录入所有活动信息</li>
+                                    <li><strong>查看：</strong>列表展示，支持搜索和筛选</li>
+                                    <li><strong>编辑：</strong>修改活动信息，表单回显</li>
+                                    <li><strong>删除：</strong>软删除，可恢复</li>
+                                </ul>
+                            </li>
+                            <li class="requirement-item">
+                                <h4>批量操作 <span class="priority priority-high">高优先级</span></h4>
+                                <ul>
+                                    <li>Excel导入：批量上传活动数据</li>
+                                    <li>Excel导出：下载活动数据表格</li>
+                                    <li>批量删除：选择多条记录删除</li>
+                                    <li>批量修改状态：更新多个活动状态</li>
+                                </ul>
+                            </li>
+                            <li class="requirement-item">
+                                <h4>数据验证</h4>
+                                <ul>
+                                    <li>必填字段验证</li>
+                                    <li>时间格式验证</li>
+                                    <li>价格范围验证</li>
+                                    <li>重复数据检测</li>
+                                    <li>错误提示和定位</li>
+                                </ul>
+                            </li>
+                            <li class="requirement-item">
+                                <h4>列表功能</h4>
+                                <ul>
+                                    <li>分页展示（每页20条）</li>
+                                    <li>排序功能（按时间、价格、创建时间）</li>
+                                    <li>搜索功能（标题、地点、分类）</li>
+                                    <li>状态筛选</li>
+                                    <li>快速预览</li>
+                                </ul>
+                            </li>
+                            <li class="requirement-item">
+                                <h4>权限控制 <span class="priority priority-low">低优先级</span></h4>
+                                <ul>
+                                    <li>登录验证</li>
+                                    <li>操作日志记录</li>
+                                    <li>角色权限管理</li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- API接口 -->
+            <div class="section" id="api">
+                <h2 class="section-title">
+                    <span class="icon">🔌</span>
+                    API接口设计
+                </h2>
+                <div class="content-grid">
+                    <div class="prototype-panel">
+                        <div class="panel-title">🎨 接口列表</div>
+                        <div class="prototype">
+                            <div style="font-size: 13px; line-height: 2;">
+                                <div style="padding: 8px; background: #e3f2fd; border-radius: 4px; margin-bottom: 5px;">
+                                    <strong>GET</strong> /api/activities
+                                </div>
+                                <div style="padding: 8px; background: #e3f2fd; border-radius: 4px; margin-bottom: 5px;">
+                                    <strong>GET</strong> /api/activities/:id
+                                </div>
+                                <div style="padding: 8px; background: #fff3e0; border-radius: 4px; margin-bottom: 5px;">
+                                    <strong>POST</strong> /api/activities
+                                </div>
+                                <div style="padding: 8px; background: #fff3e0; border-radius: 4px; margin-bottom: 5px;">
+                                    <strong>PUT</strong> /api/activities/:id
+                                </div>
+                                <div style="padding: 8px; background: #ffebee; border-radius: 4px; margin-bottom: 5px;">
+                                    <strong>DELETE</strong> /api/activities/:id
+                                </div>
+                                <div style="padding: 8px; background: #e3f2fd; border-radius: 4px; margin-bottom: 5px;">
+                                    <strong>GET</strong> /api/activities/stats/categories
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="requirement-panel">
+                        <div class="panel-title">📋 详细需求</div>
+                        <ul class="requirement-list">
+                            <li class="requirement-item">
+                                <h4>活动管理API <span class="status-badge status-done">已完成</span></h4>
+                                <ul>
+                                    <li><strong>GET /api/activities</strong> - 获取活动列表<br>
+                                    &nbsp;&nbsp;参数：category, price, search, page, limit, sort</li>
+                                    <li><strong>GET /api/activities/:id</strong> - 获取单个活动详情</li>
+                                    <li><strong>POST /api/activities</strong> - 创建新活动</li>
+                                    <li><strong>PUT /api/activities/:id</strong> - 更新活动信息</li>
+                                    <li><strong>DELETE /api/activities/:id</strong> - 删除活动</li>
+                                </ul>
+                            </li>
+                            <li class="requirement-item">
+                                <h4>数据导入导出 <span class="status-badge status-done">已完成</span></h4>
+                                <ul>
+                                    <li><strong>POST /api/import-excel</strong> - 从Excel导入数据</li>
+                                    <li><strong>POST /api/export-excel</strong> - 导出数据到Excel</li>
+                                    <li><strong>GET /api/version</strong> - 获取数据版本信息</li>
+                                </ul>
+                            </li>
+                            <li class="requirement-item">
+                                <h4>统计API</h4>
+                                <ul>
+                                    <li><strong>GET /api/activities/stats/categories</strong> - 各分类活动统计</li>
+                                    <li><strong>GET /api/activities/stats/prices</strong> - 价格分布统计</li>
+                                    <li><strong>GET /api/activities/stats/weekdays</strong> - 星期分布统计</li>
+                                </ul>
+                            </li>
+                            <li class="requirement-item">
+                                <h4>攻略管理API <span class="status-badge status-done">已完成</span></h4>
+                                <ul>
+                                    <li><strong>GET /api/guide</strong> - 获取攻略内容</li>
+                                    <li><strong>POST /api/guide</strong> - 保存攻略内容</li>
+                                </ul>
+                            </li>
+                            <li class="requirement-item">
+                                <h4>飞书集成 <span class="status-badge status-done">已完成</span></h4>
+                                <ul>
+                                    <li><strong>POST /api/sync-from-feishu</strong> - 飞书webhook接收</li>
+                                    <li><strong>POST /api/sync-manual</strong> - 手动同步飞书数据</li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 数据管理 -->
+            <div class="section" id="data">
+                <h2 class="section-title">
+                    <span class="icon">💾</span>
+                    数据管理
+                </h2>
+                <div class="content-grid">
+                    <div class="prototype-panel">
+                        <div class="panel-title">🎨 数据结构示例</div>
+                        <div class="prototype">
+                            <pre style="font-size: 11px; background: #2d2d2d; color: #f8f8f2; padding: 15px; border-radius: 4px; overflow-x: auto;">
+{
+  "id": "0014",
+  "title": "划船",
+  "category": "运动",
+  "location": "Wat Fa Ham",
+  "price": "50泰铢",
+  "time": "08:00-20:00",
+  "weekdays": ["无固定时间"],
+  "flexibleTime": "是",
+  "status": "进行中",
+  "description": "活动描述...",
+  "source": {
+    "name": "官方网站",
+    "url": "https://...",
+    "type": "website"
+  }
+}
+                            </pre>
+                        </div>
+                    </div>
+                    <div class="requirement-panel">
+                        <div class="panel-title">📋 详细需求</div>
+                        <ul class="requirement-list">
+                            <li class="requirement-item">
+                                <h4>数据存储 <span class="status-badge status-done">已完成</span></h4>
+                                <ul>
+                                    <li><strong>主文件：</strong>data/items.json</li>
+                                    <li><strong>备份文件：</strong>data/backup/items-YYYYMMDD.json</li>
+                                    <li><strong>版本文件：</strong>data/version.json（记录数据版本和更新时间）</li>
+                                    <li>自动备份机制（每次更新前备份）</li>
+                                </ul>
+                            </li>
+                            <li class="requirement-item">
+                                <h4>数据字段</h4>
+                                <ul>
+                                    <li><strong>id：</strong>唯一标识（14位时间戳）</li>
+                                    <li><strong>title：</strong>活动标题</li>
+                                    <li><strong>category：</strong>分类（瑜伽、冥想、运动等）</li>
+                                    <li><strong>location：</strong>地点</li>
+                                    <li><strong>price：</strong>价格字符串</li>
+                                    <li><strong>minPrice/maxPrice：</strong>价格范围（数字）</li>
+                                    <li><strong>time：</strong>时间字符串</li>
+                                    <li><strong>weekdays：</strong>星期数组</li>
+                                    <li><strong>flexibleTime：</strong>是否灵活时间</li>
+                                    <li><strong>status：</strong>状态（进行中、已过期等）</li>
+                                    <li><strong>description：</strong>详细描述</li>
+                                    <li><strong>source：</strong>来源信息对象</li>
+                                </ul>
+                            </li>
+                            <li class="requirement-item">
+                                <h4>数据同步 <span class="status-badge status-done">已完成</span></h4>
+                                <ul>
+                                    <li>支持Excel文件导入导出</li>
+                                    <li>支持飞书表格同步</li>
+                                    <li>自动检测数据变化</li>
+                                    <li>版本控制和冲突解决</li>
+                                    <li>数据验证和清洗</li>
+                                </ul>
+                            </li>
+                            <li class="requirement-item">
+                                <h4>数据质量保证</h4>
+                                <ul>
+                                    <li>必填字段验证</li>
+                                    <li>重复数据检测（基于标题和地点）</li>
+                                    <li>时间格式标准化</li>
+                                    <li>分类规范化</li>
+                                    <li>价格格式统一</li>
+                                </ul>
+                            </li>
+                            <li class="requirement-item">
+                                <h4>自动化脚本 <span class="priority priority-medium">中优先级</span></h4>
+                                <ul>
+                                    <li>Excel自动同步（scripts/auto-sync.mjs）</li>
+                                    <li>数据验证脚本（scripts/validators.mjs）</li>
+                                    <li>重复数据清理（scripts/cleanup-duplicates.mjs）</li>
+                                    <li>数据状态检查（scripts/check-data-status.mjs）</li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 需求日志 -->
+            <div class="section" id="requirements-log">
+                <h2 class="section-title">
+                    <span class="icon">📜</span>
+                    需求变更日志
+                </h2>
+                <div class="content-grid">
+                    <div class="prototype-panel">
+                        <div class="panel-title">📊 统计信息</div>
+                        <div id="logStats" style="padding: 20px;">
+                            <div style="text-align: center; color: #999;">加载中...</div>
+                        </div>
+                    </div>
+                    <div class="requirement-panel">
+                        <div class="panel-title">📋 添加需求变更</div>
+                        <form id="addLogForm" style="padding: 15px;">
+                            <div style="margin-bottom: 15px;">
+                                <label style="display: block; margin-bottom: 5px; font-weight: 600;">类型 *</label>
+                                <select id="logType" required style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+                                    <option value="">请选择类型</option>
+                                    <option value="新增功能">新增功能</option>
+                                    <option value="功能完善">功能完善</option>
+                                    <option value="Bug修复">Bug修复</option>
+                                    <option value="优化改进">优化改进</option>
+                                    <option value="文档更新">文档更新</option>
+                                </select>
+                            </div>
+                            <div style="margin-bottom: 15px;">
+                                <label style="display: block; margin-bottom: 5px; font-weight: 600;">分类 *</label>
+                                <select id="logCategory" required style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+                                    <option value="">请选择分类</option>
+                                    <option value="需求文档">需求文档</option>
+                                    <option value="前端功能">前端功能</option>
+                                    <option value="后端API">后端API</option>
+                                    <option value="数据管理">数据管理</option>
+                                    <option value="其他">其他</option>
+                                </select>
+                            </div>
+                            <div style="margin-bottom: 15px;">
+                                <label style="display: block; margin-bottom: 5px; font-weight: 600;">标题 *</label>
+                                <input type="text" id="logTitle" required placeholder="简短描述需求变更" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+                            </div>
+                            <div style="margin-bottom: 15px;">
+                                <label style="display: block; margin-bottom: 5px; font-weight: 600;">描述 *</label>
+                                <textarea id="logDescription" required placeholder="详细描述需求变更内容" rows="3" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px; resize: vertical;"></textarea>
+                            </div>
+                            <div style="margin-bottom: 15px;">
+                                <label style="display: block; margin-bottom: 5px; font-weight: 600;">影响级别</label>
+                                <select id="logImpact" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+                                    <option value="高">高</option>
+                                    <option value="中" selected>中</option>
+                                    <option value="低">低</option>
+                                </select>
+                            </div>
+                            <div style="margin-bottom: 15px;">
+                                <label style="display: block; margin-bottom: 5px; font-weight: 600;">相关文件</label>
+                                <input type="text" id="logFiles" placeholder="多个文件用逗号分隔" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+                            </div>
+                            <button type="submit" style="background: #667eea; color: white; padding: 10px 20px; border: none; border-radius: 6px; cursor: pointer; font-weight: 600;">
+                                ➕ 添加日志
+                            </button>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- 日志列表 -->
+                <div style="margin-top: 40px;">
+                    <h3 style="color: #333; margin-bottom: 20px; font-size: 24px;">📝 变更历史</h3>
+                    <div id="logList" style="display: flex; flex-direction: column; gap: 15px;">
+                        <div style="text-align: center; color: #999; padding: 40px;">加载中...</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 更新日志 -->
+            <div class="update-log">
+                <h4>📅 文档更新日志</h4>
+                <ul id="updateLogList">
+                    <li>2026-01-27: 添加"市集活动"独立Tab视图，补充缺失的需求文档章节</li>
+                    <li>2026-01-27: 更新"来源链接"功能状态为已完成，支持24个活动的官方链接</li>
+                    <li>2025-01-27: 创建初始需求文档，包含完整的功能模块和API设计</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 更新时间显示
+        function updateLastUpdateTime() {
+            const now = new Date();
+            const timeString = now.toLocaleString('zh-CN', {
+                year: 'numeric',
+                month: '2-digit',
+                day: '2-digit',
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit'
+            });
+            document.getElementById('lastUpdate').textContent = `最后更新: ${timeString}`;
+
+            // 保存到 localStorage
+            localStorage.setItem('requirementsDocLastUpdate', now.toISOString());
+        }
+
+        // 页面加载时更新时间
+        updateLastUpdateTime();
+
+        // 导航到指定section
+        function scrollToSection(sectionId) {
+            const section = document.getElementById(sectionId);
+            if (section) {
+                section.scrollIntoView({ behavior: 'smooth' });
+
+                // 更新导航高亮
+                document.querySelectorAll('.nav-item').forEach(item => {
+                    item.classList.remove('active');
+                });
+                event.target.closest('.nav-item').classList.add('active');
+            }
+        }
+
+        // 监听滚动，自动高亮当前section
+        window.addEventListener('scroll', () => {
+            const sections = document.querySelectorAll('.section');
+            const navItems = document.querySelectorAll('.nav-item');
+
+            let currentSection = '';
+
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                const sectionHeight = section.clientHeight;
+                if (window.scrollY >= sectionTop - 200) {
+                    currentSection = section.getAttribute('id');
+                }
+            });
+
+            navItems.forEach(item => {
+                item.classList.remove('active');
+                if (item.getAttribute('onclick').includes(currentSection)) {
+                    item.classList.add('active');
+                }
+            });
+        });
+
+        // ==================== 需求日志管理 ====================
+
+        // API基础URL
+        const API_BASE = window.location.hostname === 'localhost'
+            ? 'http://localhost:3000/api'
+            : '/api';
+
+        // 加载需求日志统计
+        async function loadLogStats() {
+            try {
+                const response = await fetch(`${API_BASE}/requirements-log/stats`);
+                const result = await response.json();
+
+                if (result.success) {
+                    const stats = result.data;
+                    const statsHtml = `
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; font-size: 14px;">
+                            <div style="padding: 10px; background: #e3f2fd; border-radius: 8px;">
+                                <div style="color: #666; font-size: 12px;">总变更数</div>
+                                <div style="font-size: 24px; font-weight: 700; color: #667eea;">${stats.total}</div>
+                            </div>
+                            <div style="padding: 10px; background: #fff3e0; border-radius: 8px;">
+                                <div style="color: #666; font-size: 12px;">近7天</div>
+                                <div style="font-size: 24px; font-weight: 700; color: #ff9800;">${stats.recent7Days}</div>
+                            </div>
+                            <div style="padding: 10px; background: #f3e5f5; border-radius: 8px;">
+                                <div style="color: #666; font-size: 12px;">高影响</div>
+                                <div style="font-size: 24px; font-weight: 700; color: #9c27b0;">${stats.byImpact.高 || 0}</div>
+                            </div>
+                            <div style="padding: 10px; background: #e8f5e9; border-radius: 8px;">
+                                <div style="color: #666; font-size: 12px;">最近更新</div>
+                                <div style="font-size: 12px; font-weight: 600; color: #4caf50;">${stats.lastUpdate ? new Date(stats.lastUpdate).toLocaleDateString('zh-CN') : '-'}</div>
+                            </div>
+                        </div>
+                        <div style="margin-top: 15px; padding: 10px; background: #f5f5f5; border-radius: 8px; font-size: 12px;">
+                            <strong>按类型统计:</strong><br>
+                            ${Object.entries(stats.byType).map(([key, value]) => `${key}: ${value}`).join(' | ')}
+                        </div>
+                    `;
+                    document.getElementById('logStats').innerHTML = statsHtml;
+                }
+            } catch (error) {
+                console.error('加载统计信息失败:', error);
+                document.getElementById('logStats').innerHTML = '<div style="color: #999;">加载失败</div>';
+            }
+        }
+
+        // 加载需求日志列表
+        async function loadRequirementsLog() {
+            try {
+                const response = await fetch(`${API_BASE}/requirements-log/recent?limit=20`);
+                const result = await response.json();
+
+                if (result.success) {
+                    const logs = result.data;
+                    const logListHtml = logs.map(log => {
+                        const impactClass = log.impact === '高' ? 'priority-high'
+                                         : log.impact === '中' ? 'priority-medium'
+                                         : 'priority-low';
+                        const impactBadge = `<span class="priority ${impactClass}" style="margin-left: 8px;">${log.impact}影响</span>`;
+
+                        const detailsHtml = log.details && log.details.length > 0
+                            ? `<ul style="margin: 10px 0 0 20px; color: #666;">
+                                ${log.details.map(detail => `<li>${detail}</li>`).join('')}
+                               </ul>`
+                            : '';
+
+                        const filesHtml = log.relatedFiles && log.relatedFiles.length > 0
+                            ? `<div style="margin-top: 8px; font-size: 12px;">
+                                <strong>相关文件:</strong>
+                                <span style="color: #667eea;">${log.relatedFiles.join(', ')}</span>
+                               </div>`
+                            : '';
+
+                        return `
+                            <div style="background: white; border-radius: 8px; padding: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); border-left: 4px solid #667eea;">
+                                <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 10px;">
+                                    <div>
+                                        <span style="background: #667eea; color: white; padding: 4px 12px; border-radius: 12px; font-size: 12px;">${log.type}</span>
+                                        <span style="background: #e0e0e0; color: #333; padding: 4px 12px; border-radius: 12px; font-size: 12px; margin-left: 8px;">${log.category}</span>
+                                        ${impactBadge}
+                                    </div>
+                                    <span style="color: #999; font-size: 12px;">${new Date(log.timestamp).toLocaleString('zh-CN')}</span>
+                                </div>
+                                <h4 style="color: #333; margin-bottom: 8px;">${log.title}</h4>
+                                <p style="color: #666; line-height: 1.6; margin-bottom: 10px;">${log.description}</p>
+                                ${detailsHtml}
+                                ${filesHtml}
+                            </div>
+                        `;
+                    }).join('');
+
+                    document.getElementById('logList').innerHTML = logListHtml || '<div style="text-align: center; color: #999; padding: 40px;">暂无日志记录</div>';
+                }
+            } catch (error) {
+                console.error('加载需求日志失败:', error);
+                document.getElementById('logList').innerHTML = '<div style="text-align: center; color: #f44336; padding: 40px;">加载失败，请确保服务器正在运行</div>';
+            }
+        }
+
+        // 添加需求日志
+        document.getElementById('addLogForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const type = document.getElementById('logType').value;
+            const category = document.getElementById('logCategory').value;
+            const title = document.getElementById('logTitle').value;
+            const description = document.getElementById('logDescription').value;
+            const impact = document.getElementById('logImpact').value;
+            const files = document.getElementById('logFiles').value;
+
+            try {
+                const response = await fetch(`${API_BASE}/requirements-log`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        type,
+                        category,
+                        title,
+                        description,
+                        impact,
+                        relatedFiles: files ? files.split(',').map(f => f.trim()) : []
+                    })
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    // 清空表单
+                    document.getElementById('addLogForm').reset();
+
+                    // 重新加载日志
+                    await loadRequirementsLog();
+                    await loadLogStats();
+
+                    // 显示成功消息
+                    alert('✅ 需求日志添加成功！');
+                } else {
+                    alert('❌ 添加失败: ' + result.message);
+                }
+            } catch (error) {
+                console.error('添加需求日志失败:', error);
+                alert('❌ 添加失败，请检查网络连接');
+            }
+        });
+
+        // 页面加载时初始化
+        loadLogStats();
+        loadRequirementsLog();
+
+        // ==================== 自动链接点击追踪 ====================
+
+        // 追踪页面上的所有链接点击
+        document.addEventListener('DOMContentLoaded', () => {
+            // 监听所有链接的点击事件
+            document.addEventListener('click', async (e) => {
+                // 查找被点击的链接或其父元素
+                let target = e.target;
+                let link = null;
+                let linkText = '';
+                let linkContext = '';
+
+                // 向上查找最近的<a>标签
+                let element = target;
+                while (element && element !== document) {
+                    if (element.tagName === 'A') {
+                        link = element;
+                        break;
+                    }
+                    element = element.parentElement;
+                }
+
+                // 如果找到了链接，记录点击
+                if (link) {
+                    e.preventDefault(); // 阻止默认跳转，先记录
+
+                    const href = link.getAttribute('href');
+                    const text = link.textContent.trim();
+                    const url = link.href;
+
+                    // 获取链接所在位置的上下文
+                    let section = '';
+                    let sectionTitle = '';
+                    let closestSection = link.closest('.section');
+                    if (closestSection) {
+                        const sectionTitleElement = closestSection.querySelector('.section-title');
+                        if (sectionTitleElement) {
+                            section = closestSection.id;
+                            sectionTitle = sectionTitleElement.textContent.trim();
+                        }
+                    }
+
+                    // 记录到需求日志
+                    try {
+                        await fetch(`${API_BASE}/requirements-log`, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({
+                                type: '用户行为',
+                                category: '链接点击',
+                                title: `点击链接: ${text.substring(0, 50)}${text.length > 50 ? '...' : ''}`,
+                                description: `用户在需求文档中点击了链接`,
+                                impact: '低',
+                                details: [
+                                    `链接文本: ${text}`,
+                                    `链接地址: ${href || '#'}`,
+                                    `完整URL: ${url}`,
+                                    `所在章节: ${sectionTitle || '未知'}`,
+                                    `时间: ${new Date().toLocaleString('zh-CN')}`
+                                ],
+                                relatedFiles: ['docs/REQUIREMENTS.html']
+                            })
+                        });
+                        console.log('✅ 链接点击已记录:', text);
+                    } catch (error) {
+                        console.error('❌ 记录链接点击失败:', error);
+                    }
+
+                    // 延迟后执行原始跳转
+                    setTimeout(() => {
+                        if (href && href !== '#') {
+                            if (href.startsWith('http') || href.startsWith('//')) {
+                                // 外部链接，在新标签页打开
+                                window.open(link.href, '_blank');
+                            } else {
+                                // 内部链接或锚点，执行原始跳转
+                                link.click();
+                            }
+                        }
+                    }, 100);
+                }
+            }, true); // 使用捕获阶段确保能监听到所有点击
+        });
+
+        console.log('%c🔗 链接点击追踪已启用', 'color: #667eea; font-size: 14px; font-weight: bold;');
+        console.log('所有的链接点击都将自动记录到需求日志中');
+
+        // 添加更新日志
+        function addUpdateLog(message) {
+            const now = new Date();
+            const dateStr = now.toLocaleDateString('zh-CN');
+            const logList = document.getElementById('updateLogList');
+            const newLog = document.createElement('li');
+            newLog.textContent = `${dateStr}: ${message}`;
+            logList.insertBefore(newLog, logList.firstChild);
+
+            // 保持最近10条记录
+            while (logList.children.length > 10) {
+                logList.removeChild(logList.lastChild);
+            }
+        }
+
+        // 自动更新机制 - 每天自动刷新页面
+        function setupAutoUpdate() {
+            // 计算到明天凌晨的时间
+            const now = new Date();
+            const tomorrow = new Date(now);
+            tomorrow.setDate(tomorrow.getDate() + 1);
+            tomorrow.setHours(0, 0, 0, 0);
+
+            const timeUntilMidnight = tomorrow - now;
+
+            // 设置定时器，在午夜时刷新页面
+            setTimeout(() => {
+                addUpdateLog('自动刷新文档，同步最新需求');
+                updateLastUpdateTime();
+
+                // 设置下一次更新
+                setupAutoUpdate();
+            }, timeUntilMidnight);
+
+            console.log(`文档将在 ${Math.round(timeUntilMidnight / 1000 / 60)} 分钟后自动更新`);
+        }
+
+        // 启动自动更新
+        setupAutoUpdate();
+
+        // 添加快捷键支持
+        document.addEventListener('keydown', (e) => {
+            // ESC 键返回顶部
+            if (e.key === 'Escape') {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+
+            // 数字键快速导航
+            const sections = ['overview', 'user-main', 'filter', 'activity-detail', 'flexible-time', 'market', 'guide', 'admin', 'api', 'data', 'requirements-log'];
+            const num = parseInt(e.key);
+            if (num >= 1 && num <= sections.length) {
+                scrollToSection(sections[num - 1]);
+            }
+        });
+
+        // 打印功能
+        document.addEventListener('keydown', (e) => {
+            if (e.ctrlKey && e.key === 'p') {
+                e.preventDefault();
+                window.print();
+            }
+        });
+
+        console.log('%c清迈活动平台需求文档', 'color: #667eea; font-size: 20px; font-weight: bold;');
+        console.log('%c快捷键提示:', 'color: #333; font-size: 14px; font-weight: bold;');
+        console.log('  1-9: 快速跳转到对应章节');
+        console.log('  ESC: 返回顶部');
+        console.log('  Ctrl+P: 打印文档');
+    </script>
+</body>
+</html>

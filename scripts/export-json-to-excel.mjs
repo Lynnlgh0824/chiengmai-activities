@@ -37,7 +37,7 @@ const columnOrder = [
     '活动编号', '活动标题', '分类', '地点', '价格',
     '时间', '持续时间', '时间信息', '星期', '序号',
     '最低价格', '最高价格', '最大人数', '描述',
-    '灵活时间', '状态', '需要预约', 'id'
+    '灵活时间', '状态', '需要预约'
 ];
 
 // 转换为 Excel 格式
@@ -59,8 +59,7 @@ const excelData = items.map(item => ({
     '描述': item.description || '',
     '灵活时间': item.flexibleTime || '否',
     '状态': item.status || '草稿',
-    '需要预约': item.requireBooking || '是',
-    'id': String(item.id || '')
+    '需要预约': item.requireBooking || '是'
 }));
 
 // 创建工作表
@@ -73,8 +72,8 @@ const worksheet = XLSX.utils.json_to_sheet(excelData, {
 const colWidths = [
     { wch: 12 }, { wch: 30 }, { wch: 12 }, { wch: 30 }, { wch: 18 },
     { wch: 18 }, { wch: 15 }, { wch: 15 }, { wch: 20 }, { wch: 8 },
-    { wch: 12 }, { wch: 12 }, { wch: 12 }, { wch: 40 }, { wch: 12 },
-    { wch: 12 }, { wch: 12 }, { wch: 18 }
+    { wch: 12 }, { wch: 12 }, { wch: 12 }, { wch: 50 }, // 描述列加宽
+    { wch: 12 }, { wch: 12 }, { wch: 12 }
 ];
 worksheet['!cols'] = colWidths;
 

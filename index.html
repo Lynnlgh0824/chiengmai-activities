@@ -3,7 +3,39 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>清迈活动平台 - Chiengmai Activities</title>
+    <!-- 强制不缓存 -->
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <title>清迈活动平台 v1.0.7 - Chiengmai Activities Platform</title>
+
+    <!-- H5模式检测 -->
+    <script>
+    (function() {
+        // 检测URL参数
+        const urlParams = new URLSearchParams(window.location.search);
+        const mode = urlParams.get('mode');
+
+        // 检测User-Agent（移动设备）
+        const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+
+        // H5模式：URL参数指定或自动检测为移动设备
+        const isH5Mode = mode === 'h5' || (mode === null && isMobile);
+
+        // 保存模式到全局变量
+        window.CHIENGMAI_MODE = isH5Mode ? 'h5' : 'pc';
+        window.CHIENGMAI_IS_MOBILE = isMobile;
+
+        // 添加模式标识到body
+        document.addEventListener('DOMContentLoaded', function() {
+            document.body.classList.add('mode-' + window.CHIENGMAI_MODE);
+            if (isMobile) {
+                document.body.classList.add('is-mobile');
+            }
+            console.log('🔍 检测到显示模式:', window.CHIENGMAI_MODE.toUpperCase(), '| 移动设备:', isMobile);
+        });
+    })();
+    </script>
     <style>
         * {
             margin: 0;
@@ -42,6 +74,7 @@
             margin: 0;
             white-space: nowrap;
         }
+
 
         .search-section {
             flex: 1;
@@ -214,6 +247,8 @@
             display: flex;
             align-items: center;
             gap: 6px;
+            flex-shrink: 0; /* 防止tab被压缩 */
+            min-width: fit-content; /* 确保tab有最小宽度 */
         }
 
         .tab-item:hover {
@@ -233,6 +268,159 @@
         .tab-content {
             padding: 20px;
             min-height: 400px;
+        }
+
+        /* 攻略信息内容样式（与后台编辑器保持一致） */
+        .guide-content {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            font-size: 13px;
+            line-height: 1.6;
+            color: #333;
+            padding: 12px 20px;
+        }
+
+        /* 攻略Tab的guide-content特殊样式 */
+        #tab-4 .guide-content {
+            padding: 12px 20px;
+        }
+
+        /* 日期详情标题栏 - 移动端固定顶部 */
+        .day-detail-header {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 12px 16px;
+            border-radius: 8px;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+        }
+
+        .day-back-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 6px;
+            color: white;
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 18px;
+            flex-shrink: 0;
+        }
+
+        .day-back-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: scale(1.05);
+        }
+
+        .day-back-btn:active {
+            transform: scale(0.95);
+        }
+
+        .day-detail-title {
+            flex: 1;
+            font-size: 16px;
+            font-weight: 600;
+            text-align: center;
+        }
+
+        .day-detail-content {
+            animation: slideUp 0.3s ease;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .guide-content h1 {
+            font-size: 15px !important;
+            font-weight: 600 !important;
+            margin: 12px 0 6px 0 !important;
+            line-height: 1.4 !important;
+            color: #333 !important;
+        }
+
+        .guide-content h2 {
+            font-size: 14px !important;
+            font-weight: 600 !important;
+            margin: 10px 0 6px 0 !important;
+            line-height: 1.4 !important;
+            color: #333 !important;
+        }
+
+        .guide-content h3 {
+            font-size: 14px !important;
+            font-weight: 600 !important;
+            margin: 10px 0 6px 0 !important;
+            line-height: 1.4 !important;
+            color: #333 !important;
+        }
+
+        .guide-content p {
+            margin: 6px 0 !important;
+            line-height: 1.6 !important;
+            font-size: 13px !important;
+            color: #333 !important;
+        }
+
+        .guide-content ul, .guide-content ol {
+            margin: 6px 0 !important;
+            padding-left: 20px !important;
+        }
+
+        .guide-content li {
+            margin: 3px 0 !important;
+            line-height: 1.5 !important;
+            font-size: 13px !important;
+            color: #333 !important;
+        }
+
+        .guide-content strong {
+            font-weight: 600 !important;
+        }
+
+        .guide-content table {
+            border-collapse: collapse !important;
+            width: 100% !important;
+            margin: 10px 0 !important;
+            font-size: 13px !important;
+        }
+
+        .guide-content th, .guide-content td {
+            border: 1px solid #ddd !important;
+            padding: 6px 10px !important;
+            text-align: left !important;
+            line-height: 1.5 !important;
+            font-size: 13px !important;
+        }
+
+        .guide-content th {
+            background: #f5f5f5 !important;
+            font-weight: 600 !important;
+        }
+
+        /* 清除所有内联样式的字体大小和颜色 */
+        .guide-content * {
+            font-family: inherit !important;
+        }
+
+        .guide-content h1, .guide-content h2, .guide-content h3 {
+            font-size: inherit !important;
         }
 
         .tab-pane {
@@ -294,16 +482,21 @@
             border-radius: 6px;
             text-align: center;
             display: flex;
+            flex-direction: column;
             align-items: center;
             justify-content: center;
-            gap: 4px;
-            transition: all 0.3s ease;
+            gap: 2px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             cursor: pointer;
             -webkit-tap-highlight-color: transparent;
             touch-action: manipulation;
             position: relative;
             font-size: 13px;
             font-weight: 500;
+            line-height: 1.2;
+            min-width: 44px; /* 移动端最小点击宽度 */
+            min-height: 44px; /* 移动端最小点击高度 */
+            border: 2px solid transparent;
         }
 
         .date-cell-header:active {
@@ -316,6 +509,7 @@
             box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
         }
 
+        /* 统一的选中样式 - 蓝色渐变 + 加粗边框 */
         .date-cell-header.selected-day {
             background: linear-gradient(135deg, #667eea 0%, #5568d3 100%);
             color: white;
@@ -323,27 +517,19 @@
             box-shadow: 0 4px 12px rgba(102, 126, 234, 0.6);
             transform: scale(1.08);
             animation: selectPulse 0.3s ease;
+            border: 2px solid #667eea;
         }
 
-        .date-cell-header.selected-day::after {
-            content: '✓';
-            margin-left: 4px;
-            font-size: 14px;
-            font-weight: 700;
-        }
-
-        /* 今天的高亮样式（默认状态，保持黄色） */
+        /* 今天的高亮样式 - 黄色边框指示 */
         .date-cell-header.today-header {
-            background: #ffc107;
-            color: white;
-            font-weight: bold;
-            box-shadow: 0 2px 8px rgba(255, 193, 7, 0.4);
+            border: 2px solid #ffc107;
         }
 
-        /* 今天且被选中（使用蓝色） */
+        /* 今天且被选中 - 保持蓝色选中，加粗黄色边框 */
         .date-cell-header.today-header.selected-day {
             background: linear-gradient(135deg, #667eea 0%, #5568d3 100%);
-            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.6);
+            border: 3px solid #ffc107;
+            box-shadow: 0 4px 16px rgba(102, 126, 234, 0.8), 0 0 0 2px rgba(255, 193, 7, 0.3);
         }
 
         @keyframes selectPulse {
@@ -427,7 +613,7 @@
             border-radius: 8px;
             padding: 12px;
             min-height: 100px;
-            transition: all 0.3s ease;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             cursor: pointer;
             position: relative;
         }
@@ -438,35 +624,25 @@
             box-shadow: 0 4px 12px rgba(102, 126, 234, 0.2);
         }
 
-        /* 选中的日期样式 */
+        /* 选中的日期样式 - 统一样式 */
         .day-cell.selected-day {
             border-color: #667eea;
             background: linear-gradient(135deg, #f0f4ff 0%, #e8eeff 100%);
             box-shadow: 0 4px 16px rgba(102, 126, 234, 0.3);
+            border-width: 2px;
         }
 
-        .day-cell.selected-day::before {
-            content: '✓';
-            position: absolute;
-            top: 8px;
-            right: 8px;
-            font-size: 18px;
-            color: #667eea;
-            font-weight: bold;
-        }
-
-        /* 今天的日期单元格（默认状态，保持黄色） */
+        /* 今天的日期单元格 - 黄色边框指示 */
         .day-cell.today {
-            background: linear-gradient(135deg, #fff9e6 0%, #fff3cd 100%);
             border-color: #ffc107;
-            box-shadow: 0 2px 8px rgba(255, 193, 7, 0.3);
+            border-width: 2px;
         }
 
-        /* 今天且被选中（使用蓝色） */
+        /* 今天且被选中 - 蓝色选中 + 黄色外发光 */
         .day-cell.today.selected-day {
             background: linear-gradient(135deg, #eef2ff 0%, #e0e7ff 100%);
-            border-color: #667eea;
-            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+            border: 2px solid #667eea;
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4), 0 0 0 2px rgba(255, 193, 7, 0.3);
         }
 
         /* 点击提示 */
@@ -487,31 +663,20 @@
             margin: 6px 0;
             text-align: center;
             position: relative;
-            padding-right: 16px;
-        }
-
-        /* 添加可点击提示图标 */
-        .day-name::after {
-            content: '👆';
-            position: absolute;
-            right: 0;
-            top: 50%;
-            transform: translateY(-50%);
-            font-size: 10px;
-            opacity: 0;
-            transition: opacity 0.2s;
-        }
-
-        .day-cell:not(.dimmed):hover .day-name::after {
-            opacity: 0.5;
+            padding-right: 0;
         }
 
         .day-cell.today .day-name {
-            color: #ff6b6b;
+            color: #d4a017;
             font-weight: 700;
         }
 
         .day-cell.selected-day .day-name {
+            color: #667eea;
+            font-weight: 700;
+        }
+
+        .day-cell.today.selected-day .day-name {
             color: #667eea;
         }
 
@@ -560,14 +725,14 @@
         .schedule-list {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 16px;
+            gap: 12px; /* 减少间距使列表更紧凑 */
         }
 
         .schedule-item {
             background: white;
             border: 1px solid #e0e0e0;
             border-radius: 8px;
-            padding: 16px;
+            padding: 12px; /* 减少padding使列表更紧凑 */
         }
 
         .schedule-item-header {
@@ -645,7 +810,7 @@
             font-size: 16px;
             font-weight: 600;
             color: #333;
-            margin-bottom: 8px;
+            margin-bottom: 6px; /* 减少间距 */
         }
 
         .schedule-item-meta {
@@ -895,22 +1060,105 @@
             background: rgba(255, 255, 255, 0.3);
         }
 
+        /* 关键信息卡片 */
+        .modal-key-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 12px;
+            margin: 12px 20px 20px 20px; /* 适中的上边距，与标题分隔 */
+            padding: 16px;
+            background: linear-gradient(135deg, #f8f9ff 0%, #f0f4ff 100%);
+            border-radius: 8px;
+            border: 1px solid #e0e7ff;
+        }
+
+        .info-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+        }
+
+        .info-icon {
+            font-size: 20px;
+            line-height: 1;
+            flex-shrink: 0;
+        }
+
+        .info-text {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .info-text strong {
+            display: block;
+            font-size: 11px;
+            color: #764ba2;
+            margin-bottom: 2px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .info-text > div {
+            font-size: 13px;
+            color: #333;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+            word-break: break-word; /* 改进中文换行 */
+            line-height: 1.5;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        /* 模态框分节 */
+        .modal-section {
+            margin-bottom: 16px;
+        }
+
+        .section-title {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #333;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .section-content {
+            font-size: 14px;
+            line-height: 1.6;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+            word-break: break-word; /* 改进中文换行 */
+        }
+
         .modal-body {
             padding: 20px;
         }
 
         .modal-info-row {
             display: flex;
-            align-items: center;
+            align-items: flex-start;
             gap: 8px;
             margin-bottom: 12px;
             font-size: 14px;
             color: #666;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
         }
 
         .modal-info-row strong {
             color: #333;
             min-width: 60px;
+            flex-shrink: 0;
+        }
+
+        .modal-info-row span {
+            flex: 1;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+            word-break: break-word; /* 改进中文换行 */
+            white-space: pre-wrap;
         }
 
         .modal-description {
@@ -921,13 +1169,62 @@
             font-size: 14px;
             line-height: 1.6;
             color: #666;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+            word-break: break-word; /* 改进中文换行 */
+            white-space: pre-wrap;
         }
 
-        /* 弹窗底部链接按钮 */
+        /* 弹窗底部按钮区域 */
         .modal-footer {
-            margin-top: 20px;
-            padding-top: 16px;
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+            margin-top: 32px;
+            padding: 16px 20px;
             border-top: 1px solid #e0e0e0;
+            background: #fafafa;
+        }
+
+        /* 主按钮 */
+        .btn-primary {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 10px 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-decoration: none;
+            border: none;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(135deg, #5568d3 0%, #653a8a 100%);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+        }
+
+        /* 次要按钮 */
+        .btn-secondary {
+            padding: 10px 20px;
+            background: white;
+            color: #666;
+            border: 1px solid #e0e0e0;
+            border-radius: 6px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .btn-secondary:hover {
+            background: #f5f5f5;
+            border-color: #ccc;
         }
 
         .modal-link-btn {
@@ -977,13 +1274,27 @@
 
         .modal-category-badge {
             display: inline-block;
-            padding: 4px 12px;
-            background: #667eea;
+            padding: 6px 14px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
-            border-radius: 12px;
-            font-size: 12px;
+            border-radius: 16px;
+            font-size: 13px;
             font-weight: 500;
-            margin-bottom: 12px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(102, 126, 234, 0.25);
+
+            /* 文案展示优化 */
+            letter-spacing: 0.5px;           /* 字间距，提升可读性 */
+            line-height: 1.4;                 /* 行高，确保文字垂直居中 */
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.15);  /* 文字阴影，增加深度感 */
+            -webkit-font-smoothing: antialiased;         /* 字体平滑渲染，更清晰 */
+            -moz-osx-font-smoothing: grayscale;          /* macOS字体平滑 */
+            transition: all 0.2s ease;                    /* 平滑过渡动画 */
+        }
+
+        .modal-category-badge:hover {
+            transform: translateY(-1px);     /* 悬停微抬效果 */
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.35);  /* 悬停时加深阴影 */
         }
 
         .note {
@@ -1010,19 +1321,41 @@
             .container {
                 border-radius: 0;
                 box-shadow: none;
+                /* 移动端不需要padding-top，因为header是fixed的 */
+                padding-top: 0 !important;
             }
 
-            /* 头部优化 */
+            /* ========== 方案A: 搜索框固定在最顶部 ========== */
             .header {
+                position: fixed !important;
+                top: 0 !important;
+                left: 0 !important;
+                right: 0 !important;
+                z-index: 1001 !important;
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
                 flex-direction: column;
                 align-items: stretch;
-                gap: 12px;
-                padding: 16px 20px;
+                gap: 8px;
+                padding: 8px 12px;
+                box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
             }
 
             .header h1 {
-                font-size: 20px;
+                font-size: 16px;
                 text-align: center;
+                margin: 0;
+                padding: 0;
+                line-height: 1.2;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                /* 移动端隐藏标题，节省空间 */
+                display: none;
+            }
+
+            /* 筛选区域取消margin-top，改用container的padding-top */
+            .filter-section {
+                margin-top: 0 !important;
             }
 
             /* 移动端搜索优化 - 单行布局 */
@@ -1030,17 +1363,30 @@
                 max-width: 100%;
                 width: 100%;
                 flex-direction: row;
-                align-items: stretch;
+                align-items: center; /* 改为center确保垂直居中 */
                 gap: 8px;
             }
 
             .search-input-wrapper {
                 flex: 1;
-                padding: 10px 48px 10px 12px; /* 为搜索按钮留出空间，增加高度 */
+                position: relative; /* 确保relative定位 */
+                display: flex;
+                align-items: center;
+                background: rgba(255, 255, 255, 0.98); /* 增加不透明度 */
+                border-radius: 8px;
+                padding: 8px 12px; /* 减小padding */
+                min-height: 44px; /* iOS推荐最小触摸尺寸 */
+                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* 添加轻微阴影 */
             }
 
             .search-input {
                 font-size: 15px; /* 移动端增大字体 */
+                flex: 1;
+                border: none;
+                background: transparent;
+                padding: 0;
+                margin: 0;
+                min-width: 0; /* 防止内容溢出 */
             }
 
             /* 移动端显示图标按钮，隐藏文字按钮 */
@@ -1050,6 +1396,19 @@
 
             .search-icon-btn {
                 display: flex;
+                width: 44px; /* iOS推荐最小触摸尺寸 */
+                height: 44px;
+                min-width: 44px;
+                min-height: 44px;
+                font-size: 20px;
+            }
+
+            /* 搜索清除按钮优化 */
+            .search-clear-btn {
+                width: 44px;
+                height: 44px;
+                font-size: 24px;
+                line-height: 44px;
             }
 
             /* 筛选区域优化 */
@@ -1096,17 +1455,65 @@
                 gap: 2px;
             }
 
-            /* 日历网格改为单列卡片或优化显示 */
+            /* 周标题和导航按钮 - 移动端优化 */
+            .nav-row {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 8px;
+            }
+
+            .month-label {
+                font-size: 15px;
+                font-weight: 600;
+                color: #333;
+                text-align: center;
+                padding: 8px;
+                background: #f5f5f5;
+                border-radius: 8px;
+            }
+
+            .nav-buttons {
+                display: flex;
+                gap: 6px;
+                justify-content: space-between;
+            }
+
+            .nav-btn {
+                flex: 1;
+                padding: 8px 4px;
+                font-size: 12px;
+                min-height: 36px;
+                white-space: nowrap;
+            }
+
+            /* 日历网格 - 水平滚动保留7列（周视图） */
+            .calendar-wrapper {
+                overflow-x: auto;
+                overflow-y: visible;
+                scroll-snap-type: x mandatory;
+                -webkit-overflow-scrolling: touch;
+                padding: 0 16px;
+                margin: 0 -16px; /* 抵消父元素的padding */
+            }
+
             .calendar-grid {
-                grid-template-columns: 1fr;
+                display: flex;
                 gap: 12px;
+                width: max-content;
+                padding: 8px 16px;
             }
 
             .day-cell {
-                min-height: auto;
+                min-width: 80vw; /* 每天占据80%屏幕宽度 */
+                max-width: 320px;
+                scroll-snap-align: center;
+                flex-shrink: 0;
+                border: 1px solid #e0e0e0;
+                border-radius: 8px;
                 padding: 12px;
                 -webkit-tap-highlight-color: transparent;
                 touch-action: manipulation;
+                background: white;
             }
 
             .day-cell:active {
@@ -1123,6 +1530,74 @@
                 padding: 8px 10px;
                 font-size: 12px;
                 /* 移动端使用统一的间隔 */
+            }
+
+            /* 移动端弹窗优化 */
+            .modal {
+                width: 95vw;
+                max-width: 420px;
+                max-height: 85vh;
+                overflow-y: auto;
+                /* 移除冲突的定位属性，使用flexbox居中 */
+            }
+
+            .modal-close {
+                width: 44px;
+                height: 44px;
+                font-size: 24px;
+                line-height: 44px;
+            }
+
+            .modal-key-info {
+                grid-template-columns: 1fr;
+                gap: 8px;
+            }
+
+            .modal-body {
+                padding: 16px;
+                font-size: 14px;
+            }
+
+            .info-text > div,
+            .section-content {
+                word-break: break-all; /* 移动端强制换行 */
+                overflow-wrap: break-word;
+                line-height: 1.6;
+            }
+
+            .modal-title {
+                font-size: 18px;
+                word-break: break-word;
+                overflow-wrap: break-word;
+            }
+
+            .modal-description,
+            .modal-info-row {
+                font-size: 14px;
+                word-break: break-all; /* 移动端强制长单词换行 */
+                line-height: 1.6;
+            }
+
+            /* 触摸滚动优化 */
+            .modal {
+                -webkit-overflow-scrolling: touch;
+            }
+
+            .modal-overlay {
+                -webkit-overflow-scrolling: touch;
+            }
+
+            .modal-footer {
+                flex-direction: column;
+                gap: 16px; /* H5端增加按钮间距 */
+                padding: 20px; /* 增加内边距 */
+            }
+
+            .btn-primary,
+            .btn-secondary {
+                width: 100%;
+                text-align: center;
+                justify-content: center;
             }
 
             /* 列表视图优化 */
@@ -1150,13 +1625,7 @@
                 min-height: 28px;
             }
 
-            /* 弹窗优化 */
-            .modal {
-                width: 95%;
-                max-height: 85vh;
-                margin: 10px auto;
-            }
-
+            /* 弹窗头部和主体优化 */
             .modal-header {
                 padding: 16px;
             }
@@ -1184,15 +1653,139 @@
             }
 
             .tab-item {
-                padding: 12px 16px;
-                font-size: 14px;
-                white-space: nowrap;
+                padding: 10px 12px;
+                font-size: 13px;
+                white-space: normal; /* 允许文本换行 */
+                text-align: center;
+                line-height: 1.3;
+                min-width: 60px;
+                flex-direction: column; /* 图标和文本垂直排列 */
+                gap: 4px;
+            }
+
+            .tab-item .tab-icon {
+                font-size: 16px;
             }
 
             /* 结果统计优化 */
             .results-count {
                 padding: 10px 16px;
                 font-size: 13px;
+            }
+
+            /* ========== Tab导航固定在搜索框下方 ========== */
+            .tabs-nav {
+                position: fixed !important;
+                top: 65px !important; /* 搜索框高度（约65px） */
+                left: 0 !important;
+                right: 0 !important;
+                z-index: 1000 !important;
+                background: white;
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+                white-space: nowrap;
+                box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+            }
+
+            .tab-item {
+                flex-shrink: 0;
+            }
+
+            /* ========== 日历头部固定在Tab导航下方 ========== */
+            .calendar-header {
+                position: fixed !important;
+                top: 115px !important; /* 搜索框65px + Tab导航50px */
+                left: 0 !important;
+                right: 0 !important;
+                z-index: 999 !important;
+                background: white;
+                padding: 12px 16px 8px 16px;
+                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            }
+
+            /* ========== 内容区适配所有固定元素 ========== */
+            .tab-pane {
+                padding-top: 120px !important; /* 搜索框65px + Tab导航约50px + 适当间距 */
+            }
+
+            /* 攻略信息Tab没有日历头部，使用更小的padding */
+            #tab-4.tab-pane {
+                padding-top: 115px !important; /* 搜索框65px + Tab导航约50px */
+            }
+
+            /* ========== 移动端间距优化 ========== */
+            /* 减少全局容器间距 */
+            .container {
+                padding-left: 8px !important;
+                padding-right: 8px !important;
+            }
+
+            /* 优化筛选栏和结果栏间距 */
+            .filter-section {
+                padding: 8px 12px !important;
+                margin-bottom: 4px !important;
+            }
+
+            .results-count {
+                padding: 6px 12px !important;
+                margin-top: 4px !important;
+                margin-bottom: 4px !important;
+                font-size: 12px !important;
+            }
+
+            /* 优化日期单元格间距 */
+            .day-cell {
+                padding: 8px !important;
+                margin-bottom: 6px !important;
+            }
+
+            /* 优化活动卡片间距 */
+            .activity-card {
+                margin-bottom: 6px !important;
+            }
+
+            .activity-chip {
+                padding: 6px 8px !important;
+                margin-bottom: 4px !important;
+                font-size: 11px !important;
+            }
+
+            /* 优化日历头部间距 */
+            .calendar-header {
+                padding: 8px 12px 6px 12px !important;
+                margin-bottom: 6px !important;
+            }
+
+            .nav-row {
+                margin-bottom: 8px !important;
+            }
+
+            .nav-btn {
+                padding: 6px 10px !important;
+                font-size: 12px !important;
+                margin: 0 2px !important;
+            }
+
+            /* 优化日期表头间距 */
+            .date-grid-header {
+                padding: 4px 8px !important;
+                gap: 6px !important;
+            }
+
+            .date-cell-header {
+                padding: 6px 8px !important;
+                min-width: 40px !important;
+                font-size: 11px !important;
+            }
+
+            /* 优化列表视图间距 */
+            .schedule-list {
+                padding: 4px !important;
+            }
+
+            .schedule-item {
+                padding: 8px 10px !important;
+                margin-bottom: 6px !important;
             }
         }
 
@@ -1211,6 +1804,81 @@
                 padding: 4px 8px;
                 font-size: 11px;
             }
+        }
+
+        /* ========== PC端响应式优化 ========== */
+
+        /* 小屏幕笔记本优化 (13-14寸) */
+        @media (max-height: 800px) and (min-width: 1024px) {
+            .day-cell {
+                min-height: 80px !important;
+                padding: 8px !important;
+            }
+
+            .activity-card {
+                padding: 4px 6px !important;
+                margin-bottom: 3px !important;
+                font-size: 12px;
+            }
+
+            .activity-title {
+                font-size: 12px;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+            }
+
+            .day-name {
+                font-size: 13px;
+            }
+
+            .day-date {
+                font-size: 11px;
+            }
+        }
+
+        /* 大屏幕优化 (1400px+) */
+        @media (min-width: 1400px) {
+            .container {
+                max-width: 1400px;
+                margin: 0 auto;
+            }
+
+            .day-cell {
+                min-height: 120px !important;
+                padding: 14px;
+            }
+
+            .activity-card {
+                padding: 8px 10px;
+            }
+        }
+
+        /* 超宽屏优化 (1920px+) */
+        @media (min-width: 1920px) {
+            .container {
+                max-width: 1600px;
+            }
+
+            .day-cell {
+                min-height: 140px !important;
+                padding: 16px;
+            }
+
+            .activity-card {
+                padding: 10px 12px;
+                font-size: 14px;
+            }
+        }
+
+        /* 活动卡片hover优化 */
+        .activity-card {
+            transition: all 0.2s ease;
+        }
+
+        .activity-card:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 2px 6px rgba(0,0,0,0.12);
         }
     </style>
 </head>
@@ -1279,21 +1947,33 @@
             </div>
         </div>
 
-        <!-- Tab导航（只有2个Tab） -->
+        <!-- Tab导航（5个Tab） -->
         <div class="tabs-nav">
             <div class="tab-item active" onclick="switchTab(0)">
                 <span class="tab-icon">📅</span>
-                <span>日历视图</span>
+                <span>兴趣班</span>
             </div>
             <div class="tab-item" onclick="switchTab(1)">
                 <span class="tab-icon">📋</span>
-                <span>列表视图</span>
+                <span>市集</span>
+            </div>
+            <div class="tab-item" onclick="switchTab(2)">
+                <span class="tab-icon">⏰</span>
+                <span>灵活时间活动</span>
+            </div>
+            <div class="tab-item" onclick="switchTab(3)">
+                <span class="tab-icon">🏪</span>
+                <span>活动网站</span>
+            </div>
+            <div class="tab-item" onclick="switchTab(4)">
+                <span class="tab-icon">📖</span>
+                <span>攻略信息</span>
             </div>
         </div>
 
         <!-- Tab内容 -->
         <div class="tab-content">
-            <!-- 日历Tab -->
+            <!-- 兴趣班Tab -->
             <div id="tab-0" class="tab-pane active">
                 <div class="calendar-header">
                     <div class="nav-row">
@@ -1304,7 +1984,7 @@
                             <button class="nav-btn" onclick="navigateWeek(1)">下一周 →</button>
                         </div>
                     </div>
-                    <div class="date-grid-header">
+                    <div class="date-grid-header" id="dateGridHeader">
                         <!-- 日期表头将通过 JavaScript 动态生成 -->
                     </div>
                 </div>
@@ -1314,10 +1994,57 @@
                 </div>
             </div>
 
-            <!-- 列表Tab -->
+            <!-- 市集Tab -->
             <div id="tab-1" class="tab-pane">
-                <div class="schedule-list" id="scheduleList">
+                <div class="calendar-header">
+                    <div class="nav-row">
+                        <div class="month-label">本周市集</div>
+                        <div class="nav-buttons">
+                            <button class="nav-btn" onclick="navigateWeek(-1)">← 上一周</button>
+                            <button class="nav-btn" onclick="goToThisWeek()">回到本周</button>
+                            <button class="nav-btn" onclick="navigateWeek(1)">下一周 →</button>
+                        </div>
+                    </div>
+                    <div class="date-grid-header" id="dateGridHeaderMarket">
+                        <!-- 日期表头将通过 JavaScript 动态生成 -->
+                    </div>
+                </div>
+
+                <div class="calendar-grid" id="calendarGridMarket">
+                    <!-- 动态生成日历内容 -->
+                </div>
+            </div>
+
+            <!-- 灵活时间活动Tab -->
+            <div id="tab-2" class="tab-pane">
+                <div class="calendar-header">
+                    <div class="nav-row">
+                        <div class="month-label">灵活时间活动</div>
+                    </div>
+                </div>
+                <div class="schedule-list" id="flexibleList">
                     <!-- 动态生成列表内容 -->
+                </div>
+            </div>
+
+            <!-- 活动网站Tab -->
+            <div id="tab-3" class="tab-pane">
+                <div class="calendar-header">
+                    <div class="nav-row">
+                        <div class="month-label">活动网站</div>
+                    </div>
+                </div>
+                <div class="websites-container" id="websitesContainer">
+                    <!-- 动态生成网站链接 -->
+                </div>
+            </div>
+
+            <!-- 攻略信息Tab -->
+            <div id="tab-4" class="tab-pane">
+                <div class="guide-content" id="guideContent" style="padding-top: 12px;">
+                    <!-- 动态加载攻略内容 -->
+                </div>
+            </div>
                 </div>
             </div>
         </div>
@@ -1342,49 +2069,165 @@
             </div>
         </div>
 
-        <!-- 活动详情弹窗 -->
+        <!-- 活动详情弹窗 - 优化后的层级结构 -->
         <div class="modal-overlay" id="activityModal">
             <div class="modal">
+                <!-- 头部：活动标题 -->
                 <div class="modal-header">
-                    <div class="modal-title" id="modalTitle">活动标题</div>
-                    <button class="modal-close" onclick="closeModal()">✕</button>
+                    <h2 class="modal-title" id="modalTitle">活动标题</h2>
+                    <button class="modal-close" onclick="closeModal()">×</button>
                 </div>
+
+                <!-- 关键信息卡片 -->
+                <div class="modal-key-info">
+                    <div class="info-item">
+                        <span class="info-icon">⏰</span>
+                        <div class="info-text">
+                            <strong>时间</strong>
+                            <div id="modalTime">08:30-09:45</div>
+                        </div>
+                    </div>
+
+                    <div class="info-item">
+                        <span class="info-icon">📍</span>
+                        <div class="info-text">
+                            <strong>地点</strong>
+                            <div id="modalLocation">地点名称</div>
+                        </div>
+                    </div>
+
+                    <div class="info-item">
+                        <span class="info-icon">💰</span>
+                        <div class="info-text">
+                            <strong>价格</strong>
+                            <div id="modalPrice">免费</div>
+                        </div>
+                    </div>
+
+                    <div class="info-item" id="modalDurationItem" style="display: none;">
+                        <span class="info-icon">⏱️</span>
+                        <div class="info-text">
+                            <strong>时长</strong>
+                            <div id="modalDuration">1小时</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 内容区域 -->
                 <div class="modal-body">
+                    <!-- 分类标签 -->
                     <span class="modal-category-badge" id="modalCategory">分类</span>
-                    <div class="modal-info-row">
-                        <strong>📍 地点:</strong>
-                        <span id="modalLocation">地点名称</span>
+
+                    <!-- 活动详情 -->
+                    <div class="modal-section">
+                        <h3 class="section-title">📝 活动详情</h3>
+                        <div class="section-content" id="modalDescription">
+                            活动描述内容...
+                        </div>
                     </div>
-                    <div class="modal-info-row">
-                        <strong>⏰ 时间:</strong>
-                        <span id="modalTime">08:30-09:45</span>
-                    </div>
-                    <div class="modal-info-row">
-                        <strong>💰 价格:</strong>
-                        <span id="modalPrice">免费</span>
-                    </div>
-                    <div class="modal-info-row">
+
+                    <!-- 频率信息 -->
+                    <div class="modal-info-row" id="modalFrequencyRow" style="display: none;">
                         <strong>📅 频率:</strong>
                         <span id="modalFrequency">每周</span>
                     </div>
-                    <div class="modal-description" id="modalDescription">
-                        活动描述内容...
-                    </div>
-
-                    <!-- 链接按钮（仅在活动有链接时显示） -->
-                    <div class="modal-footer" id="modalFooter" style="display: none;">
-                        <a id="modalLinkButton" href="#" target="_blank" class="modal-link-btn">
-                            <span class="btn-icon">🔗</span>
-                            <span class="btn-text">查看详情</span>
-                            <span class="btn-arrow">→</span>
-                        </a>
-                    </div>
                 </div>
+
+                <!-- 底部操作按钮 -->
+                <div class="modal-footer" id="modalFooter" style="display: none;">
+                    <button class="btn-secondary" onclick="closeModal()">关闭</button>
+                    <a id="modalLinkButton" href="#" target="_blank" class="btn-primary">
+                        查看官网 →
+                    </a>
+                </div>
+            </div>
+        </div>
             </div>
         </div>
     </div>
 
     <script>
+        // =====================================================
+        // 应用版本管理
+        // =====================================================
+
+        /**
+         * 从API获取应用版本号
+         */
+        async function getAppVersion() {
+            try {
+                const response = await fetch('/app/version');
+                const result = await response.json();
+                if (result.success) {
+                    return result.version;
+                }
+                return 'v1.0.0'; // 默认版本
+            } catch (error) {
+                console.warn('无法获取应用版本，使用默认版本');
+                return 'v1.0.0';
+            }
+        }
+
+        /**
+         * 检查应用版本并提示用户刷新
+         */
+        async function checkAppVersion() {
+            const APP_VERSION = await getAppVersion();
+            const storedVersion = localStorage.getItem('chiengmai_app_version');
+
+            // 如果版本不同，提示用户刷新
+            if (storedVersion && storedVersion !== APP_VERSION) {
+                console.log('🔄 应用版本已更新:', storedVersion, '→', APP_VERSION);
+
+                // 显示版本更新提示
+                const versionNotice = document.createElement('div');
+                versionNotice.style.cssText = `
+                    position: fixed;
+                    top: 0;
+                    left: 0;
+                    right: 0;
+                    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                    color: white;
+                    padding: 12px 20px;
+                    text-align: center;
+                    font-size: 14px;
+                    font-weight: 600;
+                    box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+                    z-index: 99999;
+                    animation: slideDown 0.3s ease-out;
+                `;
+                versionNotice.innerHTML = `
+                    🎉 应用已更新到 ${APP_VERSION}
+                    <span style="margin-left: 20px; cursor: pointer; opacity: 0.9;" onclick="this.parentElement.remove()">✕ 关闭</span>
+                `;
+                document.body.appendChild(versionNotice);
+
+                // 滑入动画
+                const style = document.createElement('style');
+                style.textContent = `
+                    @keyframes slideDown {
+                        from { transform: translateY(-100%); }
+                        to { transform: translateY(0); }
+                    }
+                `;
+                document.head.appendChild(style);
+
+                // 5秒后自动消失
+                setTimeout(() => {
+                    if (versionNotice.parentElement) {
+                        versionNotice.remove();
+                    }
+                }, 10000); // 10秒后消失
+            }
+
+            // 保存当前版本
+            localStorage.setItem('chiengmai_app_version', APP_VERSION);
+
+            console.log('📦 当前应用版本:', APP_VERSION);
+            console.log('💡 提示: 如遇到显示问题，请强制刷新页面（Ctrl+Shift+R 或 Cmd+Shift+R）');
+        }
+
+        // =====================================================
         // =====================================================
         // 数据获取
         // =====================================================
@@ -1403,7 +2246,14 @@
         // 保存当前周的日期数据（全局，供其他函数使用）
         let weekDates = [];
 
+        // 当前周的偏移量（0=本周, -1=上周, 1=下周）
+        let currentWeekOffset = 0;
+
         const dayNames = ['周日', '周一', '周二', '周三', '周四', '周五', '周六'];
+
+        // 兴趣班Tab包含的分类（白名单）
+        const interestCategories = ['瑜伽', '冥想', '舞蹈', '泰拳', '音乐', '文化艺术', '健身'];
+
         const categoryColors = {
             '瑜伽': '#FF6B6B',
             '冥想': '#4ECDC4',
@@ -1482,32 +2332,88 @@
         // 从 API 获取活动数据
         async function fetchActivities() {
             try {
-                const response = await fetch('http://localhost:3000/api/activities?limit=100');
+                const response = await fetch('http://localhost:3000/api/activities?limit=1000');
                 const result = await response.json();
 
                 if (result.success && result.data) {
-                    allActivities = result.data.map(item => ({
-                        id: item.id || item._id,
-                        name: item.title,
-                        title: item.title,
-                        category: item.category,
-                        price: item.price,
-                        location: item.location,
-                        time: item.time,
-                        description: item.description,
-                        day: parseDayFromWeekdays(item.weekdays),
-                        frequency: item.frequency || 'weekly',
-                        url: item.source?.url || ''
-                    }));
+                    // 处理活动数据：为每个星期创建单独的活动副本
+                    // 同时过滤掉暂停和草稿状态的活动
+                allActivities = [];
+                result.data.forEach(item => {
+                    // 过滤掉非"进行中"状态的活动
+                    if (item.status !== '进行中') {
+                        console.log('🚫 过滤活动:', item.title, '状态:', item.status);
+                        return; // 跳过suspended和draft状态的活动
+                    }
+                    const days = parseDaysFromWeekdays(item.weekdays);
+
+                    // 如果有多个星期，为每个星期创建一个副本
+                    if (days && days.length > 0) {
+                        days.forEach(day => {
+                          allActivities.push({
+                            id: item.id || item._id,
+                            originalId: item.id || item._id, // 保存原始ID用于详情查看
+                            name: item.title,
+                            title: item.title,
+                            category: item.category,
+                            price: item.price,
+                            location: item.location,
+                            time: item.time,
+                            description: item.description,
+                            day: day,
+                            frequency: item.frequency || 'weekly',
+                            source: item.source || null, // 保存完整的source对象
+                            flexibleTime: item.flexibleTime || '否'
+                          });
+                        });
+                      } else {
+                        // 没有星期信息或临时活动，保持原样
+                        allActivities.push({
+                          id: item.id || item._id,
+                          name: item.title,
+                          title: item.title,
+                          category: item.category,
+                          price: item.price,
+                          location: item.location,
+                          time: item.time,
+                          description: item.description,
+                          day: null,
+                          frequency: 'once',
+                          source: item.source || null, // 保存完整的source对象
+                          flexibleTime: item.flexibleTime || '否'
+                        });
+                      }
+                });
+
+                console.log('📦 活动数据处理完成:');
+                console.log('  - API返回:', result.data.length, '个活动');
+                console.log('  - 创建副本:', allActivities.length, '个活动记录');
+                console.log('  - 按日期分布:');
+                for (let i = 0; i < 7; i++) {
+                  const count = allActivities.filter(a => a.day === i).length;
+                  const dayName = i === 0 ? '周日' : ['周一', '周二', '周三', '周四', '周五', '周六'][i-1];
+                  console.log(`    ${dayName}: ${count} 个活动`);
+                }
+
+                // 更新Tab数量
+                updateTabCounts();
 
                     // 初始化分类筛选器
                     initCategoryFilters();
 
-                    // 刷新 = 重置为"全部"状态，显示所有活动
+                    // 默认选中Tab 0（兴趣班）
+                    currentTab = 0;
+
+                    // 刷新 = 重置为"全部"状态，显示当前Tab的活动
                     // 不默认选中任何日期，让用户看到完整的周视图
                     currentFilters.day = null;
+                    currentFilters.category = '全部';
+                    currentFilters.price = '全部';
+                    currentFilters.search = '';
 
-                    // 渲染视图
+                    console.log('📍 默认选中Tab 0（兴趣班）');
+
+                    // 渲染视图（会根据currentTab自动筛选）
                     updateViews();
 
                     console.log('✅ 已加载', allActivities.length, '个活动');
@@ -1520,19 +2426,57 @@
             }
         }
 
-        // 解析 weekdays 数组获取 day 数字
-        function parseDayFromWeekdays(weekdays) {
-            if (!weekdays || !Array.isArray(weekdays)) return null;
+        // 解析 weekdays 数组获取所有 day 数字
+        function parseDaysFromWeekdays(weekdays) {
+            if (!weekdays || !Array.isArray(weekdays)) return [];
 
             const dayMap = { '周日': 0, '周一': 1, '周二': 2, '周三': 3, '周四': 4, '周五': 5, '周六': 6 };
+            const days = [];
 
-            // 返回第一个匹配的 day
+            // 返回所有匹配的 day
             for (let day of weekdays) {
                 if (dayMap[day] !== undefined) {
-                    return dayMap[day];
+                  days.push(dayMap[day]);
                 }
             }
-            return null;
+            return days;
+        }
+
+        // 解析 weekdays 数组获取 day 数字（保留原函数用于详情显示）
+        function parseDayFromWeekdays(weekdays) {
+            const days = parseDaysFromWeekdays(weekdays);
+            return days && days.length > 0 ? days[0] : null;
+        }
+
+        // 更新Tab数量显示（仅用于控制台调试）
+        function updateTabCounts() {
+            // 兴趣班：瑜伽、冥想、舞蹈、泰拳、音乐、文化艺术、健身
+            const interestCategories = ['瑜伽', '冥想', '舞蹈', '泰拳', '音乐', '文化艺术', '健身'];
+            const interestActivities = allActivities.filter(a =>
+                interestCategories.includes(a.category)
+            );
+
+            // 市集
+            const marketActivities = allActivities.filter(a =>
+                a.category === '市集'
+            );
+
+            // 灵活时间活动
+            const flexibleActivities = allActivities.filter(a =>
+                a.flexibleTime === '是' || a.time === '灵活时间'
+            );
+
+            // 活动网站：有source字段且包含url的活动
+            const websiteActivities = allActivities.filter(a =>
+                a.source && a.source.url && a.source.url.length > 0
+            );
+
+            console.log('📊 Tab数量统计（控制台）:');
+            console.log('  - 兴趣班:', interestActivities.length);
+            console.log('  - 市集:', marketActivities.length);
+            console.log('  - 灵活时间活动:', flexibleActivities.length);
+            console.log('  - 活动网站:', websiteActivities.length);
+            console.log('  - 攻略信息: 1 (页面)');
         }
 
         // 初始化分类筛选器
@@ -1555,14 +2499,70 @@
         function filterActivities() {
             let filtered = allActivities;
 
+            console.log('🔍 开始筛选, 当前筛选条件:', currentFilters);
+            console.log('📊 总活动数:', allActivities.length);
+
+            // 过滤掉暂停的活动
+            const beforeSuspendFilter = filtered.length;
+            filtered = filtered.filter(a => a.status !== 'suspended');
+            console.log(`⏸️ 暂停活动过滤: ${beforeSuspendFilter} → ${filtered.length} (排除 ${beforeSuspendFilter - filtered.length} 个)`);
+
+            // 根据当前Tab筛选数据
+            switch(currentTab) {
+                case 0: // 兴趣班 - 排除法：排除市集和灵活时间活动
+                    filtered = filtered.filter(a => {
+                        // 排除市集
+                        if (a.category === '市集') return false;
+                        // 排除灵活时间活动
+                        if (a.flexibleTime === '是' || a.time === '灵活时间') return false;
+                        return true;
+                    });
+                    console.log('📅 Tab筛选 - 兴趣班 (固定时间，排除市集):', filtered.length);
+                    break;
+
+                case 1: // 市集
+                    filtered = filtered.filter(a => a.category === '市集');
+                    console.log('📋 Tab筛选 - 市集:', filtered.length);
+                    break;
+
+                case 2: // 灵活时间活动
+                    filtered = filtered.filter(a => a.flexibleTime === '是' || a.time === '灵活时间');
+                    console.log('⏰ Tab筛选 - 灵活时间活动:', filtered.length);
+                    break;
+
+                case 3: // 活动网站
+                    console.log('🏪 Tab 3 筛选开始，总数:', filtered.length);
+                    const beforeFilter = filtered.length;
+                    filtered = filtered.filter(a => {
+                        const hasSource = a.source && a.source.url && a.source.url.length > 0;
+                        if (!hasSource && a.source) {
+                            console.log('  ⚠️', a.title, '有 source 但无 url:', a.source);
+                        }
+                        return hasSource;
+                    });
+                    console.log('🏪 Tab筛选 - 活动网站:', beforeFilter, '→', filtered.length);
+                    if (filtered.length > 0) {
+                        console.log('  前3个活动:', filtered.slice(0, 3).map(a => a.title));
+                    }
+                    break;
+
+                case 4: // 攻略信息 - 不需要筛选
+                    console.log('📖 Tab筛选 - 攻略信息: 无需筛选');
+                    return [];
+            }
+
             // 日期筛选
             if (currentFilters.day !== null) {
+                const beforeDayFilter = filtered.length;
                 filtered = filtered.filter(act => act.day === currentFilters.day);
+                console.log(`📅 日期筛选 (day=${currentFilters.day}): ${beforeDayFilter} → ${filtered.length}`);
             }
 
             // 分类筛选
             if (currentFilters.category !== '全部') {
+                const beforeCategoryFilter = filtered.length;
                 filtered = filtered.filter(act => act.category === currentFilters.category);
+                console.log(`🏷️ 分类筛选 (${currentFilters.category}): ${beforeCategoryFilter} → ${filtered.length}`);
             }
 
             // 价格筛选
@@ -1618,15 +2618,344 @@
             updateViews();
         }
 
-        function toggleDayFilter(day) {
-            if (currentFilters.day === day) {
-                // 再次点击取消筛选，显示所有活动
-                currentFilters.day = null;
-            } else {
-                // 点击其他日期，选中该日期
-                currentFilters.day = day;
+        // ========== H5周视图滚动自动选中功能 ==========
+
+        // 存储Intersection Observer实例，用于清理
+        let h5ScrollObserver = null;
+        let h5AutoSelectTimeout = null;
+        let lastSelectedDay = null;
+
+        // 存储滚动监听器，用于清理
+        let h5ScrollListener = null;
+        let h5ScrollHighlightTimeout = null;
+
+        /**
+         * 初始化H5周视图的滚动自动选中功能
+         * @param {string} gridId - 网格容器ID
+         */
+        function initH5ScrollAutoSelect(gridId) {
+            // 清理旧的observer
+            if (h5ScrollObserver) {
+                h5ScrollObserver.disconnect();
+                h5ScrollObserver = null;
             }
 
+            // 获取所有天数卡片
+            const dayCells = document.querySelectorAll(`#${gridId} .day-cell`);
+            if (dayCells.length === 0) {
+                console.log('ℹ️ 未找到天数卡片，跳过滚动检测初始化');
+                return;
+            }
+
+            console.log('📱 初始化H5周视图滚动自动选中功能');
+
+            // 创建Intersection Observer
+            h5ScrollObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    // 当卡片占据屏幕50%以上时
+                    if (entry.isIntersecting && entry.intersectionRatio >= 0.5) {
+                        const day = parseInt(entry.target.getAttribute('data-day'));
+
+                        // 避免重复选中同一天
+                        if (day !== lastSelectedDay && day !== null && !isNaN(day)) {
+                            // 防抖动：滚动停止500ms后才触发
+                            if (h5AutoSelectTimeout) {
+                                clearTimeout(h5AutoSelectTimeout);
+                            }
+
+                            h5AutoSelectTimeout = setTimeout(() => {
+                                autoSelectDayInView(day);
+                            }, 500);
+                        }
+                    }
+                });
+            }, {
+                // 当卡片占据50%时触发
+                threshold: [0.5],
+                // 设置根元素为视口
+                rootMargin: '0px'
+            });
+
+            // 观察所有天数卡片
+            dayCells.forEach(cell => {
+                h5ScrollObserver.observe(cell);
+            });
+
+            console.log(`✅ 已为 ${dayCells.length} 个天数卡片添加滚动检测`);
+        }
+
+        /**
+         * 自动选中视野中的某一天
+         * @param {number} day - 天数（0-6，0=周日）
+         */
+        function autoSelectDayInView(day) {
+            // 避免重复选中
+            if (currentFilters.day === day) {
+                return;
+            }
+
+            console.log(`🎯 自动选中: ${day} (${dayNames[day]})`);
+
+            // 更新筛选状态
+            currentFilters.day = day;
+            lastSelectedDay = day;
+
+            // 显示自动选中提示
+            showAutoSelectToast(day);
+
+            // 更新视图（会切换到单日详细视图）
+            updateViews();
+
+            // 重新初始化滚动检测（单日视图不需要）
+            if (h5ScrollObserver) {
+                h5ScrollObserver.disconnect();
+                h5ScrollObserver = null;
+            }
+        }
+
+        /**
+         * 显示自动选中提示
+         * @param {number} day - 选中的天数
+         */
+        function showAutoSelectToast(day) {
+            // 移除旧的提示
+            const oldToast = document.querySelector('.h5-auto-select-toast');
+            if (oldToast) {
+                oldToast.remove();
+            }
+
+            // 创建新的提示
+            const toast = document.createElement('div');
+            toast.className = 'h5-auto-select-toast';
+            toast.innerHTML = `✨ 已自动选中 ${dayNames[day]}`;
+
+            // 添加样式
+            Object.assign(toast.style, {
+                position: 'fixed',
+                top: '60px',
+                left: '50%',
+                transform: 'translateX(-50%)',
+                backgroundColor: 'rgba(102, 126, 234, 0.95)',
+                color: 'white',
+                padding: '10px 20px',
+                borderRadius: '20px',
+                fontSize: '14px',
+                fontWeight: '500',
+                boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
+                zIndex: '9999',
+                opacity: '0',
+                transition: 'opacity 0.3s ease, transform 0.3s ease',
+                pointerEvents: 'none'
+            });
+
+            document.body.appendChild(toast);
+
+            // 触发淡入动画
+            requestAnimationFrame(() => {
+                toast.style.opacity = '1';
+                toast.style.transform = 'translateX(-50%) translateY(0)';
+            });
+
+            // 2秒后淡出并移除
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                toast.style.transform = 'translateX(-50%) translateY(-10px)';
+
+                setTimeout(() => {
+                    toast.remove();
+                }, 300);
+            }, 2000);
+
+            console.log(`💡 显示提示: 已自动选中 ${dayNames[day]}`);
+        }
+
+        /**
+         * 清理H5滚动检测
+         */
+        function cleanupH5ScrollObserver() {
+            if (h5ScrollObserver) {
+                h5ScrollObserver.disconnect();
+                h5ScrollObserver = null;
+                console.log('🧹 已清理H5滚动检测');
+            }
+
+            if (h5AutoSelectTimeout) {
+                clearTimeout(h5AutoSelectTimeout);
+                h5AutoSelectTimeout = null;
+            }
+
+            // 清理滚动监听器
+            if (h5ScrollListener) {
+                const gridElement = document.getElementById('calendarGrid');
+                if (gridElement) {
+                    gridElement.removeEventListener('scroll', h5ScrollListener);
+                }
+                h5ScrollListener = null;
+                console.log('🧹 已清理滚动监听器');
+            }
+
+            if (h5ScrollHighlightTimeout) {
+                clearTimeout(h5ScrollHighlightTimeout);
+                h5ScrollHighlightTimeout = null;
+            }
+
+            // 移除提示
+            const toast = document.querySelector('.h5-auto-select-toast');
+            if (toast) {
+                toast.remove();
+            }
+        }
+
+        /**
+         * 初始化H5周视图滚动日期高亮功能
+         * 根据可视区域内的活动自动高亮对应的日期按钮
+         * @param {string} gridId - 网格容器ID
+         */
+        function initH5ScrollDateHighlight(gridId) {
+            // 清理旧的监听器
+            if (h5ScrollListener) {
+                const gridElement = document.getElementById(gridId);
+                if (gridElement) {
+                    gridElement.removeEventListener('scroll', h5ScrollListener);
+                }
+                h5ScrollListener = null;
+            }
+
+            // 获取网格容器
+            const gridElement = document.getElementById(gridId);
+            if (!gridElement) {
+                console.log('ℹ️ 未找到网格容器，跳过滚动日期高亮初始化');
+                return;
+            }
+
+            // 获取所有天数卡片
+            const dayCells = document.querySelectorAll(`#${gridId} .day-cell`);
+            if (dayCells.length === 0) {
+                console.log('ℹ️ 未找到天数卡片，跳过滚动日期高亮初始化');
+                return;
+            }
+
+            console.log('📱 初始化H5周视图滚动日期高亮功能');
+
+            // 创建滚动监听函数
+            h5ScrollListener = () => {
+                // 防抖动：滚动停止100ms后才触发
+                if (h5ScrollHighlightTimeout) {
+                    clearTimeout(h5ScrollHighlightTimeout);
+                }
+
+                h5ScrollHighlightTimeout = setTimeout(() => {
+                    highlightDateInView(gridId, dayCells);
+                }, 100);
+            };
+
+            // 添加滚动监听
+            gridElement.addEventListener('scroll', h5ScrollListener, { passive: true });
+
+            console.log(`✅ 已为 ${dayCells.length} 个天数卡片添加滚动日期高亮`);
+        }
+
+        /**
+         * 高亮视野中的日期按钮
+         * @param {string} gridId - 网格容器ID
+         * @param {NodeList} dayCells - 所有天数卡片元素
+         */
+        function highlightDateInView(gridId, dayCells) {
+            let activeDay = null;
+            let maxIntersectionRatio = 0;
+
+            // 遍历所有天数卡片，找出在可视区域内占比最大的
+            dayCells.forEach(cell => {
+                const rect = cell.getBoundingClientRect();
+                const windowHeight = window.innerHeight;
+                const windowWidth = window.innerWidth;
+
+                // 计算卡片在可视区域内的占比
+                const visibleTop = Math.max(0, rect.top);
+                const visibleBottom = Math.min(windowHeight, rect.bottom);
+                const visibleHeight = Math.max(0, visibleBottom - visibleTop);
+
+                // 计算可视占比
+                const intersectionRatio = rect.height > 0 ? visibleHeight / rect.height : 0;
+
+                // 当卡片占据屏幕30%以上时，才考虑为候选
+                if (intersectionRatio >= 0.3 && intersectionRatio > maxIntersectionRatio) {
+                    maxIntersectionRatio = intersectionRatio;
+                    activeDay = parseInt(cell.getAttribute('data-day'));
+                }
+            });
+
+            // 如果找到了有效的活跃日期，更新高亮状态
+            if (activeDay !== null && !isNaN(activeDay)) {
+                updateDateHighlight(activeDay, gridId);
+            }
+        }
+
+        /**
+         * 更新日期高亮状态
+         * @param {number} day - 天数（0-6，0=周日）
+         * @param {string} gridId - 网格容器ID
+         */
+        function updateDateHighlight(day, gridId) {
+            // 获取所有日期表头按钮
+            const headerId = gridId === 'calendarGridMarket' ? 'dateGridHeaderMarket' : 'dateGridHeader';
+            const dateButtons = document.querySelectorAll(`#${headerId} .date-cell-header`);
+
+            // 更新日期按钮高亮状态
+            dateButtons.forEach(btn => {
+                const btnDay = parseInt(btn.getAttribute('data-day'));
+                if (btnDay === day) {
+                    btn.classList.add('selected-day');
+                } else {
+                    btn.classList.remove('selected-day');
+                }
+            });
+
+            // 更新活动卡片高亮状态
+            const activityCards = document.querySelectorAll(`#${gridId} .activity-card`);
+            activityCards.forEach(card => {
+                const cardDay = parseInt(card.getAttribute('data-day'));
+                if (cardDay === day) {
+                    card.style.borderColor = '#667eea';
+                    card.style.boxShadow = '0 4px 12px rgba(102, 126, 234, 0.4)';
+                } else {
+                    card.style.borderColor = '';
+                    card.style.boxShadow = '';
+                }
+            });
+
+            console.log(`🎯 高亮日期: ${day} (${dayNames[day]})`);
+        }
+
+        function toggleDayFilter(day) {
+            console.log('🗓️ 点击日期筛选:', day, `(${dayNames[day]})`);
+            console.log('📍 当前筛选状态:', currentFilters);
+
+            // 清理自动滚动检测（避免冲突）
+            cleanupH5ScrollObserver();
+
+            if (currentFilters.day === day) {
+                // 再次点击取消筛选，显示所有活动
+                console.log('✋ 取消日期筛选');
+                currentFilters.day = null;
+                lastSelectedDay = null;
+
+                // H5端：重新启用滚动自动选中
+                if (window.innerWidth <= 768) {
+                    console.log('🔄 重新启用H5滚动自动选中');
+                    const gridId = currentTab === 1 ? 'dateGridMarket' : 'dateGrid';
+                    setTimeout(() => {
+                        initH5ScrollAutoSelect(gridId);
+                    }, 300);
+                }
+            } else {
+                // 点击其他日期，选中该日期
+                console.log('✅ 设置日期筛选:', day);
+                currentFilters.day = day;
+                lastSelectedDay = day;
+            }
+
+            console.log('🆕 新的筛选状态:', currentFilters);
             updateViews();
 
             // 移动端：将选中的日期滚动到视图中心
@@ -1681,6 +3010,41 @@
                     performSearch();
                 }
             });
+
+            // 移动端键盘弹出处理（仅在移动端）
+            if (window.innerWidth <= 768) {
+                const header = document.querySelector('.header');
+
+                searchInput.addEventListener('focus', () => {
+                    // 键盘弹出时，取消固定定位效果
+                    if (header) {
+                        header.style.position = 'relative';
+                    }
+                    window.scrollTo(0, 0);
+                });
+
+                searchInput.addEventListener('blur', () => {
+                    // 恢复正常
+                    if (header) {
+                        setTimeout(() => {
+                            header.style.position = 'relative';
+                        }, 300);
+                    }
+                });
+
+                // 监听窗口大小变化（键盘弹出/收起）
+                let initialHeight = window.innerHeight;
+                window.addEventListener('resize', () => {
+                    const currentHeight = window.innerHeight;
+                    const isKeyboardOpen = currentHeight < initialHeight - 150;
+
+                    if (isKeyboardOpen && document.activeElement === searchInput) {
+                        if (header) header.style.position = 'relative';
+                    } else if (!isKeyboardOpen && header) {
+                        header.style.position = 'relative';
+                    }
+                });
+            }
         });
 
         // =====================================================
@@ -1690,11 +3054,30 @@
         function updateViews() {
             const filtered = filterActivities();
 
-            // 更新日历视图
-            updateCalendarView(filtered);
+            // 根据当前Tab更新对应视图
+            // 注意：filtered 已经在 filterActivities() 中根据 currentTab 筛选过了
+            switch(currentTab) {
+                case 0: // 兴趣班 - 日历视图
+                    updateCalendarView(filtered);
+                    break;
 
-            // 更新列表视图
-            updateListView(filtered);
+                case 1: // 市集 - 日历视图
+                    updateCalendarView(filtered);
+                    break;
+
+                case 2: // 灵活时间活动 - 列表视图
+                    updateListView(filtered, 'flexibleList');
+                    break;
+
+                case 3: // 活动网站 - 网站卡片视图
+                    console.log('🏪 Tab 3 - 准备调用 updateWebsitesView，活动数:', filtered.length);
+                    updateWebsitesView(filtered);
+                    break;
+
+                case 4: // 攻略信息 - 富文本内容
+                    loadGuideContent();
+                    break;
+            }
 
             // 更新结果数量
             updateResultCount(filtered);
@@ -1732,38 +3115,175 @@
         }
 
         function updateCalendarView(filtered) {
-            const grid = document.getElementById('calendarGrid');
+            // 根据当前Tab选择不同的容器
+            const gridId = currentTab === 1 ? 'calendarGridMarket' : 'calendarGrid';
+            const grid = document.getElementById(gridId);
+            const headerId = currentTab === 1 ? 'dateGridHeaderMarket' : 'dateGridHeader';
+
+            // 添加淡入动画类
+            grid.style.opacity = '0';
+            grid.style.transition = 'opacity 0.2s ease';
+
             let html = '';
 
-            // 生成7天的日历单元格
-            for (let day = 1; day <= 6; day++) {
-                html += createDayCell(day, filtered);
+            // 判断是否为移动端
+            const isMobile = window.innerWidth <= 768;
+
+            // 移动端：选择日期后显示单日详细视图
+            // PC端：始终显示周视图，通过高亮显示选中日期
+            if (isMobile && currentFilters.day !== null) {
+                // H5端：使用列表视图显示选中日期的活动
+                grid.style.display = 'block';
+                grid.style.gridTemplateColumns = '1fr';
+
+                // 添加日期标题栏
+                const weekDate = weekDates.find(d => d.day === currentFilters.day);
+                const dateTitle = weekDate ? `${weekDate.date}日 ${weekDate.dayName}` : '活动详情';
+
+                html = `
+                    <div class="day-detail-header">
+                        <button class="day-back-btn" onclick="toggleDayFilter(null)">
+                            <span>←</span>
+                        </button>
+                        <div class="day-detail-title">${dateTitle}</div>
+                    </div>
+                    <div class="day-detail-content">
+                        ${createDayDetailView(filtered, currentFilters.day)}
+                    </div>
+                `;
+            } else {
+                // PC端或未选择日期：显示周视图（7天）
+                grid.style.display = 'grid';
+                grid.style.gridTemplateColumns = '';
+
+                // 生成7天的日历单元格，使用未按日期筛选的数据
+                const unfiltered = filterActivitiesWithoutDay();
+                for (let day = 1; day <= 6; day++) {
+                    html += createDayCell(day, unfiltered);
+                }
+                html += createDayCell(0, unfiltered); // 周日
             }
-            html += createDayCell(0, filtered); // 周日
 
             grid.innerHTML = html;
 
-            // 为每一天添加点击事件
-            document.querySelectorAll('.day-cell').forEach(cell => {
-                cell.addEventListener('click', function() {
-                    const day = parseInt(this.getAttribute('data-day'));
-                    toggleDayFilter(day);
-                });
+            // 触发淡入动画
+            setTimeout(() => {
+                grid.style.opacity = '1';
+            }, 50);
 
-                // 添加hover效果提示
-                cell.style.cursor = 'pointer';
-            });
+            // 更新日期表头
+            updateDateHeaders(headerId);
+
+            // 为每一天添加点击事件（仅在周视图时）
+            if (!isMobile || currentFilters.day === null) {
+                document.querySelectorAll(`#${gridId} .day-cell`).forEach(cell => {
+                    cell.addEventListener('click', function() {
+                        const day = parseInt(this.getAttribute('data-day'));
+                        toggleDayFilter(day);
+                    });
+
+                    // 添加hover效果提示
+                    cell.style.cursor = 'pointer';
+                });
+            } else {
+                // H5端单日视图：添加返回按钮
+                const backBtn = grid.querySelector('.day-back-btn');
+                if (backBtn) {
+                    backBtn.addEventListener('click', () => {
+                        toggleDayFilter(currentFilters.day);
+                    });
+                }
+            }
+
+            // ========== H5周视图：滚动自动选中功能 ==========
+            // 仅在移动端周视图模式下启用
+            if (isMobile && currentFilters.day === null) {
+                // 等待DOM更新完成后初始化滚动检测
+                setTimeout(() => {
+                    initH5ScrollAutoSelect(gridId);
+                    // 同时初始化滚动日期高亮功能
+                    initH5ScrollDateHighlight(gridId);
+                }, 300);
+            }
+        }
+
+        // 辅助函数：获取未按日期筛选的活动
+        function filterActivitiesWithoutDay() {
+            const savedDay = currentFilters.day;
+            currentFilters.day = null;
+            const result = filterActivities();
+            currentFilters.day = savedDay;
+            return result;
+        }
+
+        // 创建单日详细视图
+        function createDayDetailView(activities, day) {
+            if (activities.length === 0) {
+                return `
+                    <div class="day-detail-empty" style="text-align:center;padding:30px 20px;color:#999;">
+                        <div style="font-size:48px;margin-bottom:12px;">📅</div>
+                        <div style="font-size:16px;margin-bottom:8px;">${dayNames[day]}没有活动</div>
+                        <button class="day-back-btn" style="margin-top:12px;padding:8px 16px;background:#667eea;color:white;border:none;border-radius:6px;cursor:pointer;">
+                            ← 返回周视图
+                        </button>
+                    </div>
+                `;
+            }
+
+            const weekDate = weekDates.find(d => d.day === day);
+            const dateStr = weekDate ? `${weekDate.month}/${weekDate.date}` : '';
+
+            let html = `
+                <div class="day-detail-container">
+                    <div class="day-detail-header" style="background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);color:white;padding:16px;border-radius:12px;margin-bottom:12px;">
+                        <div style="display:flex;justify-content:space-between;align-items:center;">
+                            <div>
+                                <div style="font-size:20px;font-weight:600;">${dayNames[day]}</div>
+                                <div style="font-size:13px;opacity:0.9;">${dateStr}</div>
+                            </div>
+                            <button class="day-back-btn" style="padding:8px 16px;background:rgba(255,255,255,0.2);color:white;border:none;border-radius:6px;cursor:pointer;font-size:14px;">
+                                ← 返回
+                            </button>
+                        </div>
+                    </div>
+                    <div class="day-detail-activities">
+            `;
+
+            html += activities.map(act => `
+                <div class="activity-detail-card"
+                     style="background:white;border-radius:12px;padding:12px;margin-bottom:8px;border-left:4px solid ${getActivityColor(act.id)};cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,0.1);"
+                     onclick='showActivityDetail("${act.id}")'>
+                    <div style="font-weight:600;font-size:16px;margin-bottom:6px;">${cleanTitle(act.title)}</div>
+                    <div style="display:flex;gap:12px;font-size:13px;color:#666;">
+                        <div>⏰ ${act.time || '灵活时间'}</div>
+                        <div>📍 ${act.location}</div>
+                        <div>💰 ${act.price}</div>
+                    </div>
+                    ${act.description ? `<div style="margin-top:6px;font-size:13px;color:#666;line-height:1.5;">${act.description.substring(0, 100)}${act.description.length > 100 ? '...' : ''}</div>` : ''}
+                </div>
+            `).join('');
+
+            html += `
+                    </div>
+                </div>
+            `;
+
+            return html;
         }
 
         function createDayCell(day, filtered) {
-            // 使用 allActivities 来判断该日期是否真的有活动，而不是 filtered
-            const allDayActivities = allActivities.filter(act => act.day === day);
+            // 从筛选后的活动中获取该日期的活动（确保Tab隔离）
+            const dayActivities = filtered.filter(act => act.day === day);
             const isSelectedDay = currentFilters.day === day;
             const isToday = isDayToday(day);
             const isDimmed = currentFilters.day !== null && currentFilters.day !== day;
 
-            // 如果是选中的日期，显示筛选后的活动；否则显示该日期的所有活动
-            let activitiesToShow = isSelectedDay ? filtered : allDayActivities;
+            // 获取日期数字
+            const weekDate = weekDates.find(d => d.day === day);
+            const dateNumber = weekDate ? weekDate.date : '';
+
+            // 始终使用筛选后的活动
+            let activitiesToShow = dayActivities;
 
             // 按时间排序（较早的活动排在前面）
             activitiesToShow = activitiesToShow.sort((a, b) => {
@@ -1785,30 +3305,47 @@
                 chipsHtml = activitiesToShow.map(act => `
                     <div class="activity-chip"
                          style="border-left-color: ${getActivityColor(act.id)}"
-                         onclick='showActivityDetail(${act.id})'>
-                        <div style="color: #666;">${act.time || '灵活时间'}</div>
-                        <div style="font-weight: 500;" class="chip-title">${act.title}</div>
+                         onclick='showActivityDetail("${act.id}")'>
+                        <div style="font-weight: 500;" class="chip-title">${cleanTitle(act.title)}</div>
+                        <div style="font-size: 10px; color: #666; font-weight: 600;">${act.time || '灵活时间'}</div>
                     </div>
                 `).join('');
             }
 
             return `
                 <div class="day-cell ${isToday ? 'today' : ''} ${isSelectedDay ? 'selected-day' : ''} ${isDimmed ? 'dimmed' : ''}" data-day="${day}">
-                    <div class="day-name">${isToday ? '今天' : dayNames[day]}</div>
                     ${chipsHtml}
                 </div>
             `;
         }
 
-        function updateListView(filtered) {
-            const container = document.getElementById('scheduleList');
+        function updateListView(filtered, containerId = 'scheduleList') {
+            const container = document.getElementById(containerId);
+
+            if (!container) return;
 
             if (filtered.length === 0) {
                 container.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:40px;color:#999;">没有找到符合条件的活动</div>';
                 return;
             }
 
-            let html = filtered.map(act => {
+            // 按时间排序：早的时间排在前面
+            const sortedFiltered = [...filtered].sort((a, b) => {
+                // 提取开始时间（例如：从"08:30-09:45"提取"08:30"）
+                const extractStartTime = (timeStr) => {
+                    if (!timeStr || timeStr === '灵活时间') return '99:99';
+                    const match = timeStr.match(/^(\d{1,2}):(\d{2})/);
+                    return match ? match[0] : '99:99';
+                };
+
+                const timeA = extractStartTime(a.time);
+                const timeB = extractStartTime(b.time);
+
+                // 按开始时间升序排列
+                return timeA.localeCompare(timeB);
+            });
+
+            let html = sortedFiltered.map(act => {
                 const dayName = act.day !== null ? dayNames[act.day] : '灵活时间';
                 const isDaySelected = act.day === currentFilters.day;
                 const dayFilterHtml = act.day !== null
@@ -1816,12 +3353,15 @@
                     : `<span style="color: #666;">${dayName}</span>`;
 
                 return `
-                    <div class="schedule-item" onclick='showActivityDetail(${act.id})' style="cursor: pointer;">
+                    <div class="schedule-item activity-card"
+                         data-day="${act.day !== null ? act.day : ''}"
+                         onclick='showActivityDetail("${act.id}")'
+                         style="cursor: pointer; transition: all 0.2s ease;">
                         <div class="schedule-item-header">
                             <span class="category-tag" style="background: ${categoryColors[act.category] || '#667eea'}">${act.category}</span>
                             ${dayFilterHtml}
                         </div>
-                        <div class="schedule-item-title">${act.title}</div>
+                        <div class="schedule-item-title">${cleanTitle(act.title)}</div>
                         <div class="schedule-item-meta">
                             <div>📍 ${act.location}</div>
                             <div>⏰ ${act.time || '灵活时间'}</div>
@@ -1834,14 +3374,157 @@
             container.innerHTML = html;
         }
 
+        // 更新活动网站视图 - 表格形式
+        function updateWebsitesView(activities) {
+            console.log('🏪 updateWebsitesView 被调用，活动数量:', activities.length);
+            const container = document.getElementById('websitesContainer');
+
+            if (!container) {
+                console.error('❌ 找不到 websitesContainer 元素!');
+                return;
+            }
+
+            if (activities.length === 0) {
+                console.log('⚠️ 没有活动网站链接');
+                container.innerHTML = '<div style="text-align:center;padding:40px;color:#999;">暂无活动网站链接</div>';
+                return;
+            }
+
+            // 去重：使用 originalId 或 id 去重，同一活动只显示一次
+            const uniqueActivities = [];
+            const seenIds = new Set();
+            activities.forEach(act => {
+                const id = act.originalId || act.id;
+                if (!seenIds.has(id)) {
+                    seenIds.add(id);
+                    uniqueActivities.push(act);
+                }
+            });
+
+            console.log('✅ 去重后活动数量:', uniqueActivities.length);
+
+            // 按分类分组
+            const grouped = {};
+            uniqueActivities.forEach(act => {
+                if (!grouped[act.category]) {
+                    grouped[act.category] = [];
+                }
+                grouped[act.category].push(act);
+            });
+
+            let html = '<div style="padding: 20px;">';
+
+            // 遍历每个分类
+            Object.keys(grouped).sort().forEach(category => {
+                html += `
+                    <div style="margin-bottom: 24px;">
+                        <h3 style="font-size: 14px; font-weight: 600; color: #333; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 2px solid ${categoryColors[category] || '#667eea'};">
+                            ${category} (${grouped[category].length})
+                        </h3>
+                        <table style="width: 100%; border-collapse: collapse; font-size: 13px;">
+                            <thead>
+                                <tr style="background: #f5f5f5;">
+                                    <th style="padding: 10px; text-align: left; font-weight: 600; color: #666; width: 50%;">名称</th>
+                                    <th style="padding: 10px; text-align: left; font-weight: 600; color: #666; width: 50%;">链接</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                `;
+
+                grouped[category].forEach(act => {
+                    const url = act.source.url;
+                    html += `
+                        <tr style="border-bottom: 1px solid #f0f0f0;">
+                            <td style="padding: 12px 10px; color: #333;">${act.title}</td>
+                            <td style="padding: 12px 10px;">
+                                <a href="${url}" target="_blank" style="color: #667eea; text-decoration: none; display: inline-flex; align-items: center; gap: 4px; word-break: break-all;">
+                                    🔗 ${url}
+                                </a>
+                            </td>
+                        </tr>
+                    `;
+                });
+
+                html += `
+                            </tbody>
+                        </table>
+                    </div>
+                `;
+            });
+
+            html += '</div>';
+            container.innerHTML = html;
+            console.log('✅ 网站链接表格生成完成');
+        }
+
+        // 加载攻略内容
+        async function loadGuideContent() {
+            const container = document.getElementById('guideContent');
+
+            if (!container) return;
+
+            container.innerHTML = '<div style="text-align:center;padding:40px;">加载中...</div>';
+
+            try {
+                const response = await fetch('/api/guide');
+                const result = await response.json();
+
+                if (result.success && result.data && result.data.content) {
+                    container.innerHTML = result.data.content;
+
+                    // 清除所有内联样式，让CSS样式生效
+                    setTimeout(() => {
+                        const allElements = container.querySelectorAll('*');
+                        allElements.forEach(el => {
+                            el.style.fontSize = '';
+                            el.style.color = '';
+                            el.style.fontFamily = '';
+                            el.style.margin = '';
+                            el.style.padding = '';
+                        });
+                    }, 50);
+                } else {
+                    container.innerHTML = '<div style="text-align:center;padding:40px;color:#999;">暂无攻略信息</div>';
+                }
+            } catch (error) {
+                console.error('加载攻略失败:', error);
+                container.innerHTML = '<div style="text-align:center;padding:40px;color:#999;">加载失败，请稍后重试</div>';
+            }
+        }
+
         function updateResultCount(filtered) {
             const hasFilter = currentFilters.category !== '全部' ||
                              currentFilters.price !== '全部' ||
                              currentFilters.day !== null ||
                              currentFilters.search;
 
+            // 根据当前Tab计算对应的活动总数
+            let totalInTab = 0;
+            switch(currentTab) {
+                case 0: // 兴趣班
+                    totalInTab = allActivities.filter(a => {
+                        if (a.category === '市集') return false;
+                        if (a.flexibleTime === '是' || a.time === '灵活时间') return false;
+                        return true;
+                    }).length;
+                    break;
+                case 1: // 市集
+                    totalInTab = allActivities.filter(a => a.category === '市集').length;
+                    break;
+                case 2: // 灵活时间
+                    totalInTab = allActivities.filter(a => a.flexibleTime === '是' || a.time === '灵活时间').length;
+                    break;
+                case 3: // 活动网站
+                    totalInTab = new Set(allActivities.filter(a => a.source && a.source.url).map(a => a.originalId || a.id)).size;
+                    break;
+                case 4: // 攻略信息
+                    totalInTab = 1; // 固定为1页
+                    break;
+            }
+
+            // 如果有筛选条件，显示筛选后的数量；否则显示当前Tab的总数
             document.getElementById('totalCount').textContent =
-                hasFilter ? filtered.length : allActivities.length;
+                hasFilter ? filtered.length : totalInTab;
         }
 
         function updateFilterTags() {
@@ -1950,7 +3633,23 @@
         // Tab 切换
         // =====================================================
 
+        let currentTab = 0; // 当前选中的Tab
+
         function switchTab(index) {
+            currentTab = index;
+
+            // 切换Tab时清除所有筛选条件（除了搜索）
+            currentFilters.category = '全部';
+            currentFilters.price = '全部';
+            currentFilters.day = null;
+            currentFilters.search = '';
+
+            // 清除搜索框
+            const searchInput = document.getElementById('searchInput');
+            if (searchInput) {
+                searchInput.value = '';
+            }
+
             // 移除所有 active 类
             document.querySelectorAll('.tab-item').forEach(tab => {
                 tab.classList.remove('active');
@@ -1962,6 +3661,9 @@
             // 添加 active 类到当前 Tab
             document.querySelectorAll('.tab-item')[index].classList.add('active');
             document.getElementById('tab-' + index).classList.add('active');
+
+            // 根据Tab更新视图
+            updateViews();
         }
 
         // =====================================================
@@ -2021,18 +3723,67 @@
         }
 
         // =====================================================
-        // 周导航（简化版）
+        // 周导航
         // =====================================================
 
+        // 切换周（direction: -1 上一周, 1 下一周）
         function navigateWeek(direction) {
-            // 简化实现：显示提示
-            alert('周导航功能开发中...\n\n当前展示的是本周活动。\n提示：您可以点击日期表头筛选特定日期的活动。');
+            // 更新周偏移量
+            currentWeekOffset += direction;
+
+            // 清除日期筛选（因为切换周后，之前的日期选择不再适用）
+            currentFilters.day = null;
+
+            // 重新生成日期表头
+            updateDateHeaders('dateGridHeader');
+            updateDateHeaders('dateGridHeaderMarket');
+
+            // 重新渲染视图
+            updateViews();
+
+            // 移动端：如果是本周，自动滚动到今天
+            if (window.innerWidth <= 768 && currentWeekOffset === 0) {
+                setTimeout(() => {
+                    const todayHeader = document.querySelector('.date-cell-header.today-header');
+                    if (todayHeader) {
+                        todayHeader.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'nearest',
+                            inline: 'center'
+                        });
+                    }
+                }, 100);
+            }
         }
 
+        // 回到本周
         function goToThisWeek() {
-            // 回到本周 = 重置为"全部"状态，显示所有活动
+            // 重置周偏移量
+            currentWeekOffset = 0;
+
+            // 清除日期筛选
             currentFilters.day = null;
+
+            // 重新生成日期表头
+            updateDateHeaders('dateGridHeader');
+            updateDateHeaders('dateGridHeaderMarket');
+
+            // 重新渲染视图
             updateViews();
+
+            // 移动端：自动滚动到今天
+            if (window.innerWidth <= 768) {
+                setTimeout(() => {
+                    const todayHeader = document.querySelector('.date-cell-header.today-header');
+                    if (todayHeader) {
+                        todayHeader.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'nearest',
+                            inline: 'center'
+                        });
+                    }
+                }, 100);
+            }
         }
 
         // =====================================================
@@ -2040,34 +3791,173 @@
         // =====================================================
 
         function showActivityDetail(activityId) {
-            const activity = allActivities.find(a => a.id == activityId);
+            const activity = allActivities.find(a => a.originalId == activityId || a.id == activityId);
             if (!activity) {
                 console.warn('活动未找到:', activityId);
                 return;
             }
 
-            document.getElementById('modalTitle').textContent = activity.title;
-            document.getElementById('modalCategory').textContent = activity.category;
-            document.getElementById('modalLocation').textContent = activity.location;
-            document.getElementById('modalTime').textContent = activity.time || '灵活时间';
-            document.getElementById('modalPrice').textContent = activity.price;
-            document.getElementById('modalFrequency').textContent = activity.frequency === 'weekly' ? '每周' : '一次性';
-            document.getElementById('modalDescription').textContent = activity.description || '暂无描述';
+            // 安全地获取DOM元素
+            const setTitle = (id, text) => {
+                const el = document.getElementById(id);
+                if (el) el.textContent = text || '';
+            };
+
+            setTitle('modalTitle', activity.title);
+            setTitle('modalCategory', activity.category);
+            setTitle('modalLocation', activity.location);
+            setTitle('modalTime', activity.time || '灵活时间');
+            setTitle('modalPrice', activity.price || '');
+            setTitle('modalFrequency', activity.frequency === 'weekly' ? '每周' : '一次性');
+
+            // 处理时长信息
+            const modalDurationItem = document.getElementById('modalDurationItem');
+            const modalDuration = document.getElementById('modalDuration');
+            if (modalDurationItem && modalDuration) {
+                if (activity.duration && activity.duration !== '时间灵活，无固定时长限制' && activity.duration !== '时间灵活，无固定时长限制') {
+                    modalDurationItem.style.display = 'flex';
+                    modalDuration.textContent = activity.duration;
+                } else {
+                    modalDurationItem.style.display = 'none';
+                }
+            }
+
+            // 处理频率信息显示
+            const modalFrequencyRow = document.getElementById('modalFrequencyRow');
+            if (modalFrequencyRow && activity.frequency) {
+                modalFrequencyRow.style.display = 'flex';
+            }
+
+            // 格式化描述信息，过滤掉顶部已显示的字段
+            const baseDescription = activity.description || '暂无描述';
+            const formattedDescription = formatDescription(baseDescription, activity);
+
+            const descEl = document.getElementById('modalDescription');
+            if (descEl) descEl.innerHTML = formattedDescription;
 
             // 处理链接按钮
             const modalFooter = document.getElementById('modalFooter');
             const modalLinkButton = document.getElementById('modalLinkButton');
 
-            if (activity.url && activity.url.trim() !== '') {
-                // 有链接，显示按钮
-                modalFooter.style.display = 'block';
-                modalLinkButton.href = activity.url.trim();
-            } else {
-                // 没有链接，隐藏按钮
-                modalFooter.style.display = 'none';
+            if (modalFooter && modalLinkButton) {
+                const url = activity.source?.url;
+                if (url && url.trim() !== '') {
+                    modalFooter.style.display = 'block';
+                    modalLinkButton.href = url.trim();
+                } else {
+                    modalFooter.style.display = 'none';
+                }
             }
 
-            document.getElementById('activityModal').classList.add('active');
+            const modal = document.getElementById('activityModal');
+            if (modal) modal.classList.add('active');
+        }
+
+        // 清理活动标题中的重复标签
+        function cleanTitle(title) {
+            if (!title) return title;
+
+            // 移除重复的标签（例如："注意事项：注意事项：" → "注意事项："）
+            const patterns = [
+                { pattern: /(适合人群[：:]\s*){2,}/g, replacement: '$1' },
+                { pattern: /(活动特点[：:]\s*){2,}/g, replacement: '$1' },
+                { pattern: /(注意事项[：:]\s*){2,}/g, replacement: '$1' },
+                { pattern: /(课程周期[：:]\s*){2,}/g, replacement: '$1' },
+                { pattern: /(语言[：:]\s*){2,}/g, replacement: '$1' },
+                { pattern: /(费用[：:]\s*){2,}/g, replacement: '$1' },
+                { pattern: /(联系方式[：:]\s*){2,}/g, replacement: '$1' },
+                { pattern: /(官网[：:]\s*){2,}/g, replacement: '$1' },
+                // 移除标签后的冗余冒号和空格
+                { pattern: /([：:]\s*)+[：:]/g, replacement: '：' },
+                { pattern: /\s+：/g, replacement: '：' }
+            ];
+
+            let cleaned = title;
+            patterns.forEach(({ pattern, replacement }) => {
+                cleaned = cleaned.replace(pattern, replacement);
+            });
+
+            return cleaned;
+        }
+
+        // 格式化描述信息，添加图标和结构化展示，并过滤重复字段
+        function formatDescription(description, activity = null) {
+            if (!description) return '暂无描述';
+
+            let formatted = description;
+
+            // ========== 清理冗余符号和格式 ==========
+            // 1. 清理双感叹号文本符号 "!!"
+            formatted = formatted.replace(/!!+/g, '!');
+
+            // 2. 清理多重感叹号emoji（如 ‼️ ❗❗）
+            formatted = formatted.replace(/‼️+/g, '⚠️');
+            formatted = formatted.replace(/❗❗+/g, '⚠️');
+            formatted = formatted.replace(/❗+/g, '⚠️');
+
+            // 3. 清理重复的警告符号（多个⚠️连在一起）
+            formatted = formatted.replace(/(⚠️\s*){2,}/g, '⚠️ ');
+
+            // 4. 清理重复的标点符号
+            formatted = formatted.replace(/。+/g, '。');
+            formatted = formatted.replace(/：+/g, '：');
+            formatted = formatted.replace(/，+/g, '，');
+
+            // 5. 清理行首行尾多余空格
+            formatted = formatted.replace(/^\s+|\s+$/gm, '');
+
+            // ========== 如果有活动信息，过滤掉顶部已显示的字段 ==========
+            if (activity) {
+                // 过滤时间信息
+                if (activity.time && activity.time !== '灵活时间') {
+                    formatted = formatted.replace(/[⏰]?\s*时间[：:]\s*[^\n]*/g, '');
+                }
+
+                // 过滤价格/费用信息
+                if (activity.price) {
+                    formatted = formatted.replace(/[💰]?\s*费用[：:]\s*[^\n]*/g, '');
+                }
+            }
+
+            // ========== 定义字段和对应的图标（注意：避免重叠的模式）==========
+            const fieldPatterns = [
+                { pattern: /适合人群[：:]\s*/g, icon: '👥', label: '适合人群：' },
+                { pattern: /活动特点[：:]\s*/g, icon: '✨', label: '活动特点：' },
+                { pattern: /课程周期[：:]\s*/g, icon: '📚', label: '课程周期：' },
+                { pattern: /标准课程周期[：:]\s*/g, icon: '📚', label: '课程周期：' },
+                { pattern: /语言[：:]\s*/g, icon: '🌐', label: '语言：' },
+                { pattern: /费用[：:]\s*/g, icon: '💰', label: '费用：' },
+                { pattern: /官网[：:]\s*/g, icon: '🌐', label: '官网：' },
+                { pattern: /联系方式[：:]\s*/g, icon: '📞', label: '联系方式：' },
+                // 注意事项：合并两个模式，避免重复替换
+                { pattern: /(⚠️\s*)?注意事项[：:]\s*/g, icon: '⚠️', label: '注意事项：' }
+            ];
+
+            // 替换所有匹配的字段
+            fieldPatterns.forEach(({ pattern, icon, label }) => {
+                formatted = formatted.replace(pattern, `\n<strong>${icon} ${label}</strong>`);
+            });
+
+            // 标准化换行：多个连续换行替换为单个换行
+            formatted = formatted.replace(/\n\s*\n\s*/g, '\n');
+
+            // 转义HTML，但保留我们添加的<strong>标签
+            const lines = formatted.split('\n');
+            return lines.map(line => {
+                const trimmed = line.trim();
+                if (!trimmed) return ''; // 跳过空行
+
+                // 如果是包含<strong>的行，保留原样
+                if (trimmed.includes('<strong>')) {
+                    return trimmed;
+                }
+                // 普通文本行，转义HTML
+                const escaped = trimmed
+                    .replace(/&/g, '&amp;')
+                    .replace(/</g, '&lt;')
+                    .replace(/>/g, '&gt;');
+                return escaped;
+            }).filter(line => line.length > 0).join('<br>');
         }
 
         function closeModal() {
@@ -2092,8 +3982,8 @@
         // 初始化
         // =====================================================
 
-        // 生成当前周的日期数据
-        function generateWeekDates() {
+        // 生成指定周的日期数据（支持偏移量）
+        function generateWeekDates(offset = 0) {
             const today = new Date();
             const currentDay = today.getDay(); // 0=周日, 1=周一, ...
 
@@ -2102,7 +3992,7 @@
 
             // 获取本周一的日期
             const monday = new Date(today);
-            monday.setDate(today.getDate() - daysToMonday);
+            monday.setDate(today.getDate() - daysToMonday + (offset * 7));
 
             // 生成7天的日期
             const weekDates = [];
@@ -2114,6 +4004,7 @@
                     day: i === 6 ? 0 : i + 1, // 0=周日, 1-6=周一到周六
                     date: date.getDate(),
                     month: date.getMonth() + 1,
+                    year: date.getFullYear(),
                     dayName: i === 6 ? '周日' : ['周一', '周二', '周三', '周四', '周五', '周六'][i],
                     isToday: date.getDate() === today.getDate() &&
                               date.getMonth() === today.getMonth() &&
@@ -2125,9 +4016,9 @@
         }
 
         // 更新日期表头
-        function updateDateHeaders() {
-            weekDates = generateWeekDates(); // 保存到全局变量
-            const headerContainer = document.querySelector('.date-grid-header');
+        function updateDateHeaders(headerId = 'dateGridHeader') {
+            weekDates = generateWeekDates(currentWeekOffset); // 使用当前偏移量
+            const headerContainer = document.getElementById(headerId);
 
             if (!headerContainer) return;
 
@@ -2147,10 +4038,39 @@
             });
 
             headerContainer.innerHTML = html;
+
+            // 更新周标题显示
+            updateWeekTitle();
+        }
+
+        // 更新周标题显示
+        function updateWeekTitle() {
+            const titleElement = document.getElementById('monthLabel');
+            if (!titleElement) return;
+
+            const firstDay = weekDates[0];
+            const lastDay = weekDates[6];
+
+            let title = '';
+            if (currentWeekOffset === 0) {
+                title = '本周活动';
+            } else if (currentWeekOffset === -1) {
+                title = '上周活动';
+            } else if (currentWeekOffset === 1) {
+                title = '下周活动';
+            } else {
+                const weekNum = currentWeekOffset > 0 ? `+${currentWeekOffset}` : currentWeekOffset;
+                title = `${weekNum}周活动`;
+            }
+
+            titleElement.textContent = `${title} (${firstDay.month}/${firstDay.date} - ${lastDay.month}/${lastDay.date})`;
         }
 
         // 页面加载时获取数据
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', async function() {
+            // 检查应用版本（在所有初始化之前）
+            await checkAppVersion();
+
             // 更新日期表头
             updateDateHeaders();
 

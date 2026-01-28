@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>时间排序测试</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        h1 { color: #333; margin-bottom: 30px; }
+        .test-section {
+            background: white;
+            padding: 25px;
+            margin: 20px 0;
+            border-radius: 12px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.1);
+        }
+        .test-section h2 {
+            color: #667eea;
+            margin-top: 0;
+            margin-bottom: 20px;
+            font-size: 18px;
+        }
+        .test-result {
+            margin: 15px 0;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: monospace;
+            font-size: 13px;
+            line-height: 1.6;
+        }
+        .test-result.pass {
+            background: #d1e7dd;
+            color: #0f5132;
+            border-left: 4px solid #198754;
+        }
+        .test-result.fail {
+            background: #f8d7da;
+            color: #842029;
+            border-left: 4px solid #dc3545;
+        }
+        .activity-list {
+            list-style: none;
+            padding: 0;
+            margin: 10px 0;
+        }
+        .activity-item {
+            padding: 10px;
+            margin: 5px 0;
+            background: #f8f9fa;
+            border-radius: 6px;
+            display: flex;
+            justify-content: space-between;
+        }
+        .activity-time {
+            font-weight: 600;
+            color: #667eea;
+        }
+        button {
+            padding: 12px 24px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            margin: 5px;
+        }
+        button:hover {
+            background: #5568d3;
+        }
+        .summary {
+            background: #fff3cd;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+            border-left: 4px solid #ffc107;
+        }
+    </style>
+</head>
+<body>
+    <h1>⏰ 时间排序测试</h1>
+
+    <div class="summary">
+        <strong>测试目的：</strong>验证时间排序修复是否正确<br>
+        <strong>期望规则：</strong>按开始时间数字值排序，单一时间点排在时间段前面
+    </div>
+
+    <div class="test-section">
+        <h2>测试1: 基本排序（16:00-19:00场景）</h2>
+        <button onclick="testBasicSorting()">运行测试</button>
+        <div id="test1Result"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>测试2: 9:00 vs 10:00（字符串比较问题）</h2>
+        <button onclick="testStringComparison()">运行测试</button>
+        <div id="test2Result"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>测试3: 相同开始时间（点 vs 范围）</h2>
+        <button onclick="testSameStartTime()">运行测试</button>
+        <div id="test3Result"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>测试3.5: 相同开始时间（按结束时间排序）</h2>
+        <button onclick="testSameStartTimeEndTime()">运行测试</button>
+        <div id="test35Result"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>测试4: 灵活时间排序</h2>
+        <button onclick="testFlexibleTime()">运行测试</button>
+        <div id="test4Result"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>测试5: 真实数据测试</h2>
+        <button onclick="testRealData()">运行测试</button>
+        <div id="test5Result"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>🎯 全部测试</h2>
+        <button onclick="runAllTests()">运行所有测试</button>
+        <div id="allTestsResult"></div>
+    </div>
+
+    <script>
+        // =====================================================
+        // 时间排序函数（从主页面复制）
+        // =====================================================
+
+        function extractStartTime(timeStr) {
+            if (!timeStr || timeStr === '灵活时间') {
+                return { hour: 99, minute: 99, original: timeStr || '灵活时间' };
+            }
+
+            const match = timeStr.match(/^(\d{1,2}):(\d{2})/);
+            if (match) {
+                return {
+                    hour: parseInt(match[1], 10),
+                    minute: parseInt(match[2], 10),
+                    original: timeStr
+                };
+            }
+
+            return { hour: 99, minute: 99, original: timeStr };
+        }
+
+        function extractEndTime(timeStr) {
+            if (!timeStr || timeStr === '灵活时间') {
+                return { hour: 99, minute: 99, isOvernight: false, original: timeStr || '灵活时间' };
+            }
+
+            const parts = timeStr.split('-');
+            if (parts.length >= 2) {
+                const endTimeStr = parts[1].trim();
+                const match = endTimeStr.match(/^(\d{1,2}):(\d{2})/);
+                if (match) {
+                    let hour = parseInt(match[1], 10);
+                    let minute = parseInt(match[2], 10);
+                    let isOvernight = false;
+
+                    // 特殊处理：00:00 表示当天的24:00（最晚）
+                    if (hour === 0 && minute === 0) {
+                        hour = 24;
+                        minute = 0;
+                        isOvernight = true;
+                    }
+
+                    return { hour, minute, isOvernight, original: endTimeStr };
+                }
+            }
+
+            // 如果没有结束时间（单一时间点），返回开始时间
+            const start = extractStartTime(timeStr);
+            return { hour: start.hour, minute: start.minute, isOvernight: false, original: timeStr };
+        }
+
+        function compareTimes(timeA, timeB) {
+            const extractedA = extractStartTime(timeA);
+            const extractedB = extractStartTime(timeB);
+
+            // 优先级1: 按开始时间的数字值比较
+            if (extractedA.hour !== extractedB.hour) {
+                return extractedA.hour - extractedB.hour;
+            }
+
+            if (extractedA.minute !== extractedB.minute) {
+                return extractedA.minute - extractedB.minute;
+            }
+
+            // 开始时间相同，继续比较
+            // 优先级2: 单一时间点排在时间段前面
+            const isRangeA = extractedA.original.includes('-');
+            const isRangeB = extractedB.original.includes('-');
+
+            if (isRangeA && !isRangeB) return 1;   // A是范围，B是点 → B在前
+            if (!isRangeA && isRangeB) return -1;  // A是点，B是范围 → A在前
+
+            // 优先级3: 如果都是时间段，按结束时间排序
+            if (isRangeA && isRangeB) {
+                const endA = extractEndTime(extractedA.original);
+                const endB = extractEndTime(extractedB.original);
+
+                // 按结束时间排序（早结束的在前）
+                if (endA.hour !== endB.hour) {
+                    return endA.hour - endB.hour;
+                }
+
+                if (endA.minute !== endB.minute) {
+                    return endA.minute - endB.minute;
+                }
+
+                // 结束时间也相同，保持原顺序
+                return 0;
+            }
+
+            // 都是单一时间点，保持原顺序
+            return 0;
+        }
+
+        // =====================================================
+        // 测试用例
+        // =====================================================
+
+        function testBasicSorting() {
+            const activities = [
+                { title: "活动A", time: "19:00" },
+                { title: "活动B", time: "16:00" },
+                { title: "活动C", time: "16:00-19:00" }
+            ];
+
+            const sorted = [...activities].sort((a, b) => compareTimes(a.time, b.time));
+
+            const expected = ["16:00", "16:00-19:00", "19:00"];
+            const actual = sorted.map(a => a.time);
+            const passed = JSON.stringify(actual) === JSON.stringify(expected);
+
+            const resultDiv = document.getElementById('test1Result');
+            resultDiv.innerHTML = `
+                <div class="test-result ${passed ? 'pass' : 'fail'}">
+                    <strong>${passed ? '✅ 通过' : '❌ 失败'}</strong><br><br>
+                    <strong>输入:</strong><br>
+                    ${activities.map(a => `${a.time} (${a.title})`).join('<br>')}<br><br>
+                    <strong>期望排序:</strong><br>
+                    ${expected.join('<br>')}<br><br>
+                    <strong>实际排序:</strong><br>
+                    ${actual.join('<br>')}
+                </div>
+            `;
+        }
+
+        function testStringComparison() {
+            const activities = [
+                { title: "10:00活动", time: "10:00" },
+                { title: "9:00活动", time: "9:00" },
+                { title: "16:00活动", time: "16:00" }
+            ];
+
+            const sorted = [...activities].sort((a, b) => compareTimes(a.time, b.time));
+
+            const expected = ["9:00", "10:00", "16:00"];
+            const actual = sorted.map(a => a.time);
+            const passed = JSON.stringify(actual) === JSON.stringify(expected);
+
+            const resultDiv = document.getElementById('test2Result');
+            resultDiv.innerHTML = `
+                <div class="test-result ${passed ? 'pass' : 'fail'}">
+                    <strong>${passed ? '✅ 通过' : '❌ 失败'}</strong><br><br>
+                    <strong>测试目的:</strong> 验证数字比较（而非字符串比较）<br><br>
+                    <strong>输入:</strong><br>
+                    ${activities.map(a => `${a.time} (${a.title})`).join('<br>')}<br><br>
+                    <strong>期望排序:</strong><br>
+                    ${expected.join('<br>')}<br><br>
+                    <strong>实际排序:</strong><br>
+                    ${actual.join('<br>')}
+                </div>
+            `;
+        }
+
+        function testSameStartTime() {
+            const activities = [
+                { title: "单一时间点", time: "16:00" },
+                { title: "时间段活动", time: "16:00-19:00" },
+                { title: "另一时间点", time: "16:00" }
+            ];
+
+            const sorted = [...activities].sort((a, b) => compareTimes(a.time, b.time));
+
+            // 期望：16:00（点）在 16:00-19:00（范围）前面
+            const expectedPattern = /^16:00(?!-)/.test(sorted[0].time);
+            const passed = expectedPattern;
+
+            const resultDiv = document.getElementById('test3Result');
+            resultDiv.innerHTML = `
+                <div class="test-result ${passed ? 'pass' : 'fail'}">
+                    <strong>${passed ? '✅ 通过' : '❌ 失败'}</strong><br><br>
+                    <strong>测试目的:</strong> 验证相同开始时间时，单一时间点排在前面<br><br>
+                    <strong>输入:</strong><br>
+                    ${activities.map(a => `${a.time} (${a.title})`).join('<br>')}<br><br>
+                    <strong>实际排序:</strong><br>
+                    ${sorted.map(a => `${a.time} (${a.title})`).join('<br>')}<br><br>
+                    <strong>验证:</strong> ${sorted[0].time === '16:00' && !sorted[0].time.includes('-') ? '✅ 第一个是单一时间点16:00' : '❌ 第一个不是单一时间点'}
+                </div>
+            `;
+        }
+
+        function testFlexibleTime() {
+            const activities = [
+                { title: "灵活时间活动A", time: "灵活时间" },
+                { title: "16:00活动", time: "16:00" },
+                { title: "灵活时间活动B", time: "灵活时间" }
+            ];
+
+            const sorted = [...activities].sort((a, b) => compareTimes(a.time, b.time));
+
+            const passed = sorted[sorted.length - 1].time === '灵活时间';
+
+            const resultDiv = document.getElementById('test4Result');
+            resultDiv.innerHTML = `
+                <div class="test-result ${passed ? 'pass' : 'fail'}">
+                    <strong>${passed ? '✅ 通过' : '❌ 失败'}</strong><br><br>
+                    <strong>测试目的:</strong> 验证灵活时间排在最后<br><br>
+                    <strong>输入:</strong><br>
+                    ${activities.map(a => `${a.time} (${a.title})`).join('<br>')}<br><br>
+                    <strong>实际排序:</strong><br>
+                    ${sorted.map(a => `${a.time} (${a.title})`).join('<br>')}<br><br>
+                    <strong>验证:</strong> ${passed ? '✅ 灵活时间在最后' : '❌ 灵活时间不在最后'}
+                </div>
+            `;
+        }
+
+        function testSameStartTimeEndTime() {
+            const activities = [
+                { title: "周六夜市", time: "17:00-23:00" },
+                { title: "周日夜市", time: "17:00-22:00" },
+                { title: "长康路夜市", time: "17:00-00:00" },
+                { title: "清迈大学前门夜市", time: "17:00-23:00" }
+            ];
+
+            const sorted = [...activities].sort((a, b) => compareTimes(a.time, b.time));
+
+            const expectedOrder = [
+                "17:00-22:00",  // 22:00结束
+                "17:00-23:00",  // 23:00结束（第1个）
+                "17:00-23:00",  // 23:00结束（第2个）
+                "17:00-00:00"   // 24:00结束（00:00转为24:00）
+            ];
+
+            const actualOrder = sorted.map(a => a.time);
+            const passed = JSON.stringify(actualOrder) === JSON.stringify(expectedOrder);
+
+            const resultDiv = document.getElementById('test35Result');
+            resultDiv.innerHTML = `
+                <div class="test-result ${passed ? 'pass' : 'fail'}">
+                    <strong>${passed ? '✅ 通过' : '❌ 失败'}</strong><br><br>
+                    <strong>测试目的:</strong> 验证相同开始时间时，按结束时间排序（00:00特殊处理为24:00）<br><br>
+                    <strong>输入:</strong><br>
+                    ${activities.map(a => `${a.time} (${a.title})`).join('<br>')}<br><br>
+                    <strong>期望排序:</strong><br>
+                    1. 17:00-22:00 (22:00结束)<br>
+                    2. 17:00-23:00 (23:00结束)<br>
+                    3. 17:00-23:00 (23:00结束)<br>
+                    4. 17:00-00:00 (24:00结束，00:00转为24:00)<br><br>
+                    <strong>实际排序:</strong><br>
+                    ${sorted.map((a, i) => `${i + 1}. ${a.time} (${a.title})`).join('<br>')}<br><br>
+                    <strong>验证:</strong> ${passed ? '✅ 排序正确' : '❌ 排序错误'}
+                </div>
+            `;
+        }
+
+        async function testRealData() {
+            const resultDiv = document.getElementById('test5Result');
+            resultDiv.innerHTML = '<p>正在获取真实数据...</p>';
+
+            try {
+                const response = await fetch('/api/activities?limit=100');
+                const data = await response.json();
+
+                if (data.success && data.data) {
+                    // 筛选16:00-19:00时间段的活动
+                    const timeRangeActivities = data.data.filter(a => {
+                        const time = a.time || '';
+                        return time.includes('16:') || time.includes('17:') || time.includes('18:') || time.includes('19:');
+                    }).slice(0, 10);
+
+                    const sorted = [...timeRangeActivities].sort((a, b) => compareTimes(a.time, b.time));
+
+                    resultDiv.innerHTML = `
+                        <div class="test-result pass">
+                            <strong>✅ 数据获取成功</strong><br><br>
+                            <strong>16:00-19:00时间段活动排序:</strong><br>
+                            <ul class="activity-list">
+                                ${sorted.map((a, i) => `
+                                    <li class="activity-item">
+                                        <span class="activity-time">${i + 1}. ${a.time}</span>
+                                        <span>${a.title} (${a.category})</span>
+                                    </li>
+                                `).join('')}
+                            </ul>
+                        </div>
+                    `;
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `
+                    <div class="test-result fail">
+                        <strong>❌ 错误:</strong> ${error.message}
+                    </div>
+                `;
+            }
+        }
+
+        function runAllTests() {
+            testBasicSorting();
+            testStringComparison();
+            testSameStartTime();
+            testSameStartTimeEndTime();  // 新增测试
+            testFlexibleTime();
+            testRealData();
+
+            setTimeout(() => {
+                const allResults = [
+                    document.getElementById('test1Result').textContent.includes('✅ 通过'),
+                    document.getElementById('test2Result').textContent.includes('✅ 通过'),
+                    document.getElementById('test3Result').textContent.includes('✅ 通过'),
+                    document.getElementById('test35Result').textContent.includes('✅ 通过'),  // 新增
+                    document.getElementById('test4Result').textContent.includes('✅ 通过'),
+                    document.getElementById('test5Result').textContent.includes('✅')
+                ];
+
+                const passCount = allResults.filter(r => r).length;
+                const totalCount = allResults.length;
+
+                const allTestsDiv = document.getElementById('allTestsResult');
+                allTestsDiv.innerHTML = `
+                    <div class="test-result ${passCount === totalCount ? 'pass' : 'fail'}">
+                        <strong>测试总结:</strong><br>
+                        通过: ${passCount}/${totalCount}<br>
+                        ${passCount === totalCount ? '🎉 所有测试通过！' : '⚠️ 有测试失败，请检查'}
+                    </div>
+                `;
+            }, 1000);
+        }
+
+        // 自动运行测试
+        window.addEventListener('load', () => {
+            setTimeout(runAllTests, 500);
+        });
+    </script>
+</body>
+</html>

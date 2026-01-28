@@ -81,6 +81,7 @@ function convertToProjectFormat(excelData) {
     return {
       id: Date.now() + index,
       _id: Date.now() + index,
+      activityNumber: item['活动编号'] || String(index + 1).padStart(4, '0'),
       title: title,
       description: item['活动描述*'] || item['活动描述'] || '',
       category: item['分类*'] || item['分类'] || '其他',
@@ -103,7 +104,7 @@ function convertToProjectFormat(excelData) {
       images: item['图片URL'] ? item['图片URL'].split('\n').filter(s => s.trim()) : [],
       source: {
         name: 'Excel导入',
-        url: item['来源链接'] || '',
+        url: item['来源链接'] || item['链接'] || item['URL'] || '',
         type: 'excel',
         lastUpdated: new Date().toISOString()
       },
@@ -157,15 +158,24 @@ async function importData() {
     let duplicateCount = 0;
 
     activities.forEach(newActivity => {
-      const isDuplicate = existingData.some(existing =>
+      const existingIndex = existingData.findIndex(existing =>
         existing.title === newActivity.title &&
         existing.location === newActivity.location
       );
 
-      if (!isDuplicate) {
+      if (existingIndex === -1) {
+        // 新增
         mergedData.push(newActivity);
         addedCount++;
       } else {
+        // 更新已存在的数据（保留原有ID，更新其他字段）
+        const existingItem = existingData[existingIndex];
+        mergedData[existingIndex] = {
+          ...existingItem,
+          ...newActivity,
+          id: existingItem.id,
+          _id: existingItem._id
+        };
         duplicateCount++;
       }
     });

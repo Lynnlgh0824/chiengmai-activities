@@ -40,6 +40,12 @@
             gap: 15px;
             margin-bottom: 25px;
             flex-wrap: wrap;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: white;
+            padding: 10px 0;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
         }
 
         .btn {
@@ -216,6 +222,7 @@
 
         .status-pending { background: #FFA726; color: white; }
         .status-ongoing { background: #66BB6A; color: white; }
+        .status-suspended { background: #2196F3; color: white; }
         .status-expired { background: #EF5350; color: white; }
         .status-draft { background: #9E9E9E; color: white; }
 
@@ -441,6 +448,9 @@
                 <button class="btn btn-secondary" onclick="exportToExcel()" style="display: inline-flex; align-items: center; gap: 5px;">
                     📤 导出Excel
                 </button>
+                <button class="btn btn-primary" onclick="openGuideModal()" style="display: inline-flex; align-items: center; gap: 5px; background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
+                    📖 攻略管理
+                </button>
             </div>
             <div style="display: flex; gap: 15px; align-items: center;">
                 <select id="categoryFilter" class="btn btn-secondary">
@@ -458,6 +468,7 @@
                     <option value="draft">草稿</option>
                     <option value="pending">待开始</option>
                     <option value="ongoing">进行中</option>
+                    <option value="suspended">暂停中</option>
                     <option value="expired">已过期</option>
                 </select>
                 <button class="btn btn-primary" onclick="openFormModal()">
@@ -474,17 +485,19 @@
                         <th style="width: 80px;">活动编号</th>
                         <th>标题</th>
                         <th style="width: 100px;">分类</th>
-                        <th style="width: 120px;">日期</th>
+                        <th style="width: 150px;">日期/星期</th>
                         <th style="width: 100px;">时间</th>
                         <th style="width: 100px;">地点</th>
                         <th style="width: 100px;">价格</th>
+                        <th style="width: 80px;">链接</th>
                         <th style="width: 80px;">状态</th>
+                        <th style="width: 150px;">最后更新时间</th>
                         <th style="width: 150px;">操作</th>
                     </tr>
                 </thead>
                 <tbody id="tableBody">
                     <tr>
-                        <td colspan="10" style="text-align: center; padding: 40px; color: #999;">
+                        <td colspan="12" style="text-align: center; padding: 40px; color: #999;">
                             加载中...
                         </td>
                     </tr>
@@ -533,6 +546,7 @@
                             <option value="draft">草稿</option>
                             <option value="pending">待开始</option>
                             <option value="ongoing">进行中</option>
+                            <option value="suspended">暂停中</option>
                             <option value="expired">已过期</option>
                         </select>
                     </div>
@@ -633,6 +647,17 @@
                     </div>
                 </div>
 
+                <!-- 灵活时间选项 -->
+                <div class="form-group" style="margin-top: 15px; padding: 12px; background: #f0f4ff; border-radius: 8px; border-left: 4px solid #667eea;">
+                    <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; margin: 0;">
+                        <input type="checkbox" id="flexibleTime" name="flexibleTime">
+                        <span style="font-weight: 500;">🕐 灵活时间活动</span>
+                    </label>
+                    <div style="color: #666; font-size: 12px; margin-top: 8px; margin-left: 24px;">
+                        勾选此项表示活动时间灵活，参与者可以在开放时间范围内自由选择（如：全天开放的健身房、游泳、划船等）
+                    </div>
+                </div>
+
                 <!-- 地点信息 -->
                 <h3 style="margin: 20px 0 15px 0; color: #667eea;">📍 地点信息</h3>
                 <div class="form-group">
@@ -676,13 +701,7 @@
                 <div class="form-row">
                     <div class="form-group">
                         <label>
-                            <input type="checkbox" id="flexibleTime" name="flexibleTime">
-                            灵活时间活动
-                        </label>
-                    </div>
-                    <div class="form-group">
-                        <label>
-                            <input type="checkbox" id="bookingRequired" name="bookingRequired" checked>
+                            <input type="checkbox" id="requireBooking" name="requireBooking" checked>
                             需要预约
                         </label>
                     </div>
@@ -732,6 +751,207 @@
         </div>
     </div>
 
+    <!-- 攻略管理弹窗 -->
+    <div class="modal" id="guideModal">
+        <div class="modal-content" style="max-width: 1000px;">
+            <div class="modal-header">
+                <div>📖 攻略信息管理</div>
+                <button class="close-btn" onclick="closeGuideModal()">✕</button>
+            </div>
+
+            <div class="modal-body">
+                <!-- 富文本编辑器工具栏 -->
+                <div style="border: 1px solid #e0e0e0; border-bottom: none; padding: 10px; background: #f5f5f5; border-radius: 8px 8px 0 0; display: flex; gap: 5px; flex-wrap: wrap; align-items: center;">
+                    <button type="button" onclick="formatDoc('bold')" class="btn btn-secondary" style="padding: 6px 12px; font-weight: bold;" title="粗体">B</button>
+                    <button type="button" onclick="formatDoc('italic')" class="btn btn-secondary" style="padding: 6px 12px; font-style: italic;" title="斜体">I</button>
+                    <button type="button" onclick="formatDoc('underline')" class="btn btn-secondary" style="padding: 6px 12px; text-decoration: underline;" title="下划线">U</button>
+                    <div style="width: 1px; background: #ddd; margin: 0 5px;"></div>
+                    <button type="button" onclick="formatDoc('justifyLeft')" class="btn btn-secondary" style="padding: 6px 12px;" title="左对齐">⇤</button>
+                    <button type="button" onclick="formatDoc('justifyCenter')" class="btn btn-secondary" style="padding: 6px 12px;" title="居中">⇔</button>
+                    <button type="button" onclick="formatDoc('justifyRight')" class="btn btn-secondary" style="padding: 6px 12px;" title="右对齐">⇥</button>
+                    <div style="width: 1px; background: #ddd; margin: 0 5px;"></div>
+                    <button type="button" onclick="formatDoc('insertUnorderedList')" class="btn btn-secondary" style="padding: 6px 12px;" title="无序列表">•≡</button>
+                    <button type="button" onclick="formatDoc('insertOrderedList')" class="btn btn-secondary" style="padding: 6px 12px;" title="有序列表">1≡</button>
+                    <div style="width: 1px; background: #ddd; margin: 0 5px;"></div>
+                    <select onchange="formatDoc('formatBlock', this.value)" class="btn btn-secondary" style="padding: 6px;">
+                        <option value="p">段落</option>
+                        <option value="h1">标题1</option>
+                        <option value="h2">标题2</option>
+                        <option value="h3">标题3</option>
+                        <option value="h4">标题4</option>
+                    </select>
+                    <select onchange="formatDoc('fontName', this.value)" class="btn btn-secondary" style="padding: 6px;">
+                        <option value="Arial">Arial</option>
+                        <option value="Georgia">Georgia</option>
+                        <option value="Times New Roman">Times New Roman</option>
+                        <option value="Courier New">Courier New</option>
+                    </select>
+                    <select onchange="formatDoc('fontSize', this.value)" class="btn btn-secondary" style="padding: 6px;">
+                        <option value="1">小</option>
+                        <option value="3">正常</option>
+                        <option value="5">大</option>
+                        <option value="7">特大</option>
+                    </select>
+                    <div style="width: 1px; background: #ddd; margin: 0 5px;"></div>
+                    <input type="color" onchange="formatDoc('foreColor', this.value)" class="btn btn-secondary" style="padding: 2px 6px; height: 32px; width: 40px;" title="文字颜色">
+                    <input type="color" onchange="formatDoc('hiliteColor', this.value)" class="btn btn-secondary" style="padding: 2px 6px; height: 32px; width: 40px;" value="#ffff00" title="背景颜色">
+                    <div style="width: 1px; background: #ddd; margin: 0 5px;"></div>
+                    <button type="button" onclick="cleanEditorContent()" class="btn btn-primary" style="padding: 6px 12px; font-size: 12px;" title="一键清理格式">🧹 清理格式</button>
+                </div>
+
+                <!-- 富文本编辑区域 -->
+                <div id="guideEditor" contenteditable="true" style="
+                    border: 1px solid #e0e0e0;
+                    border-radius: 0 0 8px 8px;
+                    min-height: 500px;
+                    max-height: 800px;
+                    overflow-y: auto;
+                    padding: 20px;
+                    font-size: 14px;
+                    line-height: 1.8;
+                    background: white;
+                    margin-bottom: 10px;
+                "></div>
+
+                <style>
+                    /* 攻略编辑器样式 - 保持层级清晰 */
+                    #guideEditor {
+                        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "PingFang SC", "Microsoft YaHei", sans-serif !important;
+                        font-size: 14px !important;
+                        line-height: 1.6 !important;
+                        color: #333 !important;
+                    }
+
+                    /* 标题层级清晰显示 */
+                    #guideEditor h1 {
+                        display: block !important;
+                        width: 100% !important;
+                        margin: 30px 0 12px 0 !important;
+                        padding: 8px 0 !important;
+                        font-size: 18px !important;
+                        font-weight: 700 !important;
+                        line-height: 1.4 !important;
+                        color: #222 !important;
+                        border-bottom: 2px solid #667eea !important;
+                        clear: both !important;
+                    }
+                    #guideEditor h2 {
+                        font-size: 16px !important;
+                        font-weight: 600 !important;
+                        margin: 14px 0 6px 0 !important;
+                        line-height: 1.4 !important;
+                        color: #333 !important;
+                    }
+                    #guideEditor h3 {
+                        font-size: 15px !important;
+                        font-weight: 600 !important;
+                        margin: 12px 0 6px 0 !important;
+                        line-height: 1.4 !important;
+                        color: #444 !important;
+                    }
+                    #guideEditor h4 {
+                        font-size: 14px !important;
+                        font-weight: 600 !important;
+                        margin: 10px 0 6px 0 !important;
+                        line-height: 1.4 !important;
+                        color: #555 !important;
+                    }
+
+                    /* 段落样式 */
+                    #guideEditor p {
+                        margin: 8px 0 !important;
+                        line-height: 1.6 !important;
+                        font-size: 14px !important;
+                        color: #333 !important;
+                    }
+
+                    /* 列表样式 */
+                    #guideEditor ul, #guideEditor ol {
+                        margin: 8px 0 !important;
+                        padding-left: 24px !important;
+                    }
+                    #guideEditor li {
+                        margin: 4px 0 !important;
+                        line-height: 1.6 !important;
+                        font-size: 14px !important;
+                        color: #333 !important;
+                    }
+
+                    /* 文本格式 */
+                    #guideEditor strong {
+                        font-weight: 600 !important;
+                        color: #222 !important;
+                    }
+                    #guideEditor em, #guideEditor i {
+                        font-style: italic !important;
+                    }
+                    #guideEditor u {
+                        text-decoration: underline !important;
+                    }
+
+                    /* 表格样式 - 保持边框清晰 */
+                    #guideEditor table {
+                        border-collapse: collapse !important;
+                        width: 100% !important;
+                        margin: 12px 0 !important;
+                        font-size: 13px !important;
+                        border: 2px solid #ddd !important;
+                    }
+                    #guideEditor th, #guideEditor td {
+                        border: 1px solid #ddd !important;
+                        padding: 8px 12px !important;
+                        text-align: left !important;
+                        line-height: 1.5 !important;
+                        font-size: 13px !important;
+                        vertical-align: top !important;
+                    }
+                    #guideEditor th {
+                        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+                        color: white !important;
+                        font-weight: 600 !important;
+                        text-align: center !important;
+                    }
+                    #guideEditor tr:nth-child(even) {
+                        background-color: #f9f9f9 !important;
+                    }
+                    #guideEditor tr:hover {
+                        background-color: #f0f4ff !important;
+                    }
+
+                    /* 链接样式 */
+                    #guideEditor a {
+                        color: #667eea !important;
+                        text-decoration: none !important;
+                        border-bottom: 1px dotted #667eea !important;
+                    }
+                    #guideEditor a:hover {
+                        color: #764ba2 !important;
+                        border-bottom-style: solid !important;
+                    }
+
+                    /* 清除所有元素的内联样式干扰 */
+                    #guideEditor *[style*="font-size"],
+                    #guideEditor *[style*="color"],
+                    #guideEditor *[style*="font-family"] {
+                        font-size: inherit !important;
+                        color: inherit !important;
+                        font-family: inherit !important;
+                    }
+                </style>
+
+                <!-- 提示信息 -->
+                <div style="color: #666; font-size: 12px; padding: 10px; background: #f0f0f0; border-radius: 6px;">
+                    💡 提示：可以粘贴富文本内容，使用工具栏格式化文字，或直接输入内容。保存后将显示在前端的"攻略信息"Tab中。
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" onclick="closeGuideModal()">取消</button>
+                <button type="button" class="btn btn-success" onclick="saveGuideContent()">💾 保存攻略</button>
+            </div>
+        </div>
+    </div>
+
     <script>
         const API_BASE = 'http://localhost:3000/api';
         let items = [];
@@ -750,7 +970,7 @@
                 renderTable();
             } catch (error) {
                 console.error('加载失败:', error);
-                document.getElementById('tableBody').innerHTML = '<tr><td colspan="10" style="text-align: center; color: #999;">加载失败</td></tr>';
+                document.getElementById('tableBody').innerHTML = '<tr><td colspan="12" style="text-align: center; color: #999;">加载失败</td></tr>';
             }
         }
 
@@ -770,7 +990,7 @@
             }
 
             if (filteredItems.length === 0) {
-                document.getElementById('tableBody').innerHTML = '<tr><td colspan="10" style="text-align: center; padding: 40px; color: #999;">暂无数据</td></tr>';
+                document.getElementById('tableBody').innerHTML = '<tr><td colspan="12" style="text-align: center; padding: 40px; color: #999;">暂无数据</td></tr>';
                 return;
             }
 
@@ -778,17 +998,57 @@
                 let activityNumber = item.activityNumber || item['活动编号'] || '-';
                 // 去掉#号，只显示数字
                 activityNumber = activityNumber.replace('#', '');
+
+                // 显示日期或星期
+                let dateDisplay = '-';
+                if (item.weekdays && Array.isArray(item.weekdays) && item.weekdays.length > 0) {
+                    // 固定频率活动：显示星期（最多显示4个，超过显示"等"）
+                    const displayWeekdays = item.weekdays.slice(0, 4);
+                    dateDisplay = displayWeekdays.join(', ');
+                    if (item.weekdays.length > 4) {
+                        dateDisplay += ' 等' + item.weekdays.length + '天';
+                    }
+                } else if (item.date) {
+                    // 临时活动：显示具体日期
+                    dateDisplay = item.date;
+                }
+
+                // 显示来源链接
+                let sourceLink = '-';
+                if (item.source && item.source.url) {
+                    sourceLink = `<a href="${item.source.url}" target="_blank" style="color: #667eea; text-decoration: none;" title="${item.source.url}">🔗</a>`;
+                }
+
+                // 显示最后更新时间
+                let updatedAtDisplay = '-';
+                if (item.updatedAt) {
+                    try {
+                        const date = new Date(item.updatedAt);
+                        // 格式化为：YYYY-MM-DD HH:mm
+                        const year = date.getFullYear();
+                        const month = String(date.getMonth() + 1).padStart(2, '0');
+                        const day = String(date.getDate()).padStart(2, '0');
+                        const hours = String(date.getHours()).padStart(2, '0');
+                        const minutes = String(date.getMinutes()).padStart(2, '0');
+                        updatedAtDisplay = `${year}-${month}-${day}<br><small style="color: #999;">${hours}:${minutes}</small>`;
+                    } catch (e) {
+                        updatedAtDisplay = '-';
+                    }
+                }
+
                 return `
                 <tr>
                     <td>${index + 1}</td>
                     <td><strong>${activityNumber}</strong></td>
                     <td><strong>${escapeHtml(item.title)}</strong></td>
-                    <td><span class="category-badge badge-${item.category}">${item.category}</span></td>
-                    <td>${item.date || '-'}</td>
+                    <td>${item.category}</td>
+                    <td style="font-size: 12px; line-height: 1.4;">${dateDisplay}</td>
                     <td>${item.time || '-'}</td>
                     <td>${escapeHtml(item.location || '-').substring(0, 15)}</td>
                     <td>${item.price || '-'}</td>
+                    <td style="text-align: center;">${sourceLink}</td>
                     <td><span class="status-badge status-${item.status}">${getStatusText(item.status)}</span></td>
+                    <td style="font-size: 12px; line-height: 1.4;">${updatedAtDisplay}</td>
                     <td>
                         <button class="btn btn-primary" onclick="editItem('${item.id}')" style="padding: 6px 12px; font-size: 12px;">编辑</button>
                         <button class="btn btn-danger" onclick="deleteItem('${item.id}')" style="padding: 6px 12px; font-size: 12px;">删除</button>
@@ -979,9 +1239,26 @@
                     if (item.weekdays && item.weekdays.length > 0) {
                         // 固定频率活动
                         switchTabWithoutEvent('fixed');
+
+                        // 将字符串星期转换为数字
+                        const weekdayMap = {
+                            '周一': 1,
+                            '周二': 2,
+                            '周三': 3,
+                            '周四': 4,
+                            '周五': 5,
+                            '周六': 6,
+                            '周日': 0,
+                            '1': 1, '2': 2, '3': 3, '4': 4, '5': 5, '6': 6, '0': 0
+                        };
+
+                        // 将数据中的星期字符串转换为数字数组
+                        const weekdayNumbers = item.weekdays.map(w => w in weekdayMap ? weekdayMap[w] : parseInt(w));
+
                         // 设置选中的星期
                         document.querySelectorAll('.weekday-checkbox').forEach(checkbox => {
-                            checkbox.checked = item.weekdays.includes(parseInt(checkbox.value));
+                            const checkboxValue = parseInt(checkbox.value);
+                            checkbox.checked = weekdayNumbers.includes(checkboxValue);
                         });
                         safeSetValue('fixedTime', item.time || '');
                         safeSetValue('duration', item.duration || '');
@@ -999,8 +1276,15 @@
                     safeSetValue('priceMin', item.priceMin || '');
                     safeSetValue('priceMax', item.priceMax || '');
                     safeSetValue('maxParticipants', item.maxParticipants || '');
-                    safeChecked('flexibleTime', item.flexibleTime || false);
-                    safeChecked('bookingRequired', item.bookingRequired !== undefined ? item.bookingRequired : true);
+                    // 修复：正确处理字符串"是"/"否"
+                    safeChecked('flexibleTime', item.flexibleTime === '是' || item.flexibleTime === true);
+                    // requireBooking 可能是布尔值或字符串
+                    const requireBooking = item.requireBooking;
+                    safeChecked('requireBooking',
+                        requireBooking === true ||
+                        requireBooking === '是' ||
+                        requireBooking === undefined
+                    );
 
                     // 处理图片
                     const images = item.images || [];
@@ -1131,9 +1415,9 @@
                 delete data.weekdays;
             }
 
-            // 处理复选框
-            data.flexibleTime = document.getElementById('flexibleTime').checked;
-            data.bookingRequired = document.getElementById('bookingRequired').checked;
+            // 处理复选框 - 转换为字符串"是"/"否"
+            data.flexibleTime = document.getElementById('flexibleTime').checked ? '是' : '否';
+            data.requireBooking = document.getElementById('requireBooking').checked ? '是' : '否';
 
             // 处理图片数组
             data.images = document.getElementById('images').value.split('\n').filter(url => url.trim());
@@ -1152,6 +1436,9 @@
             delete data.sourceUrl;
             delete data.fixedTime;
             delete data.tempDuration;
+
+            // 添加最后更新时间
+            data.updatedAt = new Date().toISOString();
 
             try {
                 const id = document.getElementById('itemId').value;
@@ -1208,6 +1495,7 @@
                 'draft': '草稿',
                 'pending': '待开始',
                 'ongoing': '进行中',
+                'suspended': '暂停中',
                 'expired': '已过期',
                 'active': '活跃' // 兼容旧数据
             };
@@ -1435,6 +1723,224 @@
                 btn.disabled = false;
                 btn.innerHTML = originalText;
             }
+        }
+
+        // ==================== 攻略管理相关函数 ====================
+
+        /**
+         * 打开攻略管理弹窗
+         */
+        async function openGuideModal() {
+            const modal = document.getElementById('guideModal');
+            modal.style.display = 'flex';
+
+            // 先清空编辑器
+            const editor = document.getElementById('guideEditor');
+            editor.innerHTML = '';
+
+            // 加载现有攻略内容
+            try {
+                const response = await fetch(`${API_BASE}/guide`);
+                const result = await response.json();
+
+                if (result.success && result.data) {
+                    // 使用 setTimeout 确保 DOM 已更新
+                    setTimeout(() => {
+                        let content = result.data.content || '';
+
+                        // 清除所有可能干扰显示的内联样式
+                        content = cleanInlineStyles(content);
+
+                        editor.innerHTML = content;
+                        console.log('✅ 攻略内容已加载，长度:', content.length);
+
+                        // 确保表格有正确的边框和样式
+                        setTimeout(() => {
+                            ensureTableStyles(editor);
+                            cleanElementStyles(editor);
+                        }, 50);
+                    }, 50);
+                } else {
+                    editor.innerHTML = '<p style="color:#999;text-align:center;padding:40px;">暂无攻略内容，请粘贴或输入内容</p>';
+                }
+            } catch (error) {
+                console.error('加载攻略失败:', error);
+                alert('❌ 加载攻略内容失败\n\n' + error.message);
+            }
+        }
+
+        /**
+         * 清除干扰显示的内联样式
+         */
+        function cleanInlineStyles(html) {
+            // 移除或清理style属性中的字体相关样式
+            html = html.replace(/style="([^"]*)"/gi, (match, styleContent) => {
+                // 移除font-size, font-family, color等样式
+                let cleaned = styleContent
+                    .replace(/font-size:\s*[^;]+;?/gi, '')
+                    .replace(/font-family:\s*[^;]+;?/gi, '')
+                    .replace(/color:\s*[^;]+;?/gi, '')
+                    .replace(/line-height:\s*[^;]+;?/gi, '')
+                    .replace(/background-color:\s*[^;]+;?/gi, '')
+                    .replace(/;\s*;/g, ';') // 移除重复的分号
+                    .replace(/^;\s*/g, '') // 移除开头的分号
+                    .replace(/;\s*$/g, ''); // 移除结尾的分号
+
+                // 如果清理后为空，移除整个style属性
+                return cleaned.trim() ? `style="${cleaned}"` : '';
+            });
+
+            // 移除空的style属性
+            html = html.replace(/\s+style=""/gi, '');
+
+            return html;
+        }
+
+        /**
+         * 清理DOM元素的内联样式
+         */
+        function cleanElementStyles(editor) {
+            const allElements = editor.querySelectorAll('*');
+            allElements.forEach(el => {
+                // 移除字体相关的内联样式
+                el.style.removeProperty('font-size');
+                el.style.removeProperty('font-family');
+                el.style.removeProperty('color');
+                el.style.removeProperty('line-height');
+                el.style.removeProperty('background-color');
+            });
+        }
+
+        /**
+         * 确保表格有正确的样式
+         */
+        function ensureTableStyles(editor) {
+            const tables = editor.querySelectorAll('table');
+            tables.forEach(table => {
+                // 确保表格有边框
+                if (!table.style.border) {
+                    table.style.border = '2px solid #ddd';
+                }
+
+                const cells = table.querySelectorAll('th, td');
+                cells.forEach(cell => {
+                    if (!cell.style.border) {
+                        cell.style.border = '1px solid #ddd';
+                    }
+                    if (!cell.style.padding) {
+                        cell.style.padding = '8px 12px';
+                    }
+                    if (!cell.style.verticalAlign) {
+                        cell.style.verticalAlign = 'top';
+                    }
+                });
+
+                // 确保表头有背景色
+                const headers = table.querySelectorAll('th');
+                headers.forEach(th => {
+                    if (!th.style.backgroundColor) {
+                        th.style.background = 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)';
+                        th.style.color = 'white';
+                    }
+                });
+            });
+        }
+
+        /**
+         * 关闭攻略管理弹窗
+         */
+        function closeGuideModal() {
+            document.getElementById('guideModal').style.display = 'none';
+        }
+
+        /**
+         * 保存攻略内容
+         */
+        async function saveGuideContent() {
+            const editor = document.getElementById('guideEditor');
+            let content = editor.innerHTML;
+
+            if (!content.trim() || content === '<br>') {
+                alert('⚠️ 内容不能为空');
+                return;
+            }
+
+            // 清理内联样式后再保存
+            content = cleanInlineStyles(content);
+
+            // 确保表格有必要的样式属性（不依赖外部CSS）
+            const tempDiv = document.createElement('div');
+            tempDiv.innerHTML = content;
+            ensureTableStyles(tempDiv);
+            content = tempDiv.innerHTML;
+
+            console.log('💾 准备保存攻略，长度:', content.length);
+            console.log('包含表情符号:', /[\u{1F300}-\u{1F9FF}]/u.test(content));
+
+            try {
+                const response = await fetch(`${API_BASE}/guide`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json; charset=utf-8'
+                    },
+                    body: JSON.stringify({ content })
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    console.log('✅ 攻略保存成功');
+                    alert('✅ 保存成功！\n\n攻略信息已更新，前端页面将自动刷新显示。');
+                    closeGuideModal();
+
+                    // 触发前端数据版本更新（可选）
+                    setTimeout(() => {
+                        console.log('💡 提示：如果前端未自动更新，请刷新页面查看最新内容');
+                    }, 1000);
+                } else {
+                    console.error('❌ 保存失败:', result.message);
+                    alert('❌ 保存失败\n\n' + result.message);
+                }
+            } catch (error) {
+                console.error('保存攻略失败:', error);
+                alert('❌ 保存失败\n\n' + error.message);
+            }
+        }
+
+        /**
+         * 富文本编辑器格式化函数
+         */
+        function formatDoc(cmd, value = null) {
+            document.execCommand(cmd, false, value);
+            document.getElementById('guideEditor').focus();
+        }
+
+        /**
+         * 一键清理编辑器内容格式
+         */
+        function cleanEditorContent() {
+            const editor = document.getElementById('guideEditor');
+            let content = editor.innerHTML;
+
+            console.log('🧹 清理前的内容长度:', content.length);
+
+            // 清理内联样式
+            content = cleanInlineStyles(content);
+
+            // 重新设置内容
+            editor.innerHTML = content;
+
+            // 清理DOM元素的内联样式
+            cleanElementStyles(editor);
+
+            // 确保表格样式
+            ensureTableStyles(editor);
+
+            console.log('✅ 清理后的内容长度:', content.length);
+            console.log('📊 清理掉了', (editor.innerHTML.length - content.length), '个字符');
+
+            // 提示用户
+            alert('✅ 格式已清理！\n\n已移除多余的内联样式，表格边框已优化。\n请检查内容是否正常，然后点击保存。');
         }
     </script>
 </body>

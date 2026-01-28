@@ -668,13 +668,27 @@
 
         .modal-category-badge {
             display: inline-block;
-            padding: 4px 12px;
-            background: #667eea;
+            padding: 6px 14px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
-            border-radius: 12px;
-            font-size: 12px;
+            border-radius: 16px;
+            font-size: 13px;
             font-weight: 500;
-            margin-bottom: 12px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(102, 126, 234, 0.25);
+
+            /* 文案展示优化 */
+            letter-spacing: 0.5px;           /* 字间距，提升可读性 */
+            line-height: 1.4;                 /* 行高，确保文字垂直居中 */
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.15);  /* 文字阴影，增加深度感 */
+            -webkit-font-smoothing: antialiased;         /* 字体平滑渲染，更清晰 */
+            -moz-osx-font-smoothing: grayscale;          /* macOS字体平滑 */
+            transition: all 0.2s ease;                    /* 平滑过渡动画 */
+        }
+
+        .modal-category-badge:hover {
+            transform: translateY(-1px);     /* 悬停微抬效果 */
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.35);  /* 悬停时加深阴影 */
         }
 
         /* 响应式设计 */

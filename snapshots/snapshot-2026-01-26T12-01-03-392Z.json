@@ -1,0 +1,562 @@
+{
+  "timestamp": "2026-01-26T12:01:03.392Z",
+  "filename": "清迈活动数据.xlsx",
+  "activityCount": 35,
+  "data": [
+    {
+      "id": "0002",
+      "activityNumber": "0002",
+      "title": "语言交换",
+      "category": "文化艺术",
+      "location": "Moat House",
+      "price": "walkin",
+      "time": "19:00-23:00",
+      "weekdays": [
+        "周二"
+      ],
+      "description": "入场会让你贴上贴纸，贴上会说的国家语言，然后就主动和人破冰聊天。",
+      "_tempIndex": 1,
+      "序号": 2
+    },
+    {
+      "id": "0003",
+      "activityNumber": "0003",
+      "title": "英语角",
+      "category": "文化艺术",
+      "location": "Much Room Cafe",
+      "price": "需购买咖啡",
+      "time": "10:30-12:30",
+      "weekdays": [
+        "周四"
+      ],
+      "description": "地点：Much Room Cafe。建议给老师购买一杯咖啡",
+      "_tempIndex": 2,
+      "序号": 3
+    },
+    {
+      "id": "0004",
+      "activityNumber": "0004",
+      "title": "咏春拳",
+      "category": "咏春拳",
+      "location": "清迈客栈",
+      "price": "免费",
+      "time": "10:00-11:00",
+      "weekdays": [
+        "周四"
+      ],
+      "description": "老外授课，纯英文，但并不妨碍学习，主要看动作",
+      "_tempIndex": 3,
+      "序号": 4
+    },
+    {
+      "id": "0005",
+      "activityNumber": "0005",
+      "title": "徒步",
+      "category": "徒步",
+      "location": "清迈客栈",
+      "price": "免费",
+      "time": "灵活时间",
+      "weekdays": [
+        "周六"
+      ],
+      "description": "每周五管理员会发徒步路线，接龙参加，自愿参加，遵守规则，风险自担",
+      "_tempIndex": 4,
+      "序号": 5
+    },
+    {
+      "id": "0006",
+      "activityNumber": "0006",
+      "title": "瑜伽（One Nimman）",
+      "category": "瑜伽",
+      "location": "One Nimman C栋3楼",
+      "price": "捐赠 ",
+      "time": "09:30-10:30, 18:30-19:30",
+      "weekdays": [
+        "周一",
+        "周六"
+      ],
+      "description": "需要自己带瑜伽垫，150泰铢/单次课程",
+      "_tempIndex": 5,
+      "序号": 6
+    },
+    {
+      "id": "0007",
+      "activityNumber": "0007",
+      "title": "摇摆舞（One Nimman）",
+      "category": "舞蹈",
+      "location": "One Nimman C栋3楼",
+      "price": "免费",
+      "time": "20:00-23:00",
+      "weekdays": [
+        "周六"
+      ],
+      "description": "免费，无需预约直接去",
+      "_tempIndex": 6,
+      "序号": 7
+    },
+    {
+      "id": "0008",
+      "activityNumber": "0008",
+      "title": "探戈（One Nimman）",
+      "category": "舞蹈",
+      "location": "One Nimman C栋3楼",
+      "price": "捐赠",
+      "time": "20:00-23:00",
+      "weekdays": [
+        "周四"
+      ],
+      "description": "",
+      "_tempIndex": 7,
+      "序号": 8
+    },
+    {
+      "id": "0009",
+      "activityNumber": "0009",
+      "title": "萨尔萨舞（One Nimman）",
+      "category": "舞蹈",
+      "location": "One Nimman C栋3楼",
+      "price": "捐赠",
+      "time": "20:00-23:00",
+      "weekdays": [
+        "周日"
+      ],
+      "description": "",
+      "_tempIndex": 8,
+      "序号": 9
+    },
+    {
+      "id": "0010",
+      "activityNumber": "0010",
+      "title": "声音疗愈（One Nimman）",
+      "category": "冥想",
+      "location": "One Nimman C栋3楼",
+      "price": "捐赠 ",
+      "time": "08:00-09:00",
+      "weekdays": [
+        "周二"
+      ],
+      "description": "150泰铢/单次课程，课程可能变动，请通过 Facebook 私信（One Nimman）咨询",
+      "_tempIndex": 9,
+      "序号": 10
+    },
+    {
+      "id": "0011",
+      "activityNumber": "0011",
+      "title": "泰拳体验课",
+      "category": "泰拳",
+      "location": "清迈多处拳馆",
+      "price": "免费体验",
+      "time": "灵活时间",
+      "weekdays": [],
+      "description": "几乎所有拳馆都可以提供1次免费体验课，你可以都去体验",
+      "_tempIndex": 10,
+      "序号": 11
+    },
+    {
+      "id": "0012",
+      "activityNumber": "0012",
+      "title": "划船",
+      "category": "户外运动",
+      "location": "Wat Fa Ham",
+      "price": "50泰铢",
+      "time": "08:00-20:00",
+      "weekdays": [],
+      "description": "不限时",
+      "_tempIndex": 11,
+      "序号": 12
+    },
+    {
+      "id": "0013",
+      "activityNumber": "0013",
+      "title": "网球",
+      "category": "户外运动",
+      "location": "TK AcademyTennis Club",
+      "price": "550泰铢/2小时/人",
+      "time": "06:00-22:00",
+      "weekdays": [],
+      "description": "团课，无需预约，walk-in",
+      "_tempIndex": 12,
+      "序号": 13
+    },
+    {
+      "id": "0014",
+      "activityNumber": "0014",
+      "title": "高尔夫",
+      "category": "户外运动",
+      "location": "Lanna Golf Club",
+      "price": "30-50泰铢/50个球",
+      "time": "灵活时间",
+      "weekdays": [],
+      "description": "球分3个级别，ABC就是从新到旧分别是50/40/30铢/50个球，球杆50铢，时长不限",
+      "_tempIndex": 13,
+      "序号": 14
+    },
+    {
+      "id": "0015",
+      "activityNumber": "0015",
+      "title": "实弹射击",
+      "category": "户外运动",
+      "location": "Thai Green Shooting Range绿航实弹射击场",
+      "price": "1100铢/30发子弹",
+      "time": "灵活时间",
+      "weekdays": [],
+      "description": "中午12-13点休息，18点关门",
+      "_tempIndex": 14,
+      "序号": 15
+    },
+    {
+      "id": "0016",
+      "activityNumber": "0016",
+      "title": "攀岩",
+      "category": "攀岩",
+      "location": "Main Wall Climbing Gym",
+      "price": "750泰铢/3次",
+      "time": "灵活时间",
+      "weekdays": [],
+      "description": "租鞋子每次100泰铢/私教包含在内",
+      "_tempIndex": 15,
+      "序号": 16
+    },
+    {
+      "id": "0017",
+      "activityNumber": "0017",
+      "title": "健身房",
+      "category": "健身",
+      "location": "Go gym",
+      "price": "70泰铢/天",
+      "time": "灵活时间",
+      "weekdays": [],
+      "description": "固定器械非常多，比较适合新手，有团课，可打拳，有专门的女生训练区",
+      "_tempIndex": 16,
+      "序号": 17
+    },
+    {
+      "id": "0018",
+      "activityNumber": "0018",
+      "title": "游泳",
+      "category": "健身",
+      "location": "蓝白公寓HUAYKAEW RESIDENCE",
+      "price": "免费",
+      "time": "00:00-23:59",
+      "weekdays": [],
+      "description": "全天，每天换水，还是很干净的，旁边有厕所和冷水淋浴，自带浴巾",
+      "_tempIndex": 17,
+      "序号": 18
+    },
+    {
+      "id": "0019",
+      "activityNumber": "0019",
+      "title": "椰林集市",
+      "category": "市集",
+      "location": "Coconut Market",
+      "price": "0-14泰铢",
+      "time": "08:00-14:00",
+      "weekdays": [
+        "周六",
+        "周日"
+      ],
+      "description": "位于郊外椰林中，环境优美，适合拍照",
+      "_tempIndex": 18,
+      "序号": 19
+    },
+    {
+      "id": "0020",
+      "activityNumber": "0020",
+      "title": "宁曼路复古市集",
+      "category": "市集",
+      "location": "One Nimman",
+      "price": "免费",
+      "time": "16:00-22:00",
+      "weekdays": [
+        "周一",
+        "周二"
+      ],
+      "description": "清迈宁曼路（One Nimman商圈内）。中古爱好者必逛，各式复古风格二手商品",
+      "_tempIndex": 19,
+      "序号": 20
+    },
+    {
+      "id": "0021",
+      "activityNumber": "0021",
+      "title": "宁曼路白色市集",
+      "category": "市集",
+      "location": "One Nimman",
+      "price": "免费",
+      "time": "15:00-22:00",
+      "weekdays": [
+        "周五",
+        "周六",
+        "周日"
+      ],
+      "description": "清迈宁曼路（One Nimman商圈内）。日式文艺市集，日系文艺风为主",
+      "_tempIndex": 20,
+      "序号": 21
+    },
+    {
+      "id": "0022",
+      "activityNumber": "0022",
+      "title": "云南早市",
+      "category": "市集",
+      "location": "Yunnan Market",
+      "price": "免费",
+      "time": "05:00-12:00",
+      "weekdays": [
+        "周五"
+      ],
+      "description": "清迈古城以北，Chang Phueak区附近。以贩售云南穆斯林家乡味、云南小吃为主",
+      "_tempIndex": 21,
+      "序号": 22
+    },
+    {
+      "id": "0023",
+      "activityNumber": "0023",
+      "title": "周六夜市（清迈周六夜市）",
+      "category": "市集",
+      "location": "Wua Lai Walking Street",
+      "price": "免费",
+      "time": "17:00-23:00",
+      "weekdays": [
+        "周六"
+      ],
+      "description": "清迈瓦莱路（Wua Lai Road），古城南门附近。泰国美食丰富",
+      "_tempIndex": 22,
+      "序号": 23
+    },
+    {
+      "id": "0024",
+      "activityNumber": "0024",
+      "title": "周日夜市（清迈周日夜市/周末夜市）",
+      "category": "市集",
+      "location": "Thapae Gate",
+      "price": "免费",
+      "time": "17:00-22:00",
+      "weekdays": [
+        "周日"
+      ],
+      "description": "清迈塔佩门（Thapae Gate）至Ratchadamnoen路，古城东门内。寺庙前听DJ、买画",
+      "_tempIndex": 23,
+      "序号": 24
+    },
+    {
+      "id": "0025",
+      "activityNumber": "0025",
+      "title": "长康路夜市",
+      "category": "市集",
+      "location": "Night Bazaar",
+      "price": "免费",
+      "time": "17:00-次日00:00",
+      "weekdays": [
+        "周一",
+        "周二",
+        "周三",
+        "周四",
+        "周五",
+        "周六",
+        "周日"
+      ],
+      "description": "清迈长康路（Chang Klan Road），古城东门外。清迈平日最大夜市，观光客最爱",
+      "_tempIndex": 24,
+      "序号": 25
+    },
+    {
+      "id": "0027",
+      "activityNumber": "0027",
+      "title": "雨林手作市集",
+      "category": "市集",
+      "location": "Chamcha Market",
+      "price": "免费",
+      "time": "09:00-14:00",
+      "weekdays": [
+        "周六",
+        "周日"
+      ],
+      "description": "清迈San Kamphaeng区（山甘烹县）边缘。手工小物爱好者天堂，本地手工小物为主",
+      "_tempIndex": 26,
+      "序号": 27
+    },
+    {
+      "id": "0028",
+      "activityNumber": "0028",
+      "title": "艺术村集市（艺术村市集）",
+      "category": "市集",
+      "location": "Baan Kang Wat",
+      "price": "免费",
+      "time": "10:00-18:00",
+      "weekdays": [
+        "周二",
+        "周三",
+        "周四",
+        "周五",
+        "周六",
+        "周日"
+      ],
+      "description": "清迈悟孟寺（Wat Umong）附近。汇集清迈本地艺术家作品",
+      "_tempIndex": 27,
+      "序号": 28
+    },
+    {
+      "id": "0030",
+      "activityNumber": "0030",
+      "title": "JING JAI 市集（周末版）",
+      "category": "市集",
+      "location": "Jing Jai Market",
+      "price": "免费",
+      "time": "06:00-14:00",
+      "weekdays": [
+        "周六",
+        "周日"
+      ],
+      "description": "清迈San Kamphaeng区（山甘烹县），JJ Market内。周末时段延长，摊位更多",
+      "_tempIndex": 29,
+      "序号": 30
+    },
+    {
+      "id": "0031",
+      "activityNumber": "0031",
+      "title": "清迈大学前门夜市（清迈大学夜市）",
+      "category": "市集",
+      "location": "Kad Na Mor Market",
+      "price": "免费",
+      "time": "17:00-23:00",
+      "weekdays": [
+        "周一",
+        "周二",
+        "周三",
+        "周四",
+        "周五",
+        "周六",
+        "周日"
+      ],
+      "description": "清迈大学主校区前门，Huay Kaew路附近。学生购物天堂",
+      "_tempIndex": 30,
+      "序号": 31
+    },
+    {
+      "id": "0032",
+      "activityNumber": "0032",
+      "title": "湄卡运河集市（湄卡运河市集）",
+      "category": "市集",
+      "location": "Khlong Mae Kha",
+      "price": "免费",
+      "time": "15:00-22:00",
+      "weekdays": [
+        "周五",
+        "周六",
+        "周日",
+        "周一"
+      ],
+      "description": "清迈Mae Kha运河边，靠近古城西北侧。护城河变日系风情运河，人少不拥挤",
+      "_tempIndex": 31,
+      "序号": 32
+    },
+    {
+      "id": "0033",
+      "activityNumber": "0033",
+      "title": "面包集市（BAMBOO SATURDAY MARKET）",
+      "category": "市集",
+      "location": "Nana Jungle",
+      "price": "免费",
+      "time": "07:00-11:00",
+      "weekdays": [
+        "周六"
+      ],
+      "description": "清迈Hang Dong区，Nana Jungle Cafe旁。以法式面包闻名，必须尽早前往（售完即止）",
+      "_tempIndex": 32,
+      "序号": 33
+    },
+    {
+      "id": "0034",
+      "activityNumber": "0034",
+      "title": "清迈跳蚤市集（NONG HO FLEA MARKET）",
+      "category": "市集",
+      "location": "无明确标注",
+      "price": "免费",
+      "time": "07:00-14:00",
+      "weekdays": [
+        "周六",
+        "周日"
+      ],
+      "description": "清迈Nong Ho区，靠近Chiang Mai-Lamphun公路",
+      "_tempIndex": 33,
+      "序号": 34
+    },
+    {
+      "id": "0035",
+      "activityNumber": "0035",
+      "title": "孟买市场",
+      "category": "市集",
+      "location": "Muang Mai Market",
+      "price": "免费",
+      "time": "04:00-18:00",
+      "weekdays": [
+        "周一",
+        "周二",
+        "周三",
+        "周四",
+        "周五",
+        "周六",
+        "周日"
+      ],
+      "description": "清迈Muang Mai区，瓦洛洛市场旁",
+      "_tempIndex": 34,
+      "序号": 35
+    },
+    {
+      "id": "0037",
+      "activityNumber": "0037",
+      "title": "公园瑜伽（Nong Buak Haad）",
+      "category": "瑜伽",
+      "location": "Nong Buak Haad公园",
+      "price": "免费",
+      "time": "08:30-09:45",
+      "weekdays": [
+        "周一",
+        "周二",
+        "周三",
+        "周四",
+        "周五",
+        "周六",
+        "周日"
+      ],
+      "description": "古城西南角公园，免费社区瑜伽，需自备瑜伽垫或15-20泰铢租用。下雨天取消。",
+      "_tempIndex": 36,
+      "序号": 37
+    },
+    {
+      "id": "0038",
+      "activityNumber": "0038",
+      "title": "身心调节课（Natalia Ria）",
+      "category": "健身",
+      "location": "Chiang Mai Holistic",
+      "price": "350泰铢",
+      "time": "16:45-18:00",
+      "weekdays": [
+        "周二"
+      ],
+      "description": "需要提前预约。专业的身心调节课程，帮助放松身心。",
+      "_tempIndex": 37,
+      "序号": 38
+    },
+    {
+      "id": "0036",
+      "activityNumber": "0036",
+      "title": "瓦洛洛市场（唐人街）",
+      "category": "市集",
+      "location": "Warorot Market",
+      "price": "免费",
+      "time": "06:00-19:00",
+      "weekdays": [
+        "周一",
+        "周二",
+        "周三",
+        "周四",
+        "周五",
+        "周六",
+        "周日"
+      ],
+      "description": "清迈古城南侧，Ping河旁（清迈唐人街核心区）",
+      "_tempIndex": 35,
+      "序号": 36
+    }
+  ]
+}

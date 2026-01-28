@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>缓存问题诊断</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .card {
+            background: white;
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        .status-ok {
+            color: #48bb78;
+            font-weight: 600;
+        }
+        .status-error {
+            color: #f56565;
+            font-weight: 600;
+        }
+        button {
+            padding: 12px 24px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            margin: 5px;
+        }
+        button:hover {
+            background: #5568d3;
+        }
+    </style>
+</head>
+<body>
+    <h1>🔍 缓存问题诊断</h1>
+
+    <div class="card">
+        <h2>问题诊断</h2>
+        <button onclick="diagnose()">开始诊断</button>
+        <div id="diagnosisResult"></div>
+    </div>
+
+    <div class="card">
+        <h2>解决方案</h2>
+        <div id="solutions"></div>
+    </div>
+
+    <script>
+        async function diagnose() {
+            const resultDiv = document.getElementById('diagnosisResult');
+            resultDiv.innerHTML = '<p>正在检查...</p>';
+
+            // 1. 检查主页面
+            const response = await fetch('/index.html');
+            const html = await response.text();
+
+            // 2. 检查是否有防御性代码
+            const hasDefensiveCode = html.includes('allActivities为空，100ms后重试');
+
+            // 3. 检查分类筛选
+            const categoryMatch = html.match(/<div class="filter-chips" id="categoryChips">([\s\S]*?)<\/div>/);
+            let categoryCount = 0;
+            if (categoryMatch) {
+                categoryCount = (categoryMatch[1].match(/filter-chip/g) || []).length;
+            }
+
+            // 生成报告
+            let htmlOutput = '<h3>诊断结果:</h3>';
+
+            if (hasDefensiveCode) {
+                htmlOutput += '<p>✅ <span class="status-ok">服务器代码是最新的</span> - 包含防御性检查</p>';
+            } else {
+                htmlOutput += '<p>❌ <span class="status-error">服务器代码是旧的</span> - 需要重新部署</p>';
+            }
+
+            if (categoryCount > 1) {
+                htmlOutput += `<p>✅ <span class="status-ok">服务器返回的分类筛选正常</span> - 共${categoryCount}个选项</p>`;
+            } else {
+                htmlOutput += `<p>❌ <span class="status-error">服务器返回的分类筛选异常</span> - 只有${categoryCount}个选项</p>`;
+            }
+
+            htmlOutput += '<hr style="margin: 15px 0;">';
+            htmlOutput += '<h3>结论:</h3>';
+
+            if (hasDefensiveCode && categoryCount === 1) {
+                htmlOutput += '<p><strong>这是浏览器缓存问题！</strong></p>';
+                htmlOutput += '<p>服务器代码是最新的，但您的浏览器显示的是旧版本。</p>';
+            } else if (!hasDefensiveCode) {
+                htmlOutput += '<p><strong>服务器代码需要更新！</strong></p>';
+            } else {
+                htmlOutput += '<p><strong>系统正常！</strong></p>';
+            }
+
+            resultDiv.innerHTML = htmlOutput;
+
+            // 显示解决方案
+            showSolutions(hasDefensiveCode && categoryCount === 1);
+        }
+
+        function showSolutions(isCacheProblem) {
+            const solutionsDiv = document.getElementById('solutions');
+
+            if (isCacheProblem) {
+                solutionsDiv.innerHTML = `
+                    <h3>✨ 快速解决方案:</h3>
+                    <p><strong>方法1: 强制刷新 (推荐)</strong></p>
+                    <p>Mac: 按 <code>Cmd + Shift + R</code></p>
+                    <p>Windows: 按 <code>Ctrl + Shift + R</code></p>
+                    <p><strong>方法2: 清除缓存</strong></p>
+                    <p>1. 按 F12 打开开发者工具</p>
+                    <p>2. 右键点击刷新按钮</p>
+                    <p>3. 选择"清空缓存并硬性重新加载"</p>
+                    <button onclick="window.location.href='/index.html?v=' + Date.now()">打开带时间戳的页面</button>
+                `;
+            } else {
+                solutionsDiv.innerHTML = `
+                    <p>如果问题仍然存在，请联系技术支持。</p>
+                `;
+            }
+        }
+
+        // 自动运行诊断
+        window.addEventListener('load', () => {
+            setTimeout(diagnose, 500);
+        });
+    </script>
+</body>
+</html>

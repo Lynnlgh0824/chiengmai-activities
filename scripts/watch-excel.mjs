@@ -16,10 +16,11 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 const EXCEL_FILE = path.join(__dirname, '../清迈活动数据.xlsx');
-const IMPORT_SCRIPT = path.join(__dirname, 'import-excel-enhanced.mjs');
+const IMPORT_SCRIPT = path.join(__dirname, 'smart-auto-import.mjs');
 
-console.log('👀 开始监听Excel文件变化...\n');
+console.log('🚀 智能自动导入监听器\n');
 console.log(`📂 监听文件: ${EXCEL_FILE}`);
+console.log('✨ 功能: 数据验证、冲突检测、自动快照');
 console.log('💡 提示: 修改Excel文件后，会自动导入到后台');
 console.log('💡 提示: 按 Ctrl+C 停止监听\n');
 
@@ -36,7 +37,10 @@ function importExcel() {
 
     isImporting = true;
     console.log('\n' + '='.repeat(60));
-    console.log('🔄 检测到文件变化，开始导入...');
+    console.log('🔄 检测到文件变化，开始智能导入...');
+    console.log('   ✓ 数据验证');
+    console.log('   ✓ 冲突检测');
+    console.log('   ✓ 自动快照');
     console.log('='.repeat(60));
 
     const importProcess = exec(`node "${IMPORT_SCRIPT}"`, {

@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CSS变量系统实施指南</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        h1 { color: #333; margin-bottom: 30px; }
+        .section {
+            background: white;
+            padding: 30px;
+            margin: 20px 0;
+            border-radius: 12px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.1);
+        }
+        .section h2 {
+            color: #667eea;
+            margin-top: 0;
+            margin-bottom: 20px;
+        }
+        .step {
+            background: #f8f9fa;
+            padding: 20px;
+            margin: 15px 0;
+            border-left: 4px solid #667eea;
+            border-radius: 6px;
+        }
+        pre {
+            background: #2d3748;
+            color: #f8f8f2;
+            padding: 20px;
+            border-radius: 8px;
+            overflow-x: auto;
+            font-size: 13px;
+            line-height: 1.6;
+        }
+        .copy-btn {
+            padding: 10px 20px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        .copy-btn:hover {
+            background: #5568d3;
+        }
+        .status {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-left: 10px;
+        }
+        .status-pending { background: #fff3cd; color: #856404; }
+        .status-ready { background: #d1e7dd; color: #0f5132; }
+        .note {
+            background: #fff3cd;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+            border-left: 4px solid #ffc107;
+        }
+    </style>
+</head>
+<body>
+    <h1>🚀 CSS变量系统实施指南</h1>
+
+    <div class="section">
+        <h2>📋 实施步骤</h2>
+
+        <div class="step">
+            <strong>步骤1: 添加CSS变量定义</strong>
+            <p>在 <code>public/index.html</code> 的 <code>&lt;style&gt;</code> 标签最开始（第40行左右）添加以下内容：</p>
+            <pre>&lt;style&gt;
+/* ========== CSS变量系统 ========== */
+:root {
+    /* Spacing Scale */
+    --space-xs: 4px;
+    --space-sm: 8px;
+    --space-md: 12px;
+    --space-lg: 16px;
+    --space-xl: 20px;
+    --space-2xl: 24px;
+
+    /* 移动端覆盖值 */
+    --space-mobile-xs: 2px;
+    --space-mobile-sm: 4px;
+    --space-mobile-md: 6px;
+    --space-mobile-lg: 8px;
+    --space-mobile-xl: 12px;
+    --space-mobile-2xl: 16px;
+
+    /* Z-Index Layers */
+    --z-header: 1001;
+    --z-modal: 2000;
+    --z-toast: 3000;
+}
+
+/* 移动端变量覆盖 */
+@media (max-width: 768px) {
+    :root {
+        --space-xs: var(--space-mobile-xs);
+        --space-sm: var(--space-mobile-sm);
+        --space-md: var(--space-mobile-md);
+        --space-lg: var(--space-mobile-lg);
+        --space-xl: var(--space-mobile-xl);
+        --space-2xl: var(--space-mobile-2xl);
+    }
+}
+
+/* 原有的CSS继续... */</pre>
+            <button class="copy-btn" onclick="copyStep1()">📋 复制代码</button>
+        </div>
+
+        <div class="step">
+            <strong>步骤2: 替换硬编码的spacing值（逐步进行）</strong>
+            <p>将移动端间距优化部分（第1716-1801行）的硬编码值替换为变量：</p>
+            <pre>/* 原代码（第1718-1721行） */
+.container {
+    padding-left: 8px !important;
+    padding-right: 8px !important;
+}
+
+/* 新代码 */
+.container {
+    padding-left: var(--space-sm) !important;
+    padding-right: var(--space-sm) !important;
+}</pre>
+            <p>需要替换的13个元素：</p>
+            <pre>1. .container:          padding-left/right → var(--space-sm)
+2. .filter-section:      padding: 8px 12px → var(--space-md) var(--space-lg)
+3. .results-count:       padding: 6px 12px → var(--space-mobile-md) var(--space-sm)
+4. .day-cell:            padding: 8px → var(--space-sm)
+5. .activity-card:       margin-bottom: 6px → var(--space-sm)
+6. .activity-chip:       padding: 6px 8px → var(--space-mobile-sm) var(--space-xs)
+7. .calendar-header:     padding: 8px 12px 6px → var(--space-sm) var(--space-lg) var(--space-xs)
+8. .nav-row:             margin-bottom: 8px → var(--space-sm)
+9. .nav-btn:             padding: 6px 10px → var(--space-mobile-xs) var(--space-sm)
+10. .date-grid-header:    padding: 4px 8px → var(--space-xs) var(--space-sm)
+11. .date-cell-header:    padding: 6px 8px → var(--space-mobile-xs) var(--space-sm)
+12. .schedule-list:        padding: 4px → var(--space-xs)
+13. .schedule-item:       padding: 8px 10px → var(--space-sm) var(--space-mobile-xs)</pre>
+        </div>
+
+        <div class="step">
+            <strong>步骤3: 测试验证</strong>
+            <p>修改后运行测试确保功能正常：</p>
+            <pre># 快速测试
+./t.sh
+
+# 浏览器测试
+open http://localhost:3000/test-auto-verify.html</pre>
+        </div>
+
+        <div class="note">
+            <strong>⚠️ 注意事项：</strong>
+            <ul>
+                <li>建议在修改前备份 <code>public/index.html</code></li>
+                <li>每次替换一组元素后，刷新浏览器测试</li>
+                <li>如果出现问题，可以快速回滚</li>
+                <li>不必一次性完成，可以分批进行</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>📊 当前问题分析</h2>
+        <pre>问题: 为什么会出现反复修改？
+
+诊断:
+1. ❌ 缺少全局视角 - 只看单个元素，不看累积效应
+   → Tab顶部空白修改了3次（155px → 120px → 容器0px → Tab4 115px）
+
+2. ❌ 硬编码数值 - 每个元素独立定义，难以全局修改
+   → 需要优化13个元素的spacing时，必须逐个修改
+
+3. ❌ 代码分散 - 样式分散，难以全局把控
+   → 移动端样式分散在5个位置（现已集中到1个）
+
+解决方案:
+✅ 建立CSS变量系统 - 统一管理spacing
+✅ 一次性系统性设计 - 预防问题发生
+✅ 测试驱动开发 - 及时发现问题</pre>
+    </div>
+
+    <div class="section">
+        <h2>🎯 预期效果</h2>
+        <pre>建立CSS变量系统后:
+
+修改前（硬编码）:
+.tab-pane {
+    padding-top: 120px !important;  /* 修改时需要查找并替换 */
+}
+
+修改后（使用变量）:
+.tab-pane {
+    padding-top: var(--space-xl) !important;  /* 只需修改:root中的变量值 */
+}
+
+优势:
+✅ 修改一处，全局生效
+✅ 易于维护和调整
+✅ 保证设计一致性
+✅ 减少重复修改</pre>
+    </div>
+
+    <script>
+        function copyStep1() {
+            const code = `/* ========== CSS变量系统 ========== */
+:root {
+    /* Spacing Scale */
+    --space-xs: 4px;
+    --space-sm: 8px;
+    --space-md: 12px;
+    --space-lg: 16px;
+    --space-xl: 20px;
+    --space-2xl: 24px;
+
+    /* 移动端覆盖值 */
+    --space-mobile-xs: 2px;
+    --space-mobile-sm: 4px;
+    --space-mobile-md: 6px;
+    --space-mobile-lg: 8px;
+    --space-mobile-xl: 12px;
+    --space-mobile-2xl: 16px;
+
+    /* Z-Index Layers */
+    --z-header: 1001;
+    --z-modal: 2000;
+    --z-toast: 3000;
+}
+
+/* 移动端变量覆盖 */
+@media (max-width: 768px) {
+    :root {
+        --space-xs: var(--space-mobile-xs);
+        --space-sm: var(--space-mobile-sm);
+        --space-md: var(--space-mobile-md);
+        --space-lg: var(--space-mobile-lg);
+        --space-xl: var(--space-mobile-xl);
+        --space-2xl: var(--space-mobile-2xl);
+    }
+}
+
+/* 原有的CSS继续... */`;
+
+            navigator.clipboard.writeText(code).then(() => {
+                alert('✅ 代码已复制到剪贴板！\n\n请在 public/index.html 的 <style> 标签最开始（第40行左右）粘贴此代码。');
+            });
+        }
+    </script>
+</body>
+</html>

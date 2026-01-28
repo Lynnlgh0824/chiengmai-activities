@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>灵活时间Tab测试</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .test-result {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        .test-item {
+            padding: 10px;
+            margin: 5px 0;
+            border-left: 3px solid #667eea;
+            background: #f8f9fa;
+        }
+    </style>
+</head>
+<body>
+    <h1>🧪 灵活时间活动Tab测试</h1>
+
+    <div class="test-result">
+        <h2>测试结果</h2>
+        <div id="output"></div>
+    </div>
+
+    <script>
+        // 时间格式判断函数
+        function isSpecificTimeFormat(time) {
+            if (!time || typeof time !== 'string') return false;
+            const timePattern = /^\d{1,2}:\d{2}-\d{1,2}:\d{2}/;
+            return timePattern.test(time);
+        }
+
+        // 模拟数据
+        const activities = [
+            { id: 1, title: '瑜伽', time: '09:30-10:30', category: '瑜伽' },
+            { id: 2, title: '徒步', time: '灵活时间', category: '徒步' },
+            { id: 3, title: '孟买市场', time: '00:00-24:00', category: '市集' },
+            { id: 4, title: '禅修', time: '每天开放', category: '冥想' },
+            { id: 5, title: '高尔夫', time: '', category: '户外' }
+        ];
+
+        // 筛选灵活时间活动
+        const flexible = activities.filter(act => {
+            const time = act.time || '';
+            return !isSpecificTimeFormat(time);
+        });
+
+        // 显示结果
+        const output = document.getElementById('output');
+
+        if (flexible.length === 0) {
+            output.innerHTML = '<p style="color: #999;">❌ 没有找到灵活时间活动</p>';
+        } else {
+            output.innerHTML = `
+                <p><strong>✅ 找到 ${flexible.length} 个灵活时间活动：</strong></p>
+                ${flexible.map(act => `
+                    <div class="test-item">
+                        <strong>${act.title}</strong><br>
+                        时间: ${act.time || '空'}<br>
+                        分类: ${act.category}
+                    </div>
+                `).join('')}
+            `;
+        }
+
+        console.log('✅ 测试完成');
+        console.log('灵活时间活动:', flexible);
+    </script>
+</body>
+</html>

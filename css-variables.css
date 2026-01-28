@@ -1,0 +1,65 @@
+/* ========== CSS变量系统 - Design Tokens ========== */
+/*
+   用途: 统一管理项目的spacing和z-index
+   使用方法: 将此文件内容添加到 <style> 标签的最开始
+   更新时间: 2026-01-29 00:30
+*/
+
+:root {
+    /* ========== Spacing Scale - 间距系统 ========== */
+
+    /* 基础间距 */
+    --space-xs: 4px;      /* 极小间距 */
+    --space-sm: 8px;      /* 小间距 */
+    --space-md: 12px;     /* 中等间距 */
+    --space-lg: 16px;     /* 大间距 */
+    --space-xl: 20px;     /* 超大间距 */
+    --space-2xl: 24px;    /* 特大间距 */
+    --space-3xl: 32px;    /* 巨大间距 */
+
+    /* 移动端间距（更紧凑） */
+    --space-mobile-xs: 2px;
+    --space-mobile-sm: 4px;
+    --space-mobile-md: 6px;
+    --space-mobile-lg: 8px;
+    --space-mobile-xl: 12px;
+    --space-mobile-2xl: 16px;
+
+    /* ========== Z-Index Layers - 层级系统 ========== */
+    --z-header: 1001;       /* 固定头部 */
+    --z-dropdown: 1000;     /* 下拉菜单 */
+    --z-modal: 2000;        /* 模态框 */
+    --z-toast: 3000;        /* 提示信息 */
+}
+
+/* ========== 移动端变量覆盖 ========== */
+@media (max-width: 768px) {
+    :root {
+        --space-xs: var(--space-mobile-xs);
+        --space-sm: var(--space-mobile-sm);
+        --space-md: var(--space-mobile-md);
+        --space-lg: var(--space-mobile-lg);
+        --space-xl: var(--space-mobile-xl);
+        --space-2xl: var(--space-mobile-2xl);
+    }
+}
+
+/* ========== 应用示例（参考） ========== */
+/*
+使用方法：
+将硬编码的padding/margin替换为变量
+
+.tab-pane {
+    padding-top: var(--space-xl) !important;
+}
+
+.filter-section {
+    padding: var(--space-md) var(--space-lg) !important;
+}
+
+@media (max-width: 768px) {
+    .tab-pane {
+        padding-top: var(--space-xl) !important;  /* 会自动使用12px */
+    }
+}
+*/

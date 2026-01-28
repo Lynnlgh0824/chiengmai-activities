@@ -1,0 +1,59 @@
+{
+  "timestamp": "2026-01-26T10:04:52.165Z",
+  "filename": "清迈活动数据.xlsx",
+  "summary": {
+    "total": 8,
+    "success": 0,
+    "failed": 8
+  },
+  "errors": [
+    {
+      "row": 11,
+      "title": "泰拳体验课",
+      "field": "星期",
+      "suggestion": "此字段为必填项，不能为空"
+    },
+    {
+      "row": 12,
+      "title": "划船",
+      "field": "星期",
+      "suggestion": "此字段为必填项，不能为空"
+    },
+    {
+      "row": 13,
+      "title": "网球",
+      "field": "星期",
+      "suggestion": "此字段为必填项，不能为空"
+    },
+    {
+      "row": 14,
+      "title": "高尔夫",
+      "field": "星期",
+      "suggestion": "此字段为必填项，不能为空"
+    },
+    {
+      "row": 15,
+      "title": "实弹射击",
+      "field": "星期",
+      "suggestion": "此字段为必填项，不能为空"
+    },
+    {
+      "row": 16,
+      "title": "攀岩",
+      "field": "星期",
+      "suggestion": "此字段为必填项，不能为空"
+    },
+    {
+      "row": 17,
+      "title": "健身房",
+      "field": "星期",
+      "suggestion": "此字段为必填项，不能为空"
+    },
+    {
+      "row": 18,
+      "title": "游泳",
+      "field": "星期",
+      "suggestion": "此字段为必填项，不能为空"
+    }
+  ]
+}

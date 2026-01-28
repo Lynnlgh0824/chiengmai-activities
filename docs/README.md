@@ -44,7 +44,8 @@ docs/
 
 | 文档 | 说明 |
 |------|------|
-| [chiangmai-activities-sources.md](data/chiangmai-activities-sources.md) | ⭐ 清迈活动资讯网站清单（含链接验证）|
+| [DATA_MANAGEMENT.md](DATA_MANAGEMENT.md) | ⭐ 数据维护指南（最新） |
+| [chiangmai-activities-sources.md](data/chiangmai-activities-sources.md) | 清迈活动资讯网站清单（含链接验证）|
 | [活动字段说明-详细版.md](data/活动字段说明-详细版.md) | 活动数据字段详细说明 |
 | [活动录入表格-使用说明.md](data/活动录入表格-使用说明.md) | 数据录入表格使用指南 |
 
@@ -146,6 +147,7 @@ node scripts/verify-links.js
 
 | 我想... | 查看文档 |
 |---------|----------|
+| **数据维护** | [DATA_MANAGEMENT.md](DATA_MANAGEMENT.md) ⭐ 推荐 |
 | 了解数据源 | [chiangmai-activities-sources.md](data/chiangmai-activities-sources.md) |
 | 添加新活动 | [活动录入表格-使用说明.md](data/活动录入表格-使用说明.md) |
 | 修复 bug | [问题排查指南.md](technical/问题排查指南.md) |
@@ -161,11 +163,12 @@ node scripts/verify-links.js
 |------|------|
 | 顶级文档 | 3 个 (API.md, ARCHITECTURE.md, README.md) |
 | technical/ | 9 个文档 |
-| data/ | 3 个文档 |
+| data/ | 4 个文档 ⭐ 新增 |
 | integration/ | 2 个文档 |
 | maintenance/ | 1 个文档 |
 | reports/ | 2 个文档 |
-| **总计** | **20 个文档** |
+| archive/ | 15 个归档文件 |
+| **总计** | **36 个文档** |
 
 ---
 

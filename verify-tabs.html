@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tab验证 - 实时检查</title>
+</head>
+<body style="font-family: sans-serif; padding: 40px; background: #f5f5f5;">
+    <div style="max-width: 900px; margin: 0 auto; background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.1);">
+        <h1 style="color: #333;">🔍 Tab实时验证</h1>
+        <p style="color: #666; margin-bottom: 30px;">检查主页面的Tab配置</p>
+
+        <div id="result"></div>
+
+        <div style="margin-top: 40px; padding: 20px; background: #f0f8ff; border-radius: 8px;">
+            <h3 style="color: #333;">📋 应该看到的4个Tab：</h3>
+            <ol style="line-height: 2;">
+                <li><strong>Tab 1:</strong> 📅 兴趣班 - 有具体时间的非市集活动</li>
+                <li><strong>Tab 2:</strong> 📋 列表视图 - 仅灵活时间活动</li>
+                <li><strong>Tab 3:</strong> ⏰ 灵活时间活动 - 仅灵活时间活动</li>
+                <li><strong>Tab 4:</strong> 🏪 市集视图 - 仅市集活动</li>
+            </ol>
+        </div>
+
+        <div style="margin-top: 30px;">
+            <a href="http://localhost:5173/" style="display: inline-block; padding: 15px 30px; background: #667eea; color: white; text-decoration: none; border-radius: 8px; font-weight: 600;">
+                打开主页面 →
+            </a>
+        </div>
+    </div>
+
+    <script>
+        async function checkTabs() {
+            try {
+                const response = await fetch('http://localhost:5173/');
+                const html = await response.text();
+
+                // 检查Tab数量
+                const tabMatches = html.match(/<div class="tab-item"/g);
+                const tabPaneMatches = html.match(/<div id="tab-[0-9]" class="tab-pane"/g);
+
+                // 检查Tab名称
+                const hasInterestClass = html.includes('兴趣班');
+                const hasListView = html.includes('列表视图');
+                const hasFlexibleTime = html.includes('灵活时间活动');
+                const hasMarket = html.includes('市集视图');
+
+                // 生成报告
+                let report = '<div style="background: #f9f9f9; padding: 20px; border-radius: 8px; margin-bottom: 20px;">';
+                report += '<h2 style="color: #333; margin-bottom: 15px;">📊 服务器返回的页面分析：</h2>';
+
+                report += `<p><strong>Tab数量:</strong> ${tabMatches ? tabMatches.length : 0} 个</p>`;
+                report += `<p><strong>tab-pane数量:</strong> ${tabPaneMatches ? tabPaneMatches.length : 0} 个</p>`;
+
+                report += '<h3 style="color: #333; margin-top: 20px;">Tab名称检查：</h3>';
+                report += `<ul style="line-height: 2;">`;
+                report += `<li>${hasInterestClass ? '✅' : '❌'} 兴趣班</li>`;
+                report += `<li>${hasListView ? '✅' : '❌'} 列表视图</li>`;
+                report += `<li>${hasFlexibleTime ? '✅' : '❌'} 灵活时间活动</li>`;
+                report += `<li>${hasMarket ? '✅' : '❌'} 市集视图</li>`;
+                report += `</ul>`;
+
+                if (tabMatches && tabMatches.length === 4 && hasInterestClass && hasListView && hasFlexibleTime && hasMarket) {
+                    report += '<div style="margin-top: 20px; padding: 15px; background: #d4edda; border-radius: 8px; color: #155724;">';
+                    report += '<strong>✅ 所有Tab配置正确！</strong><br>';
+                    report += '如果浏览器中只显示2个Tab，请按以下步骤操作：';
+                    report += '<ol style="margin-top: 10px;">';
+                    report += '<li>按 F12 打开开发者工具</li>';
+                    report += '<li>右键点击刷新按钮（地址栏旁边）</li>';
+                    report += '<li>选择"清空缓存并硬性重新加载"</li>';
+                    report += '</ol>';
+                    report += '</div>';
+                } else {
+                    report += '<div style="margin-top: 20px; padding: 15px; background: #f8d7da; border-radius: 8px; color: #721c24;">';
+                    report += '<strong>❌ Tab配置不完整！</strong><br>';
+                    report += '请检查HTML文件并重新加载。';
+                    report += '</div>';
+                }
+
+                report += '</div>';
+
+                document.getElementById('result').innerHTML = report;
+
+            } catch (error) {
+                document.getElementById('result').innerHTML = `
+                    <div style="padding: 20px; background: #f8d7da; border-radius: 8px;">
+                        <h3>❌ 检查失败</h3>
+                        <p>错误: ${error.message}</p>
+                        <p>请确保开发服务器正在运行: npm run dev</p>
+                    </div>
+                `;
+            }
+        }
+
+        // 页面加载时自动检查
+        checkTabs();
+
+        // 每5秒自动刷新检查
+        setInterval(checkTabs, 5000);
+    </script>
+</body>
+</html>

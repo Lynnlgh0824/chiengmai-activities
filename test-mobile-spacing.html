@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>移动端间距优化验证</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background: #f5f5f5;
+            padding: 20px;
+        }
+        .test-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 24px;
+        }
+        .subtitle {
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+        .status {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-left: 8px;
+        }
+        .status.success {
+            background: #e8f5e9;
+            color: #388e3c;
+        }
+        .section {
+            margin-bottom: 30px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+        }
+        .section h2 {
+            font-size: 18px;
+            color: #333;
+            margin-bottom: 15px;
+        }
+        .changes-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+            background: white;
+            border-radius: 6px;
+            overflow: hidden;
+        }
+        .changes-table th,
+        .changes-table td {
+            padding: 10px 12px;
+            text-align: left;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        .changes-table th {
+            background: #667eea;
+            color: white;
+            font-weight: 600;
+            font-size: 13px;
+        }
+        .changes-table td {
+            font-size: 13px;
+            color: #555;
+        }
+        .changes-table tr:last-child td {
+            border-bottom: none;
+        }
+        .before-after {
+            display: flex;
+            gap: 20px;
+            margin-top: 15px;
+        }
+        .box {
+            flex: 1;
+            padding: 15px;
+            background: white;
+            border-radius: 6px;
+        }
+        .box h3 {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 10px;
+        }
+        .value {
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            color: #333;
+            padding: 8px;
+            background: #f5f5f5;
+            border-radius: 4px;
+        }
+        .test-steps {
+            list-style: none;
+            padding: 0;
+        }
+        .test-steps li {
+            padding: 12px 0;
+            border-bottom: 1px solid #e0e0e0;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+        .test-steps li:last-child {
+            border-bottom: none;
+        }
+        .test-steps li:before {
+            content: "✓ ";
+            color: #667eea;
+            font-weight: bold;
+            margin-right: 8px;
+        }
+        .button-group {
+            display: flex;
+            gap: 12px;
+            margin-top: 20px;
+        }
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-decoration: none;
+            display: inline-block;
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+        }
+        .highlight {
+            background: #fff3cd;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: monospace;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <h1>📱 移动端间距优化报告</h1>
+        <p class="subtitle">优化状态: <span class="status success">已完成</span></p>
+
+        <div class="section">
+            <h2>📊 优化详情</h2>
+            <table class="changes-table">
+                <thead>
+                    <tr>
+                        <th>元素</th>
+                        <th>优化前</th>
+                        <th>优化后</th>
+                        <th>减少量</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>.container</strong></td>
+                        <td>无左右padding</td>
+                        <td>8px左右</td>
+                        <td>紧凑布局</td>
+                    </tr>
+                    <tr>
+                        <td><strong>.filter-section</strong></td>
+                        <td>padding: 12px 16px</td>
+                        <td>padding: 8px 12px</td>
+                        <td>-33%</td>
+                    </tr>
+                    <tr>
+                        <td><strong>.results-count</strong></td>
+                        <td>padding: 10px 16px</td>
+                        <td>padding: 6px 12px</td>
+                        <td>-40%</td>
+                    </tr>
+                    <tr>
+                        <td><strong>.day-cell</strong></td>
+                        <td>padding: 12px</td>
+                        <td>padding: 8px</td>
+                        <td>-33%</td>
+                    </tr>
+                    <tr>
+                        <td><strong>.activity-chip</strong></td>
+                        <td>padding: 8px 10px</td>
+                        <td>padding: 6px 8px</td>
+                        <td>-25%</td>
+                    </tr>
+                    <tr>
+                        <td><strong>.calendar-header</strong></td>
+                        <td>padding: 12px 16px 8px</td>
+                        <td>padding: 8px 12px 6px</td>
+                        <td>-33%</td>
+                    </tr>
+                    <tr>
+                        <td><strong>.nav-btn</strong></td>
+                        <td>常规padding</td>
+                        <td>padding: 6px 10px</td>
+                        <td>紧凑</td>
+                    </tr>
+                    <tr>
+                        <td><strong>.date-cell-header</strong></td>
+                        <td>常规padding</td>
+                        <td>padding: 6px 8px</td>
+                        <td>紧凑</td>
+                    </tr>
+                    <tr>
+                        <td><strong>.schedule-item</strong></td>
+                        <td>常规padding</td>
+                        <td>padding: 8px 10px</td>
+                        <td>紧凑</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="section">
+            <h2>🎯 验证步骤</h2>
+            <ul class="test-steps">
+                <li>打开 <a href="http://localhost:3000" target="_blank" style="color: #667eea;">http://localhost:3000</a></li>
+                <li>按 <span class="highlight">F12</span> 打开开发者工具</li>
+                <li>点击设备切换图标 📱 或按 <span class="highlight">Cmd+Shift+M</span></li>
+                <li>选择移动设备（iPhone 12 Pro 或类似）</li>
+                <li>切换到"兴趣班"或"市集"Tab</li>
+                <li>观察以下区域的间距：
+                    <ul style="margin-top: 8px; margin-left: 28px; font-size: 13px; color: #666;">
+                        <li>✓ 筛选栏（分类、地点等）</li>
+                        <li>✓ 日期导航（上一周/下一周按钮）</li>
+                        <li>✓ 日期单元格（周一到周日）</li>
+                        <li>✓ 活动卡片/芯片</li>
+                        <li>✓ 结果数量提示</li>
+                    </ul>
+                </li>
+                <li>对比优化前后的视觉效果，确认间距更紧凑</li>
+                <li>在控制台中查看是否有样式冲突警告</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2>🔍 调试技巧</h2>
+            <div class="before-after">
+                <div class="box">
+                    <h3>检查间距过大</h3>
+                    <p style="font-size: 13px; color: #666; line-height: 1.6;">
+                        1. 右键点击间距过大的元素<br>
+                        2. 选择"检查元素"<br>
+                        3. 在Styles面板查看Computed标签<br>
+                        4. 找到margin/padding值过大的属性<br>
+                        5. 确认是否被我们的优化样式覆盖
+                    </p>
+                </div>
+                <div class="box">
+                    <h3>实时调整</h3>
+                    <p style="font-size: 13px; color: #666; line-height: 1.6;">
+                        1. 在Elements面板选中元素<br>
+                        2. 在Styles面板找到对应样式<br>
+                        3. 点击数值进行编辑<br>
+                        4. 使用↑↓键微调数值<br>
+                        5. 实时预览效果
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>⚙️ 额外优化建议</h2>
+            <ul class="test-steps">
+                <li>如果某些区域间距仍然过大，可以考虑：
+                    <ul style="margin-top: 8px; margin-left: 28px; font-size: 13px; color: #666;">
+                        <li>进一步减少padding值（如从8px改为4px）</li>
+                        <li>检查父元素的margin</li>
+                        <li>检查flex布局的gap属性</li>
+                        <li>考虑使用CSS变量统一管理间距</li>
+                    </ul>
+                </li>
+                <li>如需调整特定元素，在移动端媒体查询中添加：</li>
+            </ul>
+            <div class="value" style="margin-top: 10px; font-size: 12px;">
+@media (max-width: 768px) {<br>
+&nbsp;&nbsp;.your-element {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;padding: 4px 8px !important;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;margin: 2px 0 !important;<br>
+&nbsp;&nbsp;}<br>
+}
+            </div>
+        </div>
+
+        <div class="button-group">
+            <a href="http://localhost:3000" class="btn btn-primary" target="_blank">
+                🚀 打开页面验证
+            </a>
+            <a href="test-mobile-scroll.html" class="btn" style="background: #f0f0f0; color: #333;">
+                📱 返回滚动测试指南
+            </a>
+        </div>
+    </div>
+</body>
+</html>

@@ -8,6 +8,10 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 const DATA_FILE = path.join(__dirname, 'data', 'items.json');
+const GUIDE_FILE = path.join(__dirname, 'data', 'guide.json');
+const VERSION_FILE = path.join(__dirname, 'data', 'version.json');
+const APP_VERSION_FILE = path.join(__dirname, 'app-version.json');
+const REQUIREMENTS_LOG_FILE = path.join(__dirname, 'data', 'requirements-log.json');
 
 // 配置 multer 文件上传
 const storage = multer.diskStorage({
@@ -48,13 +52,62 @@ const readData = () => {
 // 写入数据
 const writeData = (data) => {
   fs.writeFileSync(DATA_FILE, JSON.stringify(data, null, 2));
+
+  // 更新数据版本号 - 使用应用版本号
+  try {
+    const appVersion = JSON.parse(fs.readFileSync(APP_VERSION_FILE, 'utf8'));
+    const version = {
+      version: appVersion.version,
+      timestamp: new Date().toISOString(),
+      count: data.length
+    };
+    fs.writeFileSync(VERSION_FILE, JSON.stringify(version, null, 2));
+  } catch (error) {
+    // 如果读取应用版本失败，使用时间戳
+    const version = {
+      version: Date.now(),
+      timestamp: new Date().toISOString(),
+      count: data.length
+    };
+    fs.writeFileSync(VERSION_FILE, JSON.stringify(version, null, 2));
+  }
 };
 
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+// 获取数据版本
+const getDataVersion = () => {
+  try {
+    const data = fs.readFileSync(VERSION_FILE, 'utf8');
+    return JSON.parse(data);
+  } catch (error) {
+    // 如果版本文件不存在，创建一个初始版本
+    try {
+      const appVersion = JSON.parse(fs.readFileSync(APP_VERSION_FILE, 'utf8'));
+      const version = {
+        version: appVersion.version,
+        timestamp: new Date().toISOString(),
+        count: readData().length
+      };
+      fs.writeFileSync(VERSION_FILE, JSON.stringify(version, null, 2));
+      return version;
+    } catch (appError) {
+      // 如果读取应用版本失败，使用默认版本
+      const version = {
+        version: 'v1.0.0',
+        timestamp: new Date().toISOString(),
+        count: readData().length
+      };
+      fs.writeFileSync(VERSION_FILE, JSON.stringify(version, null, 2));
+      return version;
+    }
+  }
+};
+
+app.use(express.json({ limit: '10mb' }));
+app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
 // 静态文件服务 - 直接访问 public 目录
 app.use(express.static('public'));
+app.use(express.static(__dirname)); // 添加项目根目录的静态文件服务
 app.use('/uploads', express.static('uploads'));
 
 // 允许 CORS
@@ -91,6 +144,48 @@ app.get('/api/health', (req, res) => {
   res.json({ success: true, message: 'API is running', timestamp: new Date().toISOString() });
 });
 
+// GET /api/version - 获取数据版本号
+app.get('/api/version', (req, res) => {
+  // 禁用缓存
+  res.set({
+    'Cache-Control': 'no-store, no-cache, must-revalidate, private',
+    'Pragma': 'no-cache',
+    'Expires': '0'
+  });
+
+  const version = getDataVersion();
+  res.json({ success: true, version: version.version, timestamp: version.timestamp, count: version.count });
+});
+
+// GET /app/version - 获取应用版本号（简洁版本）
+app.get('/app/version', (req, res) => {
+  // 禁用缓存
+  res.set({
+    'Cache-Control': 'no-store, no-cache, must-revalidate, private',
+    'Pragma': 'no-cache',
+    'Expires': '0'
+  });
+
+  try {
+    const appVersion = JSON.parse(fs.readFileSync(APP_VERSION_FILE, 'utf8'));
+    res.json({
+      success: true,
+      version: appVersion.version,
+      fullVersion: appVersion.fullVersion,
+      codeName: appVersion.codeName,
+      buildDate: appVersion.buildDate,
+      features: appVersion.features,
+      changelog: appVersion.changelog
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: '无法读取应用版本信息',
+      error: error.message
+    });
+  }
+});
+
 // ========== 前端活动 API (/api/activities) ==========
 
 // GET /api/activities - 获取活动列表（兼容前端）
@@ -116,6 +211,7 @@ app.get('/api/activities', (req, res) => {
       price: item['价格显示'] || item.price,
       description: item['活动描述*'] || item.description,
       status: item['状态'] || item.status || '草稿',
+      suspensionNote: item['暂停备注'] || item.suspensionNote || null,
       requireBooking: item['需要预约'] || item.requireBooking,
       flexibleTime: item['灵活时间'] || item.flexibleTime,
       duration: item['持续时间'] || item.duration,
@@ -123,12 +219,13 @@ app.get('/api/activities', (req, res) => {
       maxPrice: item['最高价格'] || item.maxPrice,
       maxParticipants: item['最大人数'] || item.maxParticipants,
       timeInfo: item['时间信息'] || item.timeInfo,
-      sortOrder: item['序号'] || item.sortOrder
+      sortOrder: item['序号'] || item.sortOrder,
+      source: item.source || null
     };
   });
 
   // 支持筛选参数
-  const { category, search, priceMin, priceMax, status, page = 1, limit = 10, sortBy, sortOrder = 'asc' } = req.query;
+  const { category, search, priceMin, priceMax, status, page = 1, limit = 1000, sortBy, sortOrder = 'asc' } = req.query;
 
   let filteredItems = [...items];
 
@@ -329,6 +426,13 @@ app.get('/api/activities/stats/categories', (req, res) => {
 
 // GET /api/items - 获取所有数据
 app.get('/api/items', (req, res) => {
+  // 禁用缓存，确保始终获取最新数据
+  res.set({
+    'Cache-Control': 'no-store, no-cache, must-revalidate, private',
+    'Pragma': 'no-cache',
+    'Expires': '0'
+  });
+
   const rawItems = readData();
 
   // 字段映射：将中文字段名转换为英文字段名
@@ -350,6 +454,7 @@ app.get('/api/items', (req, res) => {
       price: item['价格显示'] || item.price,
       description: item['活动描述*'] || item.description,
       status: item['状态'] || item.status || '草稿',
+      suspensionNote: item['暂停备注'] || item.suspensionNote || null,
       requireBooking: item['需要预约'] || item.requireBooking,
       flexibleTime: item['灵活时间'] || item.flexibleTime,
       duration: item['持续时间'] || item.duration,
@@ -361,7 +466,8 @@ app.get('/api/items', (req, res) => {
     };
   });
 
-  res.json({ success: true, data: items });
+  const version = getDataVersion();
+  res.json({ success: true, data: items, version: version.version });
 });
 
 // GET /api/items/:id - 获取单条数据
@@ -612,6 +718,415 @@ app.post('/api/export-excel', async (req, res) => {
   }
 });
 
+// ========== 攻略信息 API ==========
+
+// 读取攻略数据
+const readGuideData = () => {
+  try {
+    if (fs.existsSync(GUIDE_FILE)) {
+      const data = fs.readFileSync(GUIDE_FILE, 'utf8');
+      return JSON.parse(data);
+    }
+    // 如果文件不存在，返回默认空内容
+    return {
+      content: '',
+      updatedAt: null,
+      createdAt: new Date().toISOString()
+    };
+  } catch (error) {
+    console.error('读取攻略数据失败:', error);
+    return {
+      content: '',
+      updatedAt: null,
+      createdAt: new Date().toISOString()
+    };
+  }
+};
+
+// 写入攻略数据
+const writeGuideData = (data) => {
+  try {
+    // 确保data目录存在
+    const dataDir = path.join(__dirname, 'data');
+    if (!fs.existsSync(dataDir)) {
+      fs.mkdirSync(dataDir, { recursive: true });
+    }
+
+    const jsonString = JSON.stringify(data, null, 2);
+    console.log('📝 保存攻略内容，长度:', data.content?.length || 0);
+    console.log('包含表情符号:', /[\u{1F300}-\u{1F9FF}]/u.test(data.content || ''));
+
+    fs.writeFileSync(GUIDE_FILE, jsonString, 'utf8');
+    return true;
+  } catch (error) {
+    console.error('写入攻略数据失败:', error);
+    return false;
+  }
+};
+
+/**
+ * GET /api/guide - 获取攻略信息
+ */
+app.get('/api/guide', (req, res) => {
+  try {
+    const guideData = readGuideData();
+    res.json({
+      success: true,
+      data: guideData
+    });
+  } catch (error) {
+    console.error('获取攻略信息失败:', error);
+    res.status(500).json({
+      success: false,
+      message: '获取攻略信息失败: ' + error.message
+    });
+  }
+});
+
+/**
+ * POST /api/guide - 保存攻略信息
+ */
+app.post('/api/guide', (req, res) => {
+  try {
+    const { content } = req.body;
+
+    console.log('📥 收到攻略保存请求，内容长度:', content?.length || 0);
+
+    if (content === undefined) {
+      return res.status(400).json({
+        success: false,
+        message: '缺少content字段'
+      });
+    }
+
+    // 读取现有数据
+    const existingData = readGuideData();
+
+    // 更新数据
+    const updatedData = {
+      content: content,
+      createdAt: existingData.createdAt || new Date().toISOString(),
+      updatedAt: new Date().toISOString()
+    };
+
+    // 保存到文件
+    const success = writeGuideData(updatedData);
+
+    if (success) {
+      console.log('✅ 攻略信息已更新');
+      res.json({
+        success: true,
+        message: '保存成功',
+        data: updatedData
+      });
+    } else {
+      res.status(500).json({
+        success: false,
+        message: '保存失败'
+      });
+    }
+  } catch (error) {
+    console.error('保存攻略信息失败:', error);
+    res.status(500).json({
+      success: false,
+      message: '保存失败: ' + error.message
+    });
+  }
+});
+
+// ========== 需求日志管理 API ==========
+
+/**
+ * 读取需求日志数据
+ */
+const readRequirementsLog = () => {
+  try {
+    if (fs.existsSync(REQUIREMENTS_LOG_FILE)) {
+      const data = fs.readFileSync(REQUIREMENTS_LOG_FILE, 'utf8');
+      return JSON.parse(data);
+    }
+    return [];
+  } catch (error) {
+    console.error('读取需求日志失败:', error);
+    return [];
+  }
+};
+
+/**
+ * 写入需求日志数据
+ */
+const writeRequirementsLog = (logs) => {
+  try {
+    fs.writeFileSync(REQUIREMENTS_LOG_FILE, JSON.stringify(logs, null, 2), 'utf8');
+    return true;
+  } catch (error) {
+    console.error('写入需求日志失败:', error);
+    return false;
+  }
+};
+
+/**
+ * GET /api/requirements-log - 获取所有需求日志
+ */
+app.get('/api/requirements-log', (req, res) => {
+  try {
+    const logs = readRequirementsLog();
+    res.json({
+      success: true,
+      data: logs,
+      count: logs.length
+    });
+  } catch (error) {
+    console.error('获取需求日志失败:', error);
+    res.status(500).json({
+      success: false,
+      message: '获取需求日志失败: ' + error.message
+    });
+  }
+});
+
+/**
+ * GET /api/requirements-log/recent - 获取最近的需求日志
+ */
+app.get('/api/requirements-log/recent', (req, res) => {
+  try {
+    const limit = parseInt(req.query.limit) || 10;
+    const logs = readRequirementsLog();
+    const recentLogs = logs.slice(0, limit);
+    res.json({
+      success: true,
+      data: recentLogs,
+      count: recentLogs.length
+    });
+  } catch (error) {
+    console.error('获取最近需求日志失败:', error);
+    res.status(500).json({
+      success: false,
+      message: '获取最近需求日志失败: ' + error.message
+    });
+  }
+});
+
+/**
+ * POST /api/requirements-log - 添加新的需求日志
+ */
+app.post('/api/requirements-log', (req, res) => {
+  try {
+    const { type, category, title, description, details, impact, relatedFiles } = req.body;
+
+    // 验证必填字段
+    if (!type || !category || !title || !description) {
+      return res.status(400).json({
+        success: false,
+        message: '缺少必填字段: type, category, title, description'
+      });
+    }
+
+    // 读取现有日志
+    const logs = readRequirementsLog();
+
+    // 生成新日志ID
+    const date = new Date().toISOString().split('T')[0];
+    const count = logs.filter(log => log.date === date).length + 1;
+    const id = `log-${date}-${String(count).padStart(3, '0')}`;
+
+    // 创建新日志
+    const newLog = {
+      id,
+      date,
+      timestamp: new Date().toISOString(),
+      type, // 类型: 新增功能, 功能完善, Bug修复, 优化改进, 文档更新
+      category, // 分类: 需求文档, 前端功能, 后端API, 数据管理, 其他
+      title,
+      description,
+      details: details || [],
+      impact: impact || '中', // 影响: 高, 中, 低
+      status: '已完成',
+      author: 'System',
+      relatedFiles: relatedFiles || []
+    };
+
+    // 添加到日志列表开头（最新的在前）
+    logs.unshift(newLog);
+
+    // 保存到文件
+    const success = writeRequirementsLog(logs);
+
+    if (success) {
+      console.log('✅ 需求日志已添加:', id);
+      res.json({
+        success: true,
+        message: '需求日志添加成功',
+        data: newLog
+      });
+    } else {
+      res.status(500).json({
+        success: false,
+        message: '保存需求日志失败'
+      });
+    }
+  } catch (error) {
+    console.error('添加需求日志失败:', error);
+    res.status(500).json({
+      success: false,
+      message: '添加需求日志失败: ' + error.message
+    });
+  }
+});
+
+/**
+ * PUT /api/requirements-log/:id - 更新需求日志
+ */
+app.put('/api/requirements-log/:id', (req, res) => {
+  try {
+    const { id } = req.params;
+    const updateData = req.body;
+
+    // 读取现有日志
+    const logs = readRequirementsLog();
+    const logIndex = logs.findIndex(log => log.id === id);
+
+    if (logIndex === -1) {
+      return res.status(404).json({
+        success: false,
+        message: '需求日志不存在'
+      });
+    }
+
+    // 更新日志
+    logs[logIndex] = {
+      ...logs[logIndex],
+      ...updateData,
+      id, // 确保ID不被修改
+      date: logs[logIndex].date, // 确保日期不被修改
+      timestamp: new Date().toISOString() // 更新时间戳
+    };
+
+    // 保存到文件
+    const success = writeRequirementsLog(logs);
+
+    if (success) {
+      console.log('✅ 需求日志已更新:', id);
+      res.json({
+        success: true,
+        message: '需求日志更新成功',
+        data: logs[logIndex]
+      });
+    } else {
+      res.status(500).json({
+        success: false,
+        message: '更新需求日志失败'
+      });
+    }
+  } catch (error) {
+    console.error('更新需求日志失败:', error);
+    res.status(500).json({
+      success: false,
+      message: '更新需求日志失败: ' + error.message
+    });
+  }
+});
+
+/**
+ * DELETE /api/requirements-log/:id - 删除需求日志
+ */
+app.delete('/api/requirements-log/:id', (req, res) => {
+  try {
+    const { id } = req.params;
+
+    // 读取现有日志
+    const logs = readRequirementsLog();
+    const logIndex = logs.findIndex(log => log.id === id);
+
+    if (logIndex === -1) {
+      return res.status(404).json({
+        success: false,
+        message: '需求日志不存在'
+      });
+    }
+
+    // 删除日志
+    logs.splice(logIndex, 1);
+
+    // 保存到文件
+    const success = writeRequirementsLog(logs);
+
+    if (success) {
+      console.log('✅ 需求日志已删除:', id);
+      res.json({
+        success: true,
+        message: '需求日志删除成功'
+      });
+    } else {
+      res.status(500).json({
+        success: false,
+        message: '删除需求日志失败'
+      });
+    }
+  } catch (error) {
+    console.error('删除需求日志失败:', error);
+    res.status(500).json({
+      success: false,
+      message: '删除需求日志失败: ' + error.message
+    });
+  }
+});
+
+/**
+ * GET /api/requirements-log/stats - 获取需求日志统计
+ */
+app.get('/api/requirements-log/stats', (req, res) => {
+  try {
+    const logs = readRequirementsLog();
+
+    // 按类型统计
+    const typeStats = {};
+    // 按分类统计
+    const categoryStats = {};
+    // 按日期统计
+    const dateStats = {};
+    // 按影响级别统计
+    const impactStats = { 高: 0, 中: 0, 低: 0 };
+
+    logs.forEach(log => {
+      // 类型统计
+      typeStats[log.type] = (typeStats[log.type] || 0) + 1;
+      // 分类统计
+      categoryStats[log.category] = (categoryStats[log.category] || 0) + 1;
+      // 日期统计
+      dateStats[log.date] = (dateStats[log.date] || 0) + 1;
+      // 影响级别统计
+      if (impactStats[log.impact] !== undefined) {
+        impactStats[log.impact]++;
+      }
+    });
+
+    // 最近7天的日志
+    const sevenDaysAgo = new Date();
+    sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+    const recentLogs = logs.filter(log => new Date(log.date) >= sevenDaysAgo);
+
+    res.json({
+      success: true,
+      data: {
+        total: logs.length,
+        recent7Days: recentLogs.length,
+        byType: typeStats,
+        byCategory: categoryStats,
+        byDate: dateStats,
+        byImpact: impactStats,
+        lastUpdate: logs[0]?.timestamp || null
+      }
+    });
+  } catch (error) {
+    console.error('获取需求日志统计失败:', error);
+    res.status(500).json({
+      success: false,
+      message: '获取需求日志统计失败: ' + error.message
+    });
+  }
+});
+
 // ==================== 飞书集成 ====================
 
 /**
@@ -846,6 +1361,212 @@ app.post('/api/sync-manual', async (req, res) => {
     res.status(500).json({
       success: false,
       message: '同步失败: ' + error.message
+    });
+  }
+});
+
+/**
+ * 自动修复API - 修复缺失的status字段
+ */
+app.post('/api/fix-missing-status', (req, res) => {
+  try {
+    console.log('🔧 开始修复缺失的status字段...');
+    const data = readData();
+    const { activityNumbers } = req.body;
+
+    let fixedCount = 0;
+    data.forEach(item => {
+      // 如果指定了活动编号，只修复这些
+      if (activityNumbers && activityNumbers.length > 0) {
+        if (activityNumbers.includes(item.activityNumber)) {
+          if (!item.status || item.status === '') {
+            item.status = '进行中'; // 默认状态
+            fixedCount++;
+          }
+        }
+      } else {
+        // 修复所有缺失status的活动
+        if (!item.status || item.status === '') {
+          item.status = '进行中';
+          fixedCount++;
+        }
+      }
+    });
+
+    writeData(data);
+
+    res.json({
+      success: true,
+      message: `已修复 ${fixedCount} 个活动的status字段`,
+      fixedCount,
+      timestamp: new Date().toISOString()
+    });
+
+  } catch (error) {
+    console.error('❌ 修复status字段失败:', error);
+    res.status(500).json({
+      success: false,
+      message: '修复失败: ' + error.message
+    });
+  }
+});
+
+/**
+ * 自动修复API - 修复缺失的suspensionNote字段
+ */
+app.post('/api/fix-suspension-notes', (req, res) => {
+  try {
+    console.log('🔧 开始修复缺失的suspensionNote字段...');
+    const data = readData();
+    const { items } = req.body;
+
+    let fixedCount = 0;
+    data.forEach(item => {
+      // 只修复suspended状态的活动
+      if (item.status === 'suspended' && (!item.suspensionNote || item.suspensionNote === '')) {
+        // 如果提供了具体修复项
+        if (items && items.length > 0) {
+          const fixItem = items.find(f => f.activityNumber === item.activityNumber);
+          if (fixItem) {
+            item.suspensionNote = fixItem.defaultNote || '此活动暂时停用';
+            fixedCount++;
+          }
+        } else {
+          // 使用默认说明
+          item.suspensionNote = '此活动暂时停用，详情请咨询客服';
+          fixedCount++;
+        }
+      }
+    });
+
+    writeData(data);
+
+    res.json({
+      success: true,
+      message: `已修复 ${fixedCount} 个活动的suspensionNote字段`,
+      fixedCount,
+      timestamp: new Date().toISOString()
+    });
+
+  } catch (error) {
+    console.error('❌ 修复suspensionNote字段失败:', error);
+    res.status(500).json({
+      success: false,
+      message: '修复失败: ' + error.message
+    });
+  }
+});
+
+/**
+ * 自动修复API - 更新版本号
+ */
+app.post('/api/update-version', (req, res) => {
+  try {
+    console.log('🔧 更新版本信息...');
+    const data = readData();
+
+    try {
+      const appVersion = JSON.parse(fs.readFileSync(APP_VERSION_FILE, 'utf8'));
+      const version = {
+        version: appVersion.version,
+        timestamp: new Date().toISOString(),
+        count: data.length
+      };
+      fs.writeFileSync(VERSION_FILE, JSON.stringify(version, null, 2));
+
+      res.json({
+        success: true,
+        message: '版本信息已更新',
+        version,
+        timestamp: new Date().toISOString()
+      });
+    } catch (error) {
+      // 如果读取应用版本失败，使用时间戳
+      const version = {
+        version: Date.now(),
+        timestamp: new Date().toISOString(),
+        count: data.length
+      };
+      fs.writeFileSync(VERSION_FILE, JSON.stringify(version, null, 2));
+
+      res.json({
+        success: true,
+        message: '版本信息已更新',
+        version,
+        timestamp: new Date().toISOString()
+      });
+    }
+
+  } catch (error) {
+    console.error('❌ 更新版本失败:', error);
+    res.status(500).json({
+      success: false,
+      message: '更新失败: ' + error.message
+    });
+  }
+});
+
+/**
+ * 自动修复API - 综合修复（一键修复所有问题）
+ */
+app.post('/api/auto-fix-all', async (req, res) => {
+  try {
+    console.log('🔧 开始自动修复所有问题...');
+    const results = [];
+
+    // 1. 修复缺失的status字段
+    const data = readData();
+    let statusFixed = 0;
+    data.forEach(item => {
+      if (!item.status || item.status === '') {
+        item.status = '进行中';
+        statusFixed++;
+      }
+    });
+    if (statusFixed > 0) {
+      writeData(data);
+      results.push({ action: '修复status字段', count: statusFixed });
+    }
+
+    // 2. 修复缺失的suspensionNote
+    let noteFixed = 0;
+    data.forEach(item => {
+      if (item.status === 'suspended' && (!item.suspensionNote || item.suspensionNote === '')) {
+        item.suspensionNote = '此活动暂时停用，详情请咨询客服';
+        noteFixed++;
+      }
+    });
+    if (noteFixed > 0) {
+      writeData(data);
+      results.push({ action: '修复suspensionNote', count: noteFixed });
+    }
+
+    // 3. 更新版本信息
+    try {
+      const appVersion = JSON.parse(fs.readFileSync(APP_VERSION_FILE, 'utf8'));
+      const version = {
+        version: appVersion.version,
+        timestamp: new Date().toISOString(),
+        count: data.length
+      };
+      fs.writeFileSync(VERSION_FILE, JSON.stringify(version, null, 2));
+      results.push({ action: '更新版本信息', count: 1 });
+    } catch (error) {
+      results.push({ action: '更新版本信息', count: 0, error: error.message });
+    }
+
+    res.json({
+      success: true,
+      message: `自动修复完成，共执行 ${results.length} 项操作`,
+      results,
+      timestamp: new Date().toISOString()
+    });
+
+  } catch (error) {
+    console.error('❌ 自动修复失败:', error);
+    res.status(500).json({
+      success: false,
+      message: '自动修复失败: ' + error.message
     });
   }
 });

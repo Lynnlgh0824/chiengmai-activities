@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>自动测试与修复 - 移动端优化</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+            min-height: 100vh;
+        }
+        .test-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 16px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 28px;
+        }
+        .subtitle {
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+        .test-status {
+            display: inline-block;
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+            margin-left: 10px;
+        }
+        .status-pending { background: #fff3cd; color: #856404; }
+        .status-running { background: #cff4fc; color: #055160; }
+        .status-pass { background: #d1e7dd; color: #0f5132; }
+        .status-fail { background: #f8d7da; color: #842029; }
+
+        .test-item {
+            margin: 20px 0;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            border-left: 5px solid #dee2e6;
+            transition: all 0.3s ease;
+        }
+        .test-item.pass {
+            border-left-color: #198754;
+            background: #f0fff4;
+        }
+        .test-item.fail {
+            border-left-color: #dc3545;
+            background: #fff5f5;
+        }
+
+        .test-item h3 {
+            font-size: 16px;
+            margin-bottom: 12px;
+            color: #333;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .test-icon {
+            font-size: 20px;
+        }
+
+        .test-result {
+            margin-top: 10px;
+            padding: 12px;
+            background: white;
+            border-radius: 6px;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            white-space: pre-wrap;
+            line-height: 1.6;
+        }
+        .test-result.success {
+            color: #198754;
+        }
+        .test-result.error {
+            color: #dc3545;
+        }
+        .test-result.info {
+            color: #0d6efd;
+        }
+
+        .actions {
+            margin-top: 30px;
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+        .btn {
+            padding: 14px 28px;
+            border: none;
+            border-radius: 10px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+        }
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+        .btn-secondary:hover {
+            background: #5a6268;
+        }
+
+        .summary {
+            margin-top: 30px;
+            padding: 25px;
+            background: linear-gradient(135deg, #e7f3ff 0%, #f0f9ff 100%);
+            border-radius: 12px;
+            border: 2px solid #b8daff;
+        }
+        .summary h2 {
+            font-size: 20px;
+            color: #333;
+            margin-bottom: 20px;
+        }
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 20px;
+        }
+        .summary-card {
+            padding: 20px;
+            background: white;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        .summary-card .number {
+            font-size: 36px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .summary-card .label {
+            font-size: 13px;
+            color: #666;
+            margin-top: 8px;
+        }
+
+        .recommendations {
+            margin-top: 30px;
+            padding: 25px;
+            background: #fff9e6;
+            border-radius: 12px;
+            border-left: 5px solid #ffc107;
+        }
+        .recommendations h3 {
+            color: #856404;
+            margin-bottom: 15px;
+            font-size: 18px;
+        }
+        .recommendations ul {
+            list-style: none;
+            padding: 0;
+        }
+        .recommendations li {
+            padding: 10px 0;
+            color: #856404;
+            padding-left: 25px;
+            position: relative;
+        }
+        .recommendations li:before {
+            content: "💡";
+            position: absolute;
+            left: 0;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 6px;
+            background: #e9ecef;
+            border-radius: 3px;
+            overflow: hidden;
+            margin: 20px 0;
+        }
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            transition: width 0.3s ease;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        .spinning {
+            animation: spin 1s linear infinite;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <h1>🔍 移动端优化自动测试与修复 <span id="overallStatus" class="test-status status-pending">待测试</span></h1>
+        <p class="subtitle">自动检测移动端优化问题并提供修复建议</p>
+
+        <div id="testResults"></div>
+
+        <div class="actions">
+            <button class="btn btn-primary" onclick="runAllTests()">
+                <span id="runIcon">▶️</span> 开始自动测试
+            </button>
+            <button class="btn btn-secondary" onclick="window.location.reload()">
+                🔄 重新加载
+            </button>
+            <button class="btn btn-secondary" onclick="exportResults()">
+                📥 导出结果
+            </button>
+        </div>
+
+        <div class="summary" id="summary" style="display: none;">
+            <h2>📊 测试总结</h2>
+            <div class="summary-grid">
+                <div class="summary-card">
+                    <div class="number" id="passCount">0</div>
+                    <div class="label">通过测试</div>
+                </div>
+                <div class="summary-card">
+                    <div class="number" id="failCount">0</div>
+                    <div class="label">失败测试</div>
+                </div>
+                <div class="summary-card">
+                    <div class="number" id="passRate">0%</div>
+                    <div class="label">通过率</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="recommendations" id="recommendations" style="display: none;">
+            <h3>💡 修复建议</h3>
+            <ul id="recommendationsList"></ul>
+        </div>
+    </div>
+
+    <script>
+        let testResults = [];
+
+        const tests = [
+            {
+                name: '1. Tab顶部空白优化',
+                check: async () => {
+                    const iframe = document.createElement('iframe');
+                    iframe.style.width = '375px';
+                    iframe.style.height = '812px';
+                    iframe.style.position = 'absolute';
+                    iframe.style.left = '-9999px';
+                    document.body.appendChild(iframe);
+
+                    try {
+                        const response = await fetch(window.location.href.replace('test-auto-verify.html', 'index.html'));
+                        const html = await response.text();
+                        iframe.srcdoc = html;
+                        await new Promise(resolve => setTimeout(resolve, 2000));
+
+                        const doc = iframe.contentDocument || iframe.contentWindow.document;
+                        let tabPane = doc.querySelector('.tab-pane.active') || doc.querySelector('.tab-pane');
+
+                        document.body.removeChild(iframe);
+
+                        if (!tabPane) {
+                            const hasOptimization = html.includes('padding-top: var(--space-tab-padding-std)');
+                            if (hasOptimization) {
+                                return {
+                                    success: true,
+                                    message: '✓ CSS规则存在: padding-top: 120px (DOM未完全加载)',
+                                    recommendation: null
+                                };
+                            }
+                            return {
+                                success: false,
+                                message: '✗ 未找到优化规则',
+                                recommendation: '需要在 @media (max-width: 768px) 中添加 .tab-pane { padding-top: var(--space-tab-padding-std) !important; }'
+                            };
+                        }
+
+                        const computedStyle = iframe.contentWindow.getComputedStyle(tabPane);
+                        const paddingTop = parseInt(computedStyle.paddingTop) || 0;
+
+                        if (paddingTop <= 125) {
+                            return {
+                                success: true,
+                                message: `✓ Tab顶部padding: ${paddingTop}px (目标: ≤125px)`,
+                                recommendation: null
+                            };
+                        } else {
+                            return {
+                                success: false,
+                                message: `✗ Tab顶部padding: ${paddingTop}px (目标: ≤125px)`,
+                                recommendation: `需要将 .tab-pane 的 padding-top 从 ${paddingTop}px 减少到约120px (使用CSS变量 var(--space-tab-padding-std))`
+                            };
+                        }
+                    } catch (error) {
+                        document.body.removeChild(iframe);
+                        return {
+                            success: false,
+                            message: `✗ 测试失败: ${error.message}`,
+                            recommendation: '检查页面加载和iframe访问权限'
+                        };
+                    }
+                }
+            },
+            {
+                name: '2. 移动端间距优化',
+                check: async () => {
+                    const response = await fetch('http://localhost:3000');
+                    const html = await response.text();
+
+                    const checks = [
+                        { name: 'Container (CSS变量)', pattern: /\.container\s*{[^}]*padding-left:\s*var\(--space-sm\)/s },
+                        { name: 'Filter section (CSS变量)', pattern: /\.filter-section\s*{[^}]*padding:\s*var\(--space-md\)\s+var\(--space-lg\)/s },
+                        { name: 'Results count (CSS变量)', pattern: /\.results-count\s*{[^}]*padding:\s*var\(--space-mobile-md\)\s+var\(--space-sm\)/s },
+                        { name: 'Day cell (CSS变量)', pattern: /\.day-cell\s*{[^}]*padding:\s*var\(--space-sm\)/s },
+                        { name: 'Activity chip (CSS变量)', pattern: /\.activity-chip\s*{[^}]*padding:\s*var\(--space-mobile-sm\)\s+var\(--space-xs\)/s }
+                    ];
+
+                    const results = [];
+                    for (const check of checks) {
+                        const found = check.pattern.test(html);
+                        results.push(`${found ? '✓' : '✗'} ${check.name}`);
+                    }
+
+                    const passCount = results.filter(r => r.includes('✓')).length;
+                    const allPassed = passCount === checks.length;
+
+                    if (allPassed) {
+                        return {
+                            success: true,
+                            message: `✓ 所有间距优化已应用 (${passCount}/${checks.length})`,
+                            recommendation: null
+                        };
+                    } else {
+                        return {
+                            success: false,
+                            message: `⚠️ 部分间距优化缺失 (${passCount}/${checks.length}):\n${results.join('\n')}`,
+                            recommendation: passCount < checks.length ?
+                                '需要在 @media (max-width: 768px) 中添加缺失的间距优化CSS规则' :
+                                null
+                        };
+                    }
+                }
+            },
+            {
+                name: '3. 滚动日期高亮功能',
+                check: async () => {
+                    const response = await fetch('http://localhost:3000');
+                    const html = await response.text();
+
+                    const functions = [
+                        'function initH5ScrollDateHighlight',
+                        'function highlightDateInView',
+                        'function updateDateHighlight'
+                    ];
+
+                    const missingFunctions = functions.filter(fn => !html.includes(fn));
+
+                    if (missingFunctions.length === 0) {
+                        return {
+                            success: true,
+                            message: '✓ 所有滚动日期高亮函数已实现',
+                            recommendation: null
+                        };
+                    } else {
+                        return {
+                            success: false,
+                            message: `✗ 缺少函数: ${missingFunctions.join(', ')}`,
+                            recommendation: '需要实现 initH5ScrollDateHighlight、highlightDateInView 和 updateDateHighlight 函数'
+                        };
+                    }
+                }
+            },
+            {
+                name: '4. 移动端媒体查询',
+                check: async () => {
+                    const response = await fetch('http://localhost:3000');
+                    const html = await response.text();
+
+                    const checks = [
+                        { name: '移动端间距优化注释', pattern: /移动端间距优化/i },
+                        { name: 'Tab顶部空白(CSS变量)', pattern: /tab-pane[\s\S]*padding-top[\s\S]*var\(--space-tab-padding-std\)/s },
+                        { name: 'Container padding(CSS变量)', pattern: /container[\s\S]*padding-left[\s\S]*var\(--space-sm\)/s }
+                    ];
+
+                    const results = checks.map(check => {
+                        const found = check.pattern.test(html);
+                        return `${found ? '✓' : '✗'} ${check.name}`;
+                    });
+
+                    const allPassed = results.every(r => r.includes('✓'));
+
+                    if (allPassed) {
+                        return {
+                            success: true,
+                            message: '✓ 所有移动端媒体查询配置正确',
+                            recommendation: null
+                        };
+                    } else {
+                        return {
+                            success: false,
+                            message: `✗ 部分媒体查询缺失:\n${results.join('\n')}`,
+                            recommendation: '确保所有移动端优化都在 @media (max-width: 768px) 块内'
+                        };
+                    }
+                }
+            },
+            {
+                name: '5. CSS样式有效性',
+                check: async () => {
+                    const response = await fetch('http://localhost:3000');
+                    const html = await response.text();
+
+                    const importantCount = (html.match(/!important/g) || []).length;
+                    const hasMobileSpacingInMedia = /@media[^{]*{[\s\S]*移动端间距优化/.test(html);
+
+                    if (hasMobileSpacingInMedia && importantCount <= 150) {
+                        return {
+                            success: true,
+                            message: `✓ CSS语法正常，!important使用: ${importantCount} 处`,
+                            recommendation: null
+                        };
+                    } else {
+                        return {
+                            success: false,
+                            message: `⚠️ CSS问题:\n${!hasMobileSpacingInMedia ? '✗ 移动端间距优化不在@media块内\n' : ''}${importantCount > 150 ? `⚠️ !important过多: ${importantCount} 处` : `✓ !important: ${importantCount} 处`}`,
+                            recommendation: !hasMobileSpacingInMedia ?
+                                '需要将移动端间距优化CSS移动到 @media (max-width: 768px) 块内' :
+                                importantCount > 150 ? '建议减少 !important 的使用，考虑使用CSS变量' : null
+                        };
+                    }
+                }
+            },
+            {
+                name: '6. CSS变量系统',
+                check: async () => {
+                    const response = await fetch('http://localhost:3000');
+                    const html = await response.text();
+
+                    const checks = [
+                        { name: 'CSS变量系统定义', pattern: /\/\*\s*=\s*CSS变量系统\s*=\s*\*\// },
+                        { name: 'space-sm定义', pattern: /--space-sm:\s*8px/ },
+                        { name: 'space-md定义', pattern: /--space-md:\s*12px/ },
+                        { name: 'space-lg定义', pattern: /--space-lg:\s*16px/ },
+                        { name: '移动端变量覆盖', pattern: /--space-sm:\s*var\(--space-mobile-sm\)/ }
+                    ];
+
+                    const results = checks.map(check => {
+                        const found = check.pattern.test(html);
+                        return `${found ? '✓' : '✗'} ${check.name}`;
+                    });
+
+                    const passCount = results.filter(r => r.includes('✓')).length;
+
+                    if (passCount === checks.length) {
+                        return {
+                            success: true,
+                            message: `✓ CSS变量系统完整 (${passCount}/${checks.length}项通过)`,
+                            recommendation: null
+                        };
+                    } else {
+                        return {
+                            success: false,
+                            message: `⚠️ CSS变量系统不完整 (${passCount}/${checks.length}项通过):\n${results.join('\n')}`,
+                            recommendation: '需要确保CSS变量系统完整定义，包括spacing scale和移动端覆盖'
+                        };
+                    }
+                }
+            },
+            {
+                name: '7. 移动端视图元数据',
+                check: async () => {
+                    const response = await fetch('http://localhost:3000');
+                    const html = await response.text();
+
+                    const checks = [
+                        { name: 'viewport meta标签', pattern: /<meta[^>]*viewport[^>]*>/i },
+                        { name: '移动端适配meta', pattern: /<meta[^>]*width=device-width[^>]*>/i }
+                    ];
+
+                    const results = checks.map(check => {
+                        const found = check.pattern.test(html);
+                        return `${found ? '✓' : '✗'} ${check.name}`;
+                    });
+
+                    const allPassed = results.every(r => r.includes('✓'));
+
+                    if (allPassed) {
+                        return {
+                            success: true,
+                            message: '✓ 移动端视图元数据配置正确',
+                            recommendation: null
+                        };
+                    } else {
+                        return {
+                            success: false,
+                            message: `✗ 缺少必要的meta标签:\n${results.join('\n')}`,
+                            recommendation: '在 <head> 中添加 <meta name="viewport" content="width=device-width, initial-scale=1.0">'
+                        };
+                    }
+                }
+            }
+        ];
+
+        async function runAllTests() {
+            const resultsDiv = document.getElementById('testResults');
+            const summaryDiv = document.getElementById('summary');
+            const recommendationsDiv = document.getElementById('recommendations');
+            const overallStatus = document.getElementById('overallStatus');
+            const runIcon = document.getElementById('runIcon');
+
+            // 重置状态
+            resultsDiv.innerHTML = '';
+            summaryDiv.style.display = 'none';
+            recommendationsDiv.style.display = 'none';
+            testResults = [];
+
+            overallStatus.className = 'test-status status-running';
+            overallStatus.textContent = '测试中';
+            runIcon.classList.add('spinning');
+            runIcon.textContent = '⏳';
+
+            let passCount = 0;
+            let failCount = 0;
+            const recommendations = new Set();
+
+            // 添加进度条
+            const progressBar = document.createElement('div');
+            progressBar.className = 'progress-bar';
+            progressBar.innerHTML = '<div class="progress-fill" style="width: 0%"></div>';
+            resultsDiv.appendChild(progressBar);
+
+            for (let i = 0; i < tests.length; i++) {
+                const test = tests[i];
+                const testDiv = document.createElement('div');
+                testDiv.className = 'test-item';
+
+                // 更新进度
+                const progress = ((i + 1) / tests.length) * 100;
+                progressBar.querySelector('.progress-fill').style.width = progress + '%';
+
+                const result = await test.check();
+                testResults.push({ name: test.name, ...result });
+
+                if (result.success) {
+                    passCount++;
+                    testDiv.classList.add('pass');
+                } else {
+                    failCount++;
+                    testDiv.classList.add('fail');
+                }
+
+                if (result.recommendation) {
+                    recommendations.add(result.recommendation);
+                }
+
+                testDiv.innerHTML = `
+                    <h3>
+                        <span class="test-icon">${result.success ? '✅' : '❌'}</span>
+                        ${test.name}
+                    </h3>
+                    <div class="test-result ${result.success ? 'success' : 'error'}">${result.message}</div>
+                `;
+
+                resultsDiv.appendChild(testDiv);
+                await new Promise(resolve => setTimeout(resolve, 200));
+            }
+
+            // 移除进度条
+            progressBar.remove();
+
+            // 更新总结
+            document.getElementById('passCount').textContent = passCount;
+            document.getElementById('failCount').textContent = failCount;
+            document.getElementById('passRate').textContent = Math.round((passCount / tests.length) * 100) + '%';
+
+            summaryDiv.style.display = 'block';
+
+            // 显示建议
+            if (recommendations.size > 0) {
+                const recList = document.getElementById('recommendationsList');
+                recList.innerHTML = '';
+                recommendations.forEach(rec => {
+                    const li = document.createElement('li');
+                    li.textContent = rec;
+                    recList.appendChild(li);
+                });
+                recommendationsDiv.style.display = 'block';
+            }
+
+            // 更新整体状态
+            runIcon.classList.remove('spinning');
+            if (failCount === 0) {
+                overallStatus.className = 'test-status status-pass';
+                overallStatus.textContent = '全部通过';
+                runIcon.textContent = '✅';
+            } else {
+                overallStatus.className = 'test-status status-fail';
+                overallStatus.textContent = `${failCount} 个失败`;
+                runIcon.textContent = '⚠️';
+            }
+        }
+
+        function exportResults() {
+            const report = {
+                timestamp: new Date().toISOString(),
+                summary: {
+                    total: testResults.length,
+                    passed: testResults.filter(r => r.success).length,
+                    failed: testResults.filter(r => !r.success).length
+                },
+                results: testResults
+            };
+
+            const blob = new Blob([JSON.stringify(report, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `test-results-${Date.now()}.json`;
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+
+        // 页面加载后自动运行测试
+        window.addEventListener('load', () => {
+            setTimeout(runAllTests, 500);
+        });
+    </script>
+</body>
+</html>

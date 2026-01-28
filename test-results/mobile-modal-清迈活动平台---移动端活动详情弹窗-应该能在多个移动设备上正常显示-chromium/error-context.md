@@ -1,0 +1,259 @@
+# Page snapshot
+
+```yaml
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - generic [ref=e3]:
+      - heading "✨ 清迈活动探索" [level=1] [ref=e4]
+      - generic [ref=e6]:
+        - generic [ref=e7]: 🔍
+        - textbox "搜索活动、地点、关键词..." [ref=e8]
+        - button "搜索" [ref=e9] [cursor=pointer]: 🔍
+    - generic [ref=e11]:
+      - generic [ref=e12]:
+        - generic [ref=e13]: "分类:"
+        - generic [ref=e14]:
+          - generic [ref=e15] [cursor=pointer]: 全部
+          - generic [ref=e16] [cursor=pointer]: 运动
+          - generic [ref=e17] [cursor=pointer]: 健身
+          - generic [ref=e18] [cursor=pointer]: 冥想
+          - generic [ref=e19] [cursor=pointer]: 市集
+          - generic [ref=e20] [cursor=pointer]: 泰拳
+          - generic [ref=e21] [cursor=pointer]: 徒步
+          - generic [ref=e22] [cursor=pointer]: 文化艺术
+          - generic [ref=e23] [cursor=pointer]: 舞蹈
+          - generic [ref=e24] [cursor=pointer]: 音乐
+          - generic [ref=e25] [cursor=pointer]: 瑜伽
+      - generic [ref=e26]:
+        - generic [ref=e27]: "价格:"
+        - generic [ref=e28]:
+          - generic [ref=e29] [cursor=pointer]: 全部
+          - generic [ref=e30] [cursor=pointer]: 免费
+          - generic [ref=e31] [cursor=pointer]: <500฿
+          - generic [ref=e32] [cursor=pointer]: <1000฿
+          - generic [ref=e33] [cursor=pointer]: <1500฿
+          - generic [ref=e34] [cursor=pointer]: ">1500฿"
+    - generic [ref=e35]:
+      - generic [ref=e36] [cursor=pointer]:
+        - generic [ref=e37]: 📅
+        - generic [ref=e38]: 兴趣班
+      - generic [ref=e39] [cursor=pointer]:
+        - generic [ref=e40]: 📋
+        - generic [ref=e41]: 市集
+      - generic [ref=e42] [cursor=pointer]:
+        - generic [ref=e43]: ⏰
+        - generic [ref=e44]: 灵活时间活动
+      - generic [ref=e45] [cursor=pointer]:
+        - generic [ref=e46]: 🏪
+        - generic [ref=e47]: 活动网站
+      - generic [ref=e48] [cursor=pointer]:
+        - generic [ref=e49]: 📖
+        - generic [ref=e50]: 攻略信息
+    - generic [ref=e52]:
+      - generic [ref=e53]:
+        - generic [ref=e54]:
+          - generic [ref=e55]: 📅 本周活动
+          - generic [ref=e56]:
+            - button "← 上一周" [ref=e57] [cursor=pointer]
+            - button "回到本周" [ref=e58] [cursor=pointer]
+            - button "下一周 →" [ref=e59] [cursor=pointer]
+        - generic [ref=e60]:
+          - generic "点击筛选周一" [ref=e61] [cursor=pointer]: 26 周一
+          - generic "点击筛选周二" [ref=e62] [cursor=pointer]: 27 周二
+          - generic "点击筛选周三" [ref=e63] [cursor=pointer]: 28 周三
+          - generic "点击筛选周四" [ref=e64] [cursor=pointer]: 29 周四
+          - generic "点击筛选周五" [ref=e65] [cursor=pointer]: 30 周五
+          - generic "点击筛选周六" [ref=e66] [cursor=pointer]: 31 周六
+          - generic "点击筛选周日" [ref=e67] [cursor=pointer]: 1 周日
+      - generic [ref=e68]:
+        - generic [ref=e69] [cursor=pointer]:
+          - generic [ref=e70]:
+            - generic [ref=e71]: 瑜伽（One Nimman）
+            - generic [ref=e72]: 09:30-10:30, 18:30-19:30
+          - generic [ref=e73]:
+            - generic [ref=e74]: 河边音乐酒吧 (Riverside Bar & Restaurant)
+            - generic [ref=e75]: 10:00-01:00
+          - generic [ref=e76]:
+            - generic [ref=e77]: 音乐清吧 (Nap Gastrobar)
+            - generic [ref=e78]: 10:00-01:00
+          - generic [ref=e79]:
+            - generic [ref=e80]: 河边音乐酒吧 (Good View Bar and Restaurant)
+            - generic [ref=e81]: 16:00-00:00
+          - generic [ref=e82]:
+            - generic [ref=e83]: 松德寺冥想 (Wat Suan Dok)
+            - generic [ref=e84]: 16:00-19:00
+          - generic [ref=e85]:
+            - generic [ref=e86]: 玛雅天台音乐酒吧 (Your Bar)
+            - generic [ref=e87]: 17:00-01:00
+          - generic [ref=e88]:
+            - generic [ref=e89]: 北门跨界清吧 (Crossroad Chiang Mai)
+            - generic [ref=e90]: 18:00-00:00
+          - generic [ref=e91]:
+            - generic [ref=e92]: 北门爵士清吧 (North Gate Jazz Co-Op)
+            - generic [ref=e93]: 18:00-23:59
+          - generic [ref=e94]:
+            - generic [ref=e95]: 尊巴舞（迪卡侬）
+            - generic [ref=e96]: 每周一、二、四、六 18:00-19:00
+        - generic [ref=e97] [cursor=pointer]:
+          - generic [ref=e98]:
+            - generic [ref=e99]: 河边音乐酒吧 (Riverside Bar & Restaurant)
+            - generic [ref=e100]: 10:00-01:00
+          - generic [ref=e101]:
+            - generic [ref=e102]: 音乐清吧 (Nap Gastrobar)
+            - generic [ref=e103]: 10:00-01:00
+          - generic [ref=e104]:
+            - generic [ref=e105]: 河边音乐酒吧 (Good View Bar and Restaurant)
+            - generic [ref=e106]: 16:00-00:00
+          - generic [ref=e107]:
+            - generic [ref=e108]: 玛雅天台音乐酒吧 (Your Bar)
+            - generic [ref=e109]: 17:00-01:00
+          - generic [ref=e110]:
+            - generic [ref=e111]: 北门跨界清吧 (Crossroad Chiang Mai)
+            - generic [ref=e112]: 18:00-00:00
+          - generic [ref=e113]:
+            - generic [ref=e114]: 北门爵士清吧 (North Gate Jazz Co-Op)
+            - generic [ref=e115]: 18:00-23:59
+          - generic [ref=e116]:
+            - generic [ref=e117]: 语言交换
+            - generic [ref=e118]: 19:00-23:00
+          - generic [ref=e119]:
+            - generic [ref=e120]: 声音疗愈 (One Nimman)
+            - generic [ref=e121]: 19:30-20:30
+          - generic [ref=e122]:
+            - generic [ref=e123]: 尊巴舞（迪卡侬）
+            - generic [ref=e124]: 每周一、二、四、六 18:00-19:00
+        - generic [ref=e125] [cursor=pointer]:
+          - generic [ref=e126]:
+            - generic [ref=e127]: 通宇寺冥想 (Wat Tung Yu)
+            - generic [ref=e128]: 09:00-11:00
+          - generic [ref=e129]:
+            - generic [ref=e130]: 河边音乐酒吧 (Riverside Bar & Restaurant)
+            - generic [ref=e131]: 10:00-01:00
+          - generic [ref=e132]:
+            - generic [ref=e133]: 音乐清吧 (Nap Gastrobar)
+            - generic [ref=e134]: 10:00-01:00
+          - generic [ref=e135]:
+            - generic [ref=e136]: 河边音乐酒吧 (Good View Bar and Restaurant)
+            - generic [ref=e137]: 16:00-00:00
+          - generic [ref=e138]:
+            - generic [ref=e139]: 松德寺冥想 (Wat Suan Dok)
+            - generic [ref=e140]: 16:00-19:00
+          - generic [ref=e141]:
+            - generic [ref=e142]: 玛雅天台音乐酒吧 (Your Bar)
+            - generic [ref=e143]: 17:00-01:00
+          - generic [ref=e144]:
+            - generic [ref=e145]: 北门跨界清吧 (Crossroad Chiang Mai)
+            - generic [ref=e146]: 18:00-00:00
+          - generic [ref=e147]:
+            - generic [ref=e148]: 北门爵士清吧 (North Gate Jazz Co-Op)
+            - generic [ref=e149]: 18:00-23:59
+        - generic [ref=e150] [cursor=pointer]:
+          - generic [ref=e151]:
+            - generic [ref=e152]: 河边音乐酒吧 (Riverside Bar & Restaurant)
+            - generic [ref=e153]: 10:00-01:00
+          - generic [ref=e154]:
+            - generic [ref=e155]: 音乐清吧 (Nap Gastrobar)
+            - generic [ref=e156]: 10:00-01:00
+          - generic [ref=e157]:
+            - generic [ref=e158]: 咏春拳
+            - generic [ref=e159]: 10:00-11:00
+          - generic [ref=e160]:
+            - generic [ref=e161]: 英语角
+            - generic [ref=e162]: 10:30-12:30
+          - generic [ref=e163]:
+            - generic [ref=e164]: 河边音乐酒吧 (Good View Bar and Restaurant)
+            - generic [ref=e165]: 16:00-00:00
+          - generic [ref=e166]:
+            - generic [ref=e167]: 玛雅天台音乐酒吧 (Your Bar)
+            - generic [ref=e168]: 17:00-01:00
+          - generic [ref=e169]:
+            - generic [ref=e170]: 北门跨界清吧 (Crossroad Chiang Mai)
+            - generic [ref=e171]: 18:00-00:00
+          - generic [ref=e172]:
+            - generic [ref=e173]: 北门爵士清吧 (North Gate Jazz Co-Op)
+            - generic [ref=e174]: 18:00-23:59
+          - generic [ref=e175]:
+            - generic [ref=e176]: 探戈（One Nimman）
+            - generic [ref=e177]: 20:00-23:00
+          - generic [ref=e178]:
+            - generic [ref=e179]: 尊巴舞（迪卡侬）
+            - generic [ref=e180]: 每周一、二、四、六 18:00-19:00
+        - generic [ref=e181] [cursor=pointer]:
+          - generic [ref=e182]:
+            - generic [ref=e183]: 河边音乐酒吧 (Riverside Bar & Restaurant)
+            - generic [ref=e184]: 10:00-01:00
+          - generic [ref=e185]:
+            - generic [ref=e186]: 音乐清吧 (Nap Gastrobar)
+            - generic [ref=e187]: 10:00-01:00
+          - generic [ref=e188]:
+            - generic [ref=e189]: 河边音乐酒吧 (Good View Bar and Restaurant)
+            - generic [ref=e190]: 16:00-00:00
+          - generic [ref=e191]:
+            - generic [ref=e192]: 松德寺冥想 (Wat Suan Dok)
+            - generic [ref=e193]: 16:00-19:00
+          - generic [ref=e194]:
+            - generic [ref=e195]: 玛雅天台音乐酒吧 (Your Bar)
+            - generic [ref=e196]: 17:00-01:00
+          - generic [ref=e197]:
+            - generic [ref=e198]: 北门跨界清吧 (Crossroad Chiang Mai)
+            - generic [ref=e199]: 18:00-00:00
+          - generic [ref=e200]:
+            - generic [ref=e201]: 北门爵士清吧 (North Gate Jazz Co-Op)
+            - generic [ref=e202]: 18:00-23:59
+        - generic [ref=e203] [cursor=pointer]:
+          - generic [ref=e204]:
+            - generic [ref=e205]: 通宇寺冥想 (Wat Tung Yu)
+            - generic [ref=e206]: 09:00-11:00
+          - generic [ref=e207]:
+            - generic [ref=e208]: 河边音乐酒吧 (Riverside Bar & Restaurant)
+            - generic [ref=e209]: 10:00-01:00
+          - generic [ref=e210]:
+            - generic [ref=e211]: 音乐清吧 (Nap Gastrobar)
+            - generic [ref=e212]: 10:00-01:00
+          - generic [ref=e213]:
+            - generic [ref=e214]: 河边音乐酒吧 (Good View Bar and Restaurant)
+            - generic [ref=e215]: 16:00-00:00
+          - generic [ref=e216]:
+            - generic [ref=e217]: 玛雅天台音乐酒吧 (Your Bar)
+            - generic [ref=e218]: 17:00-01:00
+          - generic [ref=e219]:
+            - generic [ref=e220]: 北门跨界清吧 (Crossroad Chiang Mai)
+            - generic [ref=e221]: 18:00-00:00
+          - generic [ref=e222]:
+            - generic [ref=e223]: 北门爵士清吧 (North Gate Jazz Co-Op)
+            - generic [ref=e224]: 18:00-23:59
+          - generic [ref=e225]:
+            - generic [ref=e226]: 摇摆舞（One Nimman）
+            - generic [ref=e227]: 20:00-23:00
+          - generic [ref=e228]:
+            - generic [ref=e229]: 尊巴舞（迪卡侬）
+            - generic [ref=e230]: 每周一、二、四、六 18:00-19:00
+        - generic [ref=e231] [cursor=pointer]:
+          - generic [ref=e232]:
+            - generic [ref=e233]: 萨尔萨舞（One Nimman）
+            - generic [ref=e234]: 08:00-11:00
+          - generic [ref=e235]:
+            - generic [ref=e236]: 通宇寺冥想 (Wat Tung Yu)
+            - generic [ref=e237]: 09:00-11:00
+          - generic [ref=e238]:
+            - generic [ref=e239]: 河边音乐酒吧 (Riverside Bar & Restaurant)
+            - generic [ref=e240]: 10:00-01:00
+          - generic [ref=e241]:
+            - generic [ref=e242]: 音乐清吧 (Nap Gastrobar)
+            - generic [ref=e243]: 10:00-01:00
+          - generic [ref=e244]:
+            - generic [ref=e245]: 河边音乐酒吧 (Good View Bar and Restaurant)
+            - generic [ref=e246]: 16:00-00:00
+          - generic [ref=e247]:
+            - generic [ref=e248]: 玛雅天台音乐酒吧 (Your Bar)
+            - generic [ref=e249]: 17:00-01:00
+          - generic [ref=e250]:
+            - generic [ref=e251]: 北门跨界清吧 (Crossroad Chiang Mai)
+            - generic [ref=e252]: 18:00-00:00
+          - generic [ref=e253]:
+            - generic [ref=e254]: 北门爵士清吧 (North Gate Jazz Co-Op)
+            - generic [ref=e255]: 18:00-23:59
+  - generic [ref=e256]: 共 60 个活动
+  - button "⚙️" [ref=e257]:
+    - generic [ref=e258]: ⚙️
+```

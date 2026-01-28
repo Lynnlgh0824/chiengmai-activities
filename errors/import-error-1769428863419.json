@@ -1,0 +1,39 @@
+{
+  "timestamp": "2026-01-26T12:01:03.419Z",
+  "filename": "清迈活动数据.xlsx",
+  "summary": {
+    "total": 4,
+    "success": 0,
+    "failed": 4
+  },
+  "errors": [
+    {
+      "row": 54,
+      "title": "Wat Tung Yu",
+      "field": "时间",
+      "error": "时间格式错误",
+      "suggestion": "请使用格式：HH:MM-HH:MM 或 HH:MM-HH:MM, HH:MM-HH:MM，例如：\"08:30-09:45\" 或 \"09:30-10:30, 18:30-19:30\""
+    },
+    {
+      "row": 55,
+      "title": "乌蒙寺 (Wat Umong)",
+      "field": "时间",
+      "error": "时间格式错误",
+      "suggestion": "请使用格式：HH:MM-HH:MM 或 HH:MM-HH:MM, HH:MM-HH:MM，例如：\"08:30-09:45\" 或 \"09:30-10:30, 18:30-19:30\""
+    },
+    {
+      "row": 56,
+      "title": "朗奔寺/兰蓬寺 (Wat Ram Poeng)",
+      "field": "时间",
+      "error": "时间格式错误",
+      "suggestion": "请使用格式：HH:MM-HH:MM 或 HH:MM-HH:MM, HH:MM-HH:MM，例如：\"08:30-09:45\" 或 \"09:30-10:30, 18:30-19:30\""
+    },
+    {
+      "row": 57,
+      "title": "国际内观禅修中心 (International Meditation Center Chom Tong)",
+      "field": "时间",
+      "error": "时间格式错误",
+      "suggestion": "请使用格式：HH:MM-HH:MM 或 HH:MM-HH:MM, HH:MM-HH:MM，例如：\"08:30-09:45\" 或 \"09:30-10:30, 18:30-19:30\""
+    }
+  ]
+}

@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>周视图时间显示原型</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background: #f5f5f5;
+            padding: 40px;
+        }
+
+        .prototype-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+            overflow: hidden;
+        }
+
+        .prototype-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 24px 32px;
+        }
+
+        .prototype-header h1 {
+            font-size: 24px;
+            margin-bottom: 8px;
+        }
+
+        .prototype-header p {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        .prototype-content {
+            padding: 32px;
+        }
+
+        .week-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 12px;
+            margin-top: 24px;
+        }
+
+        .day-cell {
+            background: #f9fafb;
+            border-radius: 12px;
+            padding: 12px;
+            min-height: 280px;
+            border: 2px solid transparent;
+            transition: all 0.2s;
+        }
+
+        .day-cell.today {
+            border-color: #667eea;
+            background: #f0f4ff;
+        }
+
+        .day-name {
+            font-weight: 600;
+            color: #374151;
+            font-size: 13px;
+            margin-bottom: 12px;
+            text-align: center;
+            padding: 8px;
+            background: white;
+            border-radius: 8px;
+        }
+
+        .activity-chip {
+            background: white;
+            border-left: 3px solid #667eea;
+            border-radius: 8px;
+            padding: 10px 12px;
+            margin-bottom: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+
+        .activity-chip:hover {
+            transform: translateX(4px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .chip-title {
+            font-weight: 500;
+            color: #1f2937;
+            font-size: 13px;
+            line-height: 1.4;
+        }
+
+        .chip-time {
+            color: #6b7280;
+            font-size: 11px;
+            margin-top: 4px;
+        }
+
+        .example-section {
+            margin-top: 40px;
+            padding-top: 32px;
+            border-top: 2px solid #e5e7eb;
+        }
+
+        .example-section h2 {
+            font-size: 18px;
+            color: #374151;
+            margin-bottom: 16px;
+        }
+
+        .comparison {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 24px;
+        }
+
+        .comparison-item {
+            background: #f9fafb;
+            padding: 20px;
+            border-radius: 12px;
+        }
+
+        .comparison-item h3 {
+            font-size: 14px;
+            color: #6b7280;
+            margin-bottom: 12px;
+            font-weight: 500;
+        }
+
+        .legend {
+            display: flex;
+            gap: 24px;
+            margin-top: 24px;
+            padding: 16px;
+            background: #fef3c7;
+            border-radius: 8px;
+            font-size: 13px;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .legend-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+
+        .category-yoga { border-color: #10b981 !important; }
+        .category-dance { border-color: #f59e0b !important; }
+        .category-language { border-color: #3b82f6 !important; }
+        .category-meditation { border-color: #8b5cf6 !important; }
+        .category-music { border-color: #ec4899 !important; }
+    </style>
+</head>
+<body>
+    <div class="prototype-container">
+        <div class="prototype-header">
+            <h1>周视图时间显示原型</h1>
+            <p>展示活动时间在周视图列表中的显示效果</p>
+        </div>
+
+        <div class="prototype-content">
+            <div class="legend">
+                <div class="legend-item">
+                    <div class="legend-dot" style="background: #10b981;"></div>
+                    <span>运动</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-dot" style="background: #f59e0b;"></div>
+                    <span>舞蹈</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-dot" style="background: #3b82f6;"></div>
+                    <span>语言</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-dot" style="background: #8b5cf6;"></div>
+                    <span>冥想</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-dot" style="background: #ec4899;"></div>
+                    <span>音乐</span>
+                </div>
+            </div>
+
+            <div class="week-grid">
+                <!-- 周一 -->
+                <div class="day-cell">
+                    <div class="day-name">周一</div>
+                    <div class="activity-chip category-yoga">
+                        <div class="chip-title">瑜伽（One Nimman）</div>
+                        <div class="chip-time">09:30-10:30, 18:30-19:30</div>
+                    </div>
+                    <div class="activity-chip category-language">
+                        <div class="chip-title">泰语课程</div>
+                        <div class="chip-time">17:00-19:00</div>
+                    </div>
+                    <div class="activity-chip category-dance">
+                        <div class="chip-title">摇摆舞基础</div>
+                        <div class="chip-time">18:00-20:00</div>
+                    </div>
+                </div>
+
+                <!-- 周二 -->
+                <div class="day-cell">
+                    <div class="day-name">周二</div>
+                    <div class="activity-chip category-meditation">
+                        <div class="chip-title">声音疗愈（One Nimman）</div>
+                        <div class="chip-time">08:00-09:00</div>
+                    </div>
+                    <div class="activity-chip category-meditation">
+                        <div class="chip-title">松德寺冥想</div>
+                        <div class="chip-time">17:00-19:00</div>
+                    </div>
+                    <div class="activity-chip category-language">
+                        <div class="chip-title">语言交换</div>
+                        <div class="chip-time">19:00-23:00</div>
+                    </div>
+                </div>
+
+                <!-- 周三 -->
+                <div class="day-cell">
+                    <div class="day-name">周三</div>
+                    <div class="activity-chip category-yoga">
+                        <div class="chip-title">瑜伽（Nong Buak Haad公园）</div>
+                        <div class="chip-time">08:30-09:45</div>
+                    </div>
+                    <div class="activity-chip category-dance">
+                        <div class="chip-title">探戈练习</div>
+                        <div class="chip-time">19:00-21:00</div>
+                    </div>
+                </div>
+
+                <!-- 周四 -->
+                <div class="day-cell today">
+                    <div class="day-name">周四 ✓</div>
+                    <div class="activity-chip category-language">
+                        <div class="chip-title">英语角</div>
+                        <div class="chip-time">10:30-12:30</div>
+                    </div>
+                    <div class="activity-chip category-yoga">
+                        <div class="chip-title">咏春拳</div>
+                        <div class="chip-time">10:00-11:00</div>
+                    </div>
+                    <div class="activity-chip category-dance">
+                        <div class="chip-title">探戈（One Nimman）</div>
+                        <div class="chip-time">20:00-23:00</div>
+                    </div>
+                </div>
+
+                <!-- 周五 -->
+                <div class="day-cell">
+                    <div class="day-name">周五</div>
+                    <div class="activity-chip category-yoga">
+                        <div class="chip-title">瑜伽（Nong Buak Haad公园）</div>
+                        <div class="chip-time">08:30-09:45</div>
+                    </div>
+                    <div class="activity-chip category-music">
+                        <div class="chip-title">Riverside Bar</div>
+                        <div class="chip-time">10:00-01:00</div>
+                    </div>
+                </div>
+
+                <!-- 周六 -->
+                <div class="day-cell">
+                    <div class="day-name">周六</div>
+                    <div class="activity-chip category-dance">
+                        <div class="chip-title">摇摆舞（One Nimman）</div>
+                        <div class="chip-time">20:00-23:00</div>
+                    </div>
+                    <div class="activity-chip category-yoga">
+                        <div class="chip-title">阿斯汤加瑜伽</div>
+                        <div class="chip-time">07:00-08:30</div>
+                    </div>
+                    <div class="activity-chip category-meditation">
+                        <div class="chip-title">正念冥想</div>
+                    </div>
+                </div>
+
+                <!-- 周日 -->
+                <div class="day-cell">
+                    <div class="day-name">周日</div>
+                    <div class="activity-chip category-dance">
+                        <div class="chip-title">萨尔萨舞（One Nimman）</div>
+                        <div class="chip-time">08:00-11:00</div>
+                    </div>
+                    <div class="activity-chip category-music">
+                        <div class="chip-title">North Gate Jazz</div>
+                        <div class="chip-time">20:00-00:00</div>
+                    </div>
+                    <div class="activity-chip category-outdoor">
+                        <div class="chip-title">徒步</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="example-section">
+                <h2>显示规则说明</h2>
+                <div class="comparison">
+                    <div class="comparison-item">
+                        <h3>✅ 会显示时间</h3>
+                        <div style="margin-top: 12px;">
+                            <div style="padding: 8px; background: white; border-radius: 6px; margin-bottom: 8px; border-left: 3px solid #10b981;">
+                                <div style="font-size: 13px; font-weight: 500;">瑜伽</div>
+                                <div style="font-size: 11px; color: #6b7280; margin-top: 4px;">09:30-10:30</div>
+                            </div>
+                            <div style="padding: 8px; background: white; border-radius: 6px; border-left: 3px solid #3b82f6;">
+                                <div style="font-size: 13px; font-weight: 500;">语言交换</div>
+                                <div style="font-size: 11px; color: #6b7280; margin-top: 4px;">19:00-23:00</div>
+                            </div>
+                        </div>
+                        <p style="font-size: 12px; color: #6b7280; margin-top: 8px;">
+                            条件：时间字段包含冒号（:）
+                        </p>
+                    </div>
+
+                    <div class="comparison-item">
+                        <h3>❌ 不显示时间</h3>
+                        <div style="margin-top: 12px;">
+                            <div style="padding: 8px; background: white; border-radius: 6px; margin-bottom: 8px; border-left: 3px solid #8b5cf6;">
+                                <div style="font-size: 13px; font-weight: 500;">正念冥想</div>
+                            </div>
+                            <div style="padding: 8px; background: white; border-radius: 6px; border-left: 3px solid #f59e0b;">
+                                <div style="font-size: 13px; font-weight: 500;">徒步</div>
+                            </div>
+                        </div>
+                        <p style="font-size: 12px; color: #6b7280; margin-top: 8px;">
+                            条件：描述性文本、短文本（灵活时间、待定等）
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="example-section">
+                <h2>当前数据统计</h2>
+                <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-top: 16px;">
+                    <div style="background: #d1fae5; padding: 16px; border-radius: 8px; text-align: center;">
+                        <div style="font-size: 28px; font-weight: 600; color: #059669;">38</div>
+                        <div style="font-size: 12px; color: #047857; margin-top: 4px;">会显示时间</div>
+                    </div>
+                    <div style="background: #fef3c7; padding: 16px; border-radius: 8px; text-align: center;">
+                        <div style="font-size: 28px; font-weight: 600; color: #d97706;">1</div>
+                        <div style="font-size: 12px; color: #b45309; margin-top: 4px;">长文本（不显示）</div>
+                    </div>
+                    <div style="background: #e5e7eb; padding: 16px; border-radius: 8px; text-align: center;">
+                        <div style="font-size: 28px; font-weight: 600; color: #4b5563;">8</div>
+                        <div style="font-size: 12px; color: #374151; margin-top: 4px;">短文本（不显示）</div>
+                    </div>
+                    <div style="background: #dbeafe; padding: 16px; border-radius: 8px; text-align: center;">
+                        <div style="font-size: 28px; font-weight: 600; color: #2563eb;">47</div>
+                        <div style="font-size: 12px; color: #1d4ed8; margin-top: 4px;">总活动数</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
