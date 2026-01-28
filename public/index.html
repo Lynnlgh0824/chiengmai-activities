@@ -2674,7 +2674,7 @@
                 return;
             }
 
-            const categories = [...new Set(allActivities.map(a => a.category))];
+            const categories = [...new Set(allActivities.map(a => a.category))].filter(cat => cat !== '市集' && cat !== '音乐');
             const container = document.getElementById('categoryChips');
 
             let html = '<div class="filter-chip active" onclick="setFilter(\'category\', \'全部\')">全部</div>';
