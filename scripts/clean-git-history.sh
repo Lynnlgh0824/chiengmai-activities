@@ -44,19 +44,21 @@ echo ""
 
 # 方法1: 清理docs/internal-archive/的历史（最安全）
 echo "方法1: 清理docs/internal-archive/的历史..."
-git filter-repo --force --index \
+git filter-repo --force \
   --path "docs/internal-archive/" \
-  --invert
+  --invert-paths
 
 echo ""
+echo "✅ 方法1完成"
+echo ""
 echo "方法2: 清理特定文件模式的历史..."
-git filter-repo --force --index \
-  --path "*/test-*.md" \
-  --path "*/任务*.md" \
-  --path "*/报告*.md" \
-  --path "*/优化*.md" \
-  --path "*/分析*.md" \
-  --invert
+git filter-repo --force \
+  --path-glob "*/test-*.md" \
+  --path-glob "*/任务*.md" \
+  --path-glob "*/报告*.md" \
+  --path-glob "*/优化*.md" \
+  --path-glob "*/分析*.md" \
+  --invert-paths
 
 echo ""
 echo "=========================================="
