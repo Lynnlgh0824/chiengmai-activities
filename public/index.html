@@ -1921,6 +1921,494 @@
             transform: translateY(-1px);
             box-shadow: 0 2px 6px rgba(0,0,0,0.12);
         }
+
+        /* ========== 移动端优化功能样式 ========== */
+
+        /* 1. Bottom Sheet 筛选组件 */
+        .bottom-sheet {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: var(--z-modal);
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .bottom-sheet.active {
+            pointer-events: auto;
+            opacity: 1;
+        }
+
+        .sheet-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .bottom-sheet.active .sheet-overlay {
+            opacity: 1;
+        }
+
+        .sheet-content {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            border-radius: 20px 20px 0 0;
+            max-height: 85vh;
+            transform: translateY(100%);
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .bottom-sheet.active .sheet-content {
+            transform: translateY(0);
+        }
+
+        .sheet-handle {
+            width: 40px;
+            height: 4px;
+            background: #ddd;
+            border-radius: 2px;
+            margin: 12px auto;
+            flex-shrink: 0;
+        }
+
+        .sheet-header {
+            padding: 16px 20px;
+            border-bottom: 1px solid #eee;
+            flex-shrink: 0;
+        }
+
+        .sheet-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #333;
+            margin: 0;
+        }
+
+        .sheet-body {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .sheet-footer {
+            padding: 16px 20px;
+            border-top: 1px solid #eee;
+            display: flex;
+            gap: 12px;
+            flex-shrink: 0;
+        }
+
+        .sheet-footer button {
+            flex: 1;
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .sheet-footer .btn-reset {
+            background: #f5f5f5;
+            color: #666;
+        }
+
+        .sheet-footer .btn-reset:active {
+            background: #e0e0e0;
+        }
+
+        .sheet-footer .btn-confirm {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .sheet-footer .btn-confirm:active {
+            opacity: 0.8;
+        }
+
+        /* 筛选选项样式 */
+        .filter-group-section {
+            margin-bottom: 24px;
+        }
+
+        .filter-group-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 12px;
+        }
+
+        .filter-option-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+        }
+
+        .filter-option-item {
+            padding: 10px 12px;
+            background: #f5f5f5;
+            border-radius: 8px;
+            text-align: center;
+            font-size: 13px;
+            color: #666;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: 2px solid transparent;
+        }
+
+        .filter-option-item:active {
+            background: #e0e0e0;
+        }
+
+        .filter-option-item.selected {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-color: #667eea;
+        }
+
+        /* 浮动筛选按钮 (移动端) */
+        .mobile-filter-fab {
+            position: fixed;
+            bottom: 80px;
+            right: 16px;
+            width: 56px;
+            height: 56px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 50%;
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 999;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .mobile-filter-fab:active {
+            transform: scale(0.95);
+        }
+
+        .filter-count {
+            position: absolute;
+            top: -4px;
+            right: -4px;
+            background: #ff6b6b;
+            color: white;
+            font-size: 11px;
+            font-weight: 600;
+            padding: 2px 6px;
+            border-radius: 10px;
+            min-width: 18px;
+            text-align: center;
+            display: none;
+        }
+
+        .filter-count.show {
+            display: block;
+        }
+
+        /* 2. Toast 提示系统 */
+        .toast {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0.9);
+            background: rgba(0, 0, 0, 0.85);
+            color: white;
+            padding: 16px 24px;
+            border-radius: 12px;
+            font-size: 15px;
+            text-align: center;
+            max-width: 80%;
+            z-index: var(--z-toast);
+            opacity: 0;
+            pointer-events: none;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            backdrop-filter: blur(10px);
+        }
+
+        .toast.show {
+            opacity: 1;
+            transform: translate(-50%, -50%) scale(1);
+            pointer-events: auto;
+        }
+
+        .toast.success {
+            background: rgba(76, 175, 80, 0.95);
+        }
+
+        .toast.error {
+            background: rgba(244, 67, 54, 0.95);
+        }
+
+        .toast.info {
+            background: rgba(33, 150, 243, 0.95);
+        }
+
+        /* 3. Dialog 确认弹窗 */
+        .dialog-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: var(--z-modal);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .dialog-overlay.active {
+            display: flex;
+            opacity: 1;
+        }
+
+        .dialog {
+            background: white;
+            border-radius: 16px;
+            max-width: 320px;
+            width: 100%;
+            padding: 24px;
+            transform: scale(0.9);
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .dialog-overlay.active .dialog {
+            transform: scale(1);
+        }
+
+        .dialog-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 12px;
+        }
+
+        .dialog-message {
+            font-size: 15px;
+            color: #666;
+            line-height: 1.5;
+            margin-bottom: 20px;
+        }
+
+        .dialog-buttons {
+            display: flex;
+            gap: 12px;
+        }
+
+        .dialog-button {
+            flex: 1;
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .dialog-button.cancel {
+            background: #f5f5f5;
+            color: #666;
+        }
+
+        .dialog-button.confirm {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        /* 4. Loading 加载状态 */
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(255, 255, 255, 0.95);
+            z-index: var(--z-modal);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+        }
+
+        .loading-overlay.active {
+            display: flex;
+        }
+
+        .spinner {
+            width: 48px;
+            height: 48px;
+            border: 4px solid #f0f0f0;
+            border-top-color: #667eea;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .loading-text {
+            margin-top: 16px;
+            font-size: 15px;
+            color: #666;
+        }
+
+        /* 骨架屏 */
+        .skeleton {
+            background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+            background-size: 200% 100%;
+            animation: shimmer 1.5s infinite;
+            border-radius: 4px;
+        }
+
+        @keyframes shimmer {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+
+        .skeleton-card {
+            padding: 16px;
+            background: white;
+            border-radius: 12px;
+            margin-bottom: 12px;
+        }
+
+        .skeleton-title {
+            height: 20px;
+            width: 60%;
+            margin-bottom: 12px;
+        }
+
+        .skeleton-text {
+            height: 14px;
+            width: 100%;
+            margin-bottom: 8px;
+        }
+
+        .skeleton-text.short {
+            width: 40%;
+        }
+
+        /* 5. 下拉刷新 */
+        .pull-to-refresh {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .pull-indicator {
+            position: absolute;
+            top: -60px;
+            left: 0;
+            right: 0;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: white;
+            transition: transform 0.3s ease;
+            z-index: 10;
+        }
+
+        .pull-indicator.loading {
+            transform: translateY(60px);
+        }
+
+        .pull-icon {
+            font-size: 24px;
+            margin-right: 8px;
+        }
+
+        .pull-text {
+            font-size: 14px;
+            color: #666;
+        }
+
+        .refresh-spinner {
+            width: 24px;
+            height: 24px;
+            border: 3px solid #f0f0f0;
+            border-top-color: #667eea;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        /* 6. 空状态 */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            display: none;
+        }
+
+        .empty-state.active {
+            display: block;
+        }
+
+        .empty-icon {
+            font-size: 64px;
+            margin-bottom: 16px;
+            opacity: 0.5;
+        }
+
+        .empty-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 8px;
+        }
+
+        .empty-message {
+            font-size: 14px;
+            color: #999;
+            line-height: 1.5;
+        }
+
+        /* 移动端响应式 */
+        @media (max-width: 768px) {
+            .mobile-filter-fab {
+                display: flex;
+            }
+
+            .filter-option-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .sheet-content {
+                max-height: 90vh;
+            }
+
+            .toast {
+                max-width: 90%;
+                padding: 14px 20px;
+                font-size: 14px;
+            }
+
+            .dialog {
+                max-width: 280px;
+                padding: 20px;
+            }
+        }
     </style>
 
     <!-- 性能优化：资源预加载和DNS预解析 -->
@@ -4779,6 +5267,451 @@
                 resizeTimeout = setTimeout(initMobileFilter, 250);
             });
         });
+
+        // =====================================================
+        // 移动端优化功能
+        // =====================================================
+
+        // 1. Bottom Sheet 筛选组件
+        const filterSheet = {
+            element: null,
+            overlay: null,
+            content: null,
+            handle: null,
+            startY: 0,
+            currentY: 0,
+            isDragging: false,
+
+            init() {
+                this.element = document.getElementById('filterSheet');
+                this.overlay = this.element.querySelector('.sheet-overlay');
+                this.content = this.element.querySelector('.sheet-content');
+                this.handle = document.getElementById('sheetHandle');
+                this.setupGestures();
+            },
+
+            setupGestures() {
+                // 触摸开始
+                this.handle.addEventListener('touchstart', (e) => {
+                    this.startY = e.touches[0].clientY;
+                    this.isDragging = true;
+                    this.content.style.transition = 'none';
+                }, { passive: true });
+
+                // 触摸移动
+                this.handle.addEventListener('touchmove', (e) => {
+                    if (!this.isDragging) return;
+                    this.currentY = e.touches[0].clientY;
+                    const deltaY = this.currentY - this.startY;
+
+                    if (deltaY > 0) {
+                        const translate = Math.min(deltaY, window.innerHeight * 0.85);
+                        this.content.style.transform = `translateY(${translate}px)`;
+                    }
+                }, { passive: true });
+
+                // 触摸结束
+                this.handle.addEventListener('touchend', () => {
+                    if (!this.isDragging) return;
+                    this.isDragging = false;
+                    this.content.style.transition = 'transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)';
+
+                    const deltaY = this.currentY - this.startY;
+                    if (deltaY > 100) {
+                        this.close();
+                    } else {
+                        this.content.style.transform = 'translateY(0)';
+                    }
+                });
+            },
+
+            open() {
+                this.element.classList.add('active');
+                document.body.style.overflow = 'hidden';
+
+                // 触觉反馈
+                if (navigator.vibrate) {
+                    navigator.vibrate(10);
+                }
+            },
+
+            close() {
+                this.element.classList.remove('active');
+                document.body.style.overflow = '';
+            }
+        };
+
+        function openFilterSheet() {
+            filterSheet.init();
+            filterSheet.open();
+        }
+
+        function closeFilterSheet() {
+            filterSheet.close();
+        }
+
+        // 筛选选项选择
+        const selectedFilters = {
+            category: 'all',
+            price: 'all'
+        };
+
+        function selectFilterOption(element, type) {
+            // 移除同组其他选项的选中状态
+            const group = element.parentElement;
+            group.querySelectorAll('.filter-option-item').forEach(item => {
+                item.classList.remove('selected');
+            });
+
+            // 选中当前选项
+            element.classList.add('selected');
+            selectedFilters[type] = element.dataset.value;
+
+            // 触觉反馈
+            if (navigator.vibrate) {
+                navigator.vibrate(10);
+            }
+
+            // 更新筛选计数
+            updateFilterCount();
+        }
+
+        function updateFilterCount() {
+            let count = 0;
+            if (selectedFilters.category !== 'all') count++;
+            if (selectedFilters.price !== 'all') count++;
+
+            const filterCount = document.getElementById('filterCount');
+            filterCount.textContent = count;
+            filterCount.classList.toggle('show', count > 0);
+        }
+
+        function resetFilters() {
+            selectedFilters.category = 'all';
+            selectedFilters.price = 'all';
+
+            // 重置UI
+            document.querySelectorAll('.filter-option-item').forEach(item => {
+                item.classList.remove('selected');
+                if (item.dataset.value === 'all') {
+                    item.classList.add('selected');
+                }
+            });
+
+            updateFilterCount();
+            showToast('筛选已重置', 'info');
+        }
+
+        function applyFilters() {
+            closeFilterSheet();
+
+            // 应用筛选逻辑
+            console.log('应用筛选:', selectedFilters);
+
+            // TODO: 这里需要调用实际的筛选函数
+            // 例如：filterActivitiesByOptions(selectedFilters);
+
+            showToast('筛选已应用', 'success');
+        }
+
+        // 2. Toast 提示系统
+        let toastTimeout = null;
+
+        function showToast(message, type = 'info', duration = 2000) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.className = `toast ${type}`;
+
+            // 清除之前的定时器
+            if (toastTimeout) {
+                clearTimeout(toastTimeout);
+            }
+
+            // 显示
+            requestAnimationFrame(() => {
+                toast.classList.add('show');
+            });
+
+            // 自动隐藏
+            toastTimeout = setTimeout(() => {
+                toast.classList.remove('show');
+            }, duration);
+        }
+
+        // 3. Dialog 确认弹窗
+        function showDialog(title, message, onConfirm, onCancel) {
+            const overlay = document.getElementById('dialogOverlay');
+            const titleEl = document.getElementById('dialogTitle');
+            const messageEl = document.getElementById('dialogMessage');
+            const cancelBtn = document.getElementById('dialogCancel');
+            const confirmBtn = document.getElementById('dialogConfirm');
+
+            titleEl.textContent = title;
+            messageEl.textContent = message;
+
+            const close = () => {
+                overlay.classList.remove('active');
+                cancelBtn.onclick = null;
+                confirmBtn.onclick = null;
+            };
+
+            cancelBtn.onclick = () => {
+                close();
+                if (onCancel) onCancel();
+            };
+
+            confirmBtn.onclick = () => {
+                close();
+                if (onConfirm) onConfirm();
+            };
+
+            overlay.classList.add('active');
+        }
+
+        // 4. Loading 加载状态
+        const loading = {
+            element: null,
+            textElement: null,
+
+            init() {
+                this.element = document.getElementById('loadingOverlay');
+                this.textElement = this.element.querySelector('.loading-text');
+            },
+
+            show(text = '加载中...') {
+                this.init();
+                this.textElement.textContent = text;
+                this.element.classList.add('active');
+            },
+
+            hide() {
+                if (this.element) {
+                    this.element.classList.remove('active');
+                }
+            }
+        };
+
+        function showLoading(text = '加载中...') {
+            loading.show(text);
+        }
+
+        function hideLoading() {
+            loading.hide();
+        }
+
+        // 5. 下拉刷新
+        const pullToRefresh = {
+            startY: 0,
+            currentY: 0,
+            isPulling: false,
+            isLoading: false,
+            indicator: null,
+            icon: null,
+            text: null,
+            threshold: 80,
+
+            init() {
+                this.indicator = document.getElementById('pullIndicator');
+                this.icon = document.getElementById('pullIcon');
+                this.text = document.getElementById('pullText');
+
+                if (!this.indicator) return;
+
+                document.addEventListener('touchstart', this.onTouchStart.bind(this), { passive: true });
+                document.addEventListener('touchmove', this.onTouchMove.bind(this), { passive: false });
+                document.addEventListener('touchend', this.onTouchEnd.bind(this), { passive: true });
+            },
+
+            onTouchStart(e) {
+                if (this.isLoading || window.scrollY > 0) return;
+                this.startY = e.touches[0].clientY;
+                this.isPulling = true;
+            },
+
+            onTouchMove(e) {
+                if (!this.isPulling || this.isLoading || window.scrollY > 0) return;
+
+                this.currentY = e.touches[0].clientY;
+                const deltaY = this.currentY - this.startY;
+
+                if (deltaY > 0) {
+                    const progress = Math.min(deltaY / this.threshold, 1);
+
+                    if (deltaY > 10) {
+                        this.indicator.style.transform = `translateY(${Math.min(deltaY, this.threshold)}px)`;
+
+                        if (deltaY >= this.threshold) {
+                            this.icon.textContent = '↑';
+                            this.text.textContent = '释放立即刷新';
+                        } else {
+                            this.icon.textContent = '↓';
+                            this.text.textContent = '下拉刷新';
+                        }
+                    }
+                }
+            },
+
+            onTouchEnd() {
+                if (!this.isPulling) return;
+                this.isPulling = false;
+
+                const deltaY = this.currentY - this.startY;
+
+                if (deltaY >= this.threshold) {
+                    this.refresh();
+                } else {
+                    this.indicator.style.transform = '';
+                }
+            },
+
+            refresh() {
+                this.isLoading = true;
+                this.indicator.classList.add('loading');
+                this.icon.innerHTML = '<div class="refresh-spinner"></div>';
+                this.text.textContent = '正在刷新...';
+
+                // 触发刷新回调
+                if (typeof onRefresh === 'function') {
+                    onRefresh().finally(() => {
+                        this.hide();
+                    });
+                } else {
+                    // 默认刷新操作
+                    setTimeout(() => {
+                        this.hide();
+                    }, 1500);
+                }
+            },
+
+            hide() {
+                this.isLoading = false;
+                this.indicator.classList.remove('loading');
+                this.indicator.style.transform = '';
+                this.icon.textContent = '↓';
+                this.text.textContent = '下拉刷新';
+            }
+        };
+
+        // 初始化下拉刷新
+        document.addEventListener('DOMContentLoaded', () => {
+            pullToRefresh.init();
+        });
+
+        // 刷新回调函数（可被覆盖）
+        let onRefresh = null;
+
+        function setRefreshCallback(callback) {
+            onRefresh = callback;
+        }
+
+        // 6. 空状态显示
+        function showEmptyState(container, options = {}) {
+            const {
+                icon = '🔍',
+                title = '暂无内容',
+                message = '当前没有可显示的内容'
+            } = options;
+
+            const emptyHTML = `
+                <div class="empty-state active">
+                    <div class="empty-icon">${icon}</div>
+                    <div class="empty-title">${title}</div>
+                    <div class="empty-message">${message}</div>
+                </div>
+            `;
+
+            container.innerHTML = emptyHTML;
+        }
+
+        // 页面加载完成后初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            // 初始化 Bottom Sheet
+            filterSheet.init();
+
+            // 显示欢迎提示
+            setTimeout(() => {
+                if (window.CHIENGMAI_IS_MOBILE) {
+                    showToast('👆 点击右下角按钮筛选活动', 'info', 3000);
+                }
+            }, 1000);
+        });
     </script>
+
+    <!-- 移动端优化组件 -->
+
+    <!-- 1. Bottom Sheet 筛选组件 -->
+    <div class="bottom-sheet" id="filterSheet">
+        <div class="sheet-overlay" onclick="closeFilterSheet()"></div>
+        <div class="sheet-content">
+            <div class="sheet-handle" id="sheetHandle"></div>
+            <div class="sheet-header">
+                <h3 class="sheet-title">筛选条件</h3>
+            </div>
+            <div class="sheet-body">
+                <!-- 分类筛选 -->
+                <div class="filter-group-section">
+                    <div class="filter-group-title">分类</div>
+                    <div class="filter-option-grid" id="categoryOptions">
+                        <div class="filter-option-item selected" data-value="all" onclick="selectFilterOption(this, 'category')">全部</div>
+                        <div class="filter-option-item" data-value="class" onclick="selectFilterOption(this, 'category')">兴趣班</div>
+                        <div class="filter-option-item" data-value="market" onclick="selectFilterOption(this, 'category')">市集</div>
+                    </div>
+                </div>
+
+                <!-- 价格筛选 -->
+                <div class="filter-group-section">
+                    <div class="filter-group-title">价格区间 (泰铢)</div>
+                    <div class="filter-option-grid" id="priceOptions">
+                        <div class="filter-option-item selected" data-value="all" onclick="selectFilterOption(this, 'price')">全部</div>
+                        <div class="filter-option-item" data-value="free" onclick="selectFilterOption(this, 'price')">免费</div>
+                        <div class="filter-option-item" data-value="0-100" onclick="selectFilterOption(this, 'price')">0-100</div>
+                        <div class="filter-option-item" data-value="100-300" onclick="selectFilterOption(this, 'price')">100-300</div>
+                        <div class="filter-option-item" data-value="300-500" onclick="selectFilterOption(this, 'price')">300-500</div>
+                        <div class="filter-option-item" data-value="500+" onclick="selectFilterOption(this, 'price')">500+</div>
+                    </div>
+                </div>
+            </div>
+            <div class="sheet-footer">
+                <button class="btn-reset" onclick="resetFilters()">重置</button>
+                <button class="btn-confirm" onclick="applyFilters()">确认</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 浮动筛选按钮 -->
+    <div class="mobile-filter-fab" id="filterFab" onclick="openFilterSheet()">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+            <path d="M4 6h16M4 12h16M4 18h16"/>
+        </svg>
+        <span class="filter-count" id="filterCount">0</span>
+    </div>
+
+    <!-- 2. Toast 容器 -->
+    <div class="toast" id="toast"></div>
+
+    <!-- 3. Dialog 确认弹窗 -->
+    <div class="dialog-overlay" id="dialogOverlay">
+        <div class="dialog">
+            <h3 class="dialog-title" id="dialogTitle">确认</h3>
+            <p class="dialog-message" id="dialogMessage">确定要执行此操作吗？</p>
+            <div class="dialog-buttons">
+                <button class="dialog-button cancel" id="dialogCancel">取消</button>
+                <button class="dialog-button confirm" id="dialogConfirm">确定</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 4. Loading 加载遮罩 -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="spinner"></div>
+        <div class="loading-text">加载中...</div>
+    </div>
+
+    <!-- 5. 下拉刷新指示器 -->
+    <div class="pull-indicator" id="pullIndicator">
+        <div class="pull-icon" id="pullIcon">↓</div>
+        <div class="pull-text" id="pullText">下拉刷新</div>
+    </div>
+
 </body>
 </html>
