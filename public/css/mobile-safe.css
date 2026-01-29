@@ -1,11 +1,16 @@
 /**
  * ========================================
- * 🧹 Mobile Anti-Overflow 安全 CSS 清单
+ * 🧹 Mobile Anti-Overflow 安全 CSS 清单 v2.0
  * ========================================
  * 目标：不管状态怎么切、DOM 怎么 show/hide，都绝对不横向溢出
- * 适用：body.mode-h5.is-mobile → .container → tab → filters → list
+ *
+ * ✅ 重构说明：
+ * - 移除所有 body.class 依赖
+ * - 改用 @media 查询（只依赖视口宽度）
+ * - 确保样式来源唯一，避免状态竞争
  *
  * 创建时间：2026-01-30
+ * 重构时间：2026-01-30
  * 作者：Claude Code
  * ========================================
  */
@@ -25,11 +30,14 @@ html, body {
 /* ============================================================
  * ② container 层（隐形风险点）
  * ============================================================ */
-body.mode-h5.is-mobile .container {
-    width: 100%;
-    max-width: 100%;
-    box-sizing: border-box;
-    overflow-x: hidden;
+/* ✅ 使用 @media 查询，不依赖 body.class */
+@media (max-width: 768px) {
+    .container {
+        width: 100%;
+        max-width: 100%;
+        box-sizing: border-box;
+        overflow-x: hidden;
+    }
 }
 
 /* ❗ 原因：container 一旦没锁 width，里面 flex / absolute / translate 都可能外溢 */
@@ -37,12 +45,14 @@ body.mode-h5.is-mobile .container {
 /* ============================================================
  * ③ tab / pane 层（禁止内联 padding）
  * ============================================================ */
-body.mode-h5.is-mobile .tab-pane {
-    width: 100%;
-    max-width: 100%;
-    box-sizing: border-box;
-    overflow-x: hidden;
-    padding-top: var(--tab-offset, 16px); /* 使用 CSS 变量，禁止内联 style */
+@media (max-width: 768px) {
+    .tab-pane {
+        width: 100%;
+        max-width: 100%;
+        box-sizing: border-box;
+        overflow-x: hidden;
+        padding-top: var(--tab-offset, 16px); /* 使用 CSS 变量，禁止内联 style */
+    }
 }
 
 /* 📌 原则：tab-pane 永远不能参与横向尺寸计算 */
@@ -50,26 +60,28 @@ body.mode-h5.is-mobile .tab-pane {
 /* ============================================================
  * ④ active-filters（事故源头 - 永不超宽组件）
  * ============================================================ */
-body.mode-h5.is-mobile .active-filters {
-    width: 100%;
-    max-width: 100%;
-    box-sizing: border-box;
+@media (max-width: 768px) {
+    .active-filters {
+        width: 100%;
+        max-width: 100%;
+        box-sizing: border-box;
 
-    display: flex;
-    flex-wrap: wrap;        /* 🔥 必须：能 wrap 就别 scroll */
-    gap: 8px;
+        display: flex;
+        flex-wrap: wrap;        /* 🔥 必须：能 wrap 就别 scroll */
+        gap: 8px;
 
-    overflow-x: hidden;     /* 防止单条撑爆 */
-    padding: 8px 16px;      /* 使用固定 padding，禁止内联 style */
-}
+        overflow-x: hidden;     /* 防止单条撑爆 */
+        padding: 8px 16px;      /* 使用固定 padding，禁止内联 style */
+    }
 
-/* 🔥 筛选标签子元素保护 */
-body.mode-h5.is-mobile .active-filters > * {
-    max-width: calc(100vw - 48px); /* 减去左右 padding */
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    flex-shrink: 1;         /* 允许收缩 */
+    /* 🔥 筛选标签子元素保护 */
+    .active-filters > * {
+        max-width: calc(100vw - 48px); /* 减去左右 padding */
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        flex-shrink: 1;         /* 允许收缩 */
+    }
 }
 
 /* 📌 心法：筛选条 ≠ 横向滚动容器，能 wrap 就别 scroll */
@@ -77,19 +89,21 @@ body.mode-h5.is-mobile .active-filters > * {
 /* ============================================================
  * ⑤ 日期 / Tab 按钮区（隐性高危）
  * ============================================================ */
-body.mode-h5.is-mobile .date-tabs,
-body.mode-h5.is-mobile .date-grid {
-    width: 100%;
-    max-width: 100%;
-    overflow-x: auto;       /* 可以横滚，但不撑页面 */
-    box-sizing: border-box;
-    -webkit-overflow-scrolling: touch;
-}
+@media (max-width: 768px) {
+    .date-tabs,
+    .date-grid {
+        width: 100%;
+        max-width: 100%;
+        overflow-x: auto;       /* 可以横滚，但不撑页面 */
+        box-sizing: border-box;
+        -webkit-overflow-scrolling: touch;
+    }
 
-/* 隐藏滚动条但保留功能 */
-body.mode-h5.is-mobile .date-tabs::-webkit-scrollbar,
-body.mode-h5.is-mobile .date-grid::-webkit-scrollbar {
-    display: none;
+    /* 隐藏滚动条但保留功能 */
+    .date-tabs::-webkit-scrollbar,
+    .date-grid::-webkit-scrollbar {
+        display: none;
+    }
 }
 
 /* 📌 区分清楚两种角色：
@@ -101,35 +115,39 @@ body.mode-h5.is-mobile .date-grid::-webkit-scrollbar {
 /* ============================================================
  * ⑥ 列表卡片（防止内容撑爆）
  * ============================================================ */
-body.mode-h5.is-mobile .card,
-body.mode-h5.is-mobile .list-item,
-body.mode-h5.is-mobile .activity-card,
-body.mode-h5.is-mobile .schedule-item {
-    max-width: 100%;
-    box-sizing: border-box;
-    min-width: 0;           /* 🔥 防 flex 子元素撑爆 */
-}
+@media (max-width: 768px) {
+    .card,
+    .list-item,
+    .activity-card,
+    .schedule-item {
+        max-width: 100%;
+        box-sizing: border-box;
+        min-width: 0;           /* 🔥 防 flex 子元素撑爆 */
+    }
 
-/* 🔥 这是 90% flex 超宽 bug 的解药 */
-body.mode-h5.is-mobile .card *,
-body.mode-h5.is-mobile .list-item *,
-body.mode-h5.is-mobile .activity-card *,
-body.mode-h5.is-mobile .schedule-item * {
-    min-width: 0;
+    /* 🔥 这是 90% flex 超宽 bug 的解药 */
+    .card *,
+    .list-item *,
+    .activity-card *,
+    .schedule-item * {
+        min-width: 0;
+    }
 }
 
 /* ============================================================
  * ⑦ show / hide 状态（反复触发风险）
  * ============================================================ */
-body.mode-h5.is-mobile .show {
-    display: flex;          /* 明确 layout */
-    max-width: 100%;
-}
+@media (max-width: 768px) {
+    .show {
+        display: flex;          /* 明确 layout */
+        max-width: 100%;
+    }
 
-body.mode-h5.is-mobile .active-filters.show {
-    display: flex;
-    max-width: 100%;
-    width: 100%;
+    .active-filters.show {
+        display: flex;
+        max-width: 100%;
+        width: 100%;
+    }
 }
 
 /* 📌 display 切换时，浏览器会重新算宽，不给上限 = 风险 */
@@ -167,32 +185,34 @@ body.debug-outline *:where(
  * 🛡️ 额外的防御性规则
  * ============================================================ */
 
-/* Flex 子元素通用保护 */
-body.mode-h5.is-mobile * {
-    min-width: 0;           /* 防止 flex 子元素内容撑爆 */
-    max-width: 100%;        /* 强制所有元素不超出父容器 */
-}
+@media (max-width: 768px) {
+    /* Flex 子元素通用保护 */
+    * {
+        min-width: 0;           /* 防止 flex 子元素内容撑爆 */
+        max-width: 100%;        /* 强制所有元素不超出父容器 */
+    }
 
-/* 图片保护 */
-body.mode-h5.is-mobile img {
-    max-width: 100%;
-    height: auto;
-    display: block;
-}
+    /* 图片保护 */
+    img {
+        max-width: 100%;
+        height: auto;
+        display: block;
+    }
 
-/* iframe 保护 */
-body.mode-h5.is-mobile iframe {
-    max-width: 100%;
-    border: none;
-}
+    /* iframe 保护 */
+    iframe {
+        max-width: 100%;
+        border: none;
+    }
 
-/* 表单元素保护 */
-body.mode-h5.is-mobile input,
-body.mode-h5.is-mobile select,
-body.mode-h5.is-mobile textarea,
-body.mode-h5.is-mobile button {
-    max-width: 100%;
-    box-sizing: border-box;
+    /* 表单元素保护 */
+    input,
+    select,
+    textarea,
+    button {
+        max-width: 100%;
+        box-sizing: border-box;
+    }
 }
 
 /* ============================================================
@@ -209,12 +229,15 @@ body.mode-h5.is-mobile button {
  * ============================================================
  *
  * ✅ html / body 有 overflow-x: hidden
- * ✅ container 锁 width
+ * ✅ container 锁 width（使用 @media）
  * ✅ tab-pane 无内联 padding
  * ✅ active-filters 支持 wrap
  * ✅ 横向滚动区 ≠ 页面容器
  * ✅ flex 子元素有 min-width: 0
+ * ✅ 移除所有 body.class 依赖
+ * ✅ 使用 @media 查询确保样式来源唯一
  *
  * 🧠 一句话总结：
  * 移动端只要"状态条 + flex + 未锁宽"，迟早横向溢出。
+ * CSS 不依赖 body.class，避免状态竞争。
  * ============================================================ */
