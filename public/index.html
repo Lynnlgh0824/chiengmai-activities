@@ -10,33 +10,67 @@
     <!-- 修复浏览器扩展引起的错误 -->
     <script>
     (function() {
-        // 捕获并抑制浏览器扩展引起的错误
+        'use strict';
+
+        // 🔒 增强的浏览器扩展错误过滤系统
+        const extensionKeywords = [
+            'runtime.lastError',
+            'message port closed',
+            'message port',
+            'extension',
+            'content.js',
+            'chrome-extension',
+            'moz-extension',
+            'webkit-extension',
+            'Unchecked runtime.lastError',
+            'The message port closed'
+        ];
+
+        // 检查是否为浏览器扩展错误
+        function isExtensionError(message, source = '') {
+            if (typeof message !== 'string') return false;
+
+            // 检查消息内容
+            if (extensionKeywords.some(keyword => message.includes(keyword))) {
+                return true;
+            }
+
+            // 检查来源
+            if (source && (
+                source.includes('chrome-extension://') ||
+                source.includes('moz-extension://') ||
+                source.includes('webkit-extension://')
+            )) {
+                return true;
+            }
+
+            return false;
+        }
+
+        // 1. 覆盖 console.error
         const originalError = console.error;
         console.error = function(...args) {
             const message = args[0];
-            // 忽略浏览器扩展的错误
-            if (typeof message === 'string' &&
-                (message.includes('runtime.lastError') ||
-                 message.includes('message port closed') ||
-                 message.includes('extension') ||
-                 message.includes('content.js') ||
-                 message.includes('chrome-extension'))) {
-                return; // 静默忽略
+            if (isExtensionError(message)) {
+                return; // 静默忽略浏览器扩展错误
             }
             originalError.apply(console, args);
         };
 
-        // 捕获 window.onerror 中的扩展错误
+        // 2. 覆盖 console.warn（某些扩展用 warn 输出）
+        const originalWarn = console.warn;
+        console.warn = function(...args) {
+            const message = args[0];
+            if (isExtensionError(message)) {
+                return; // 静默忽略浏览器扩展警告
+            }
+            originalWarn.apply(console, args);
+        };
+
+        // 3. 捕获 window.onerror
         const originalOnError = window.onerror;
         window.onerror = function(message, source, lineno, colno, error) {
-            // 检查是否是浏览器扩展的错误
-            if (typeof message === 'string' && (
-                message.includes('runtime.lastError') ||
-                message.includes('message port closed') ||
-                message.includes('content.js') ||
-                message.includes('chrome-extension://') ||
-                (source && source.includes('chrome-extension://'))
-            )) {
+            if (isExtensionError(message, source)) {
                 return true; // 阻止默认错误处理
             }
             if (originalOnError) {
@@ -45,15 +79,13 @@
             return false;
         };
 
-        // 捕获未处理的 Promise rejection（通常是扩展错误）
+        // 4. 捕获未处理的 Promise rejection
         const originalOnUnhandled = window.onunhandledrejection;
         window.onunhandledrejection = function(event) {
-            if (event.reason && event.reason.message) {
-                const msg = event.reason.message;
+            if (event.reason) {
+                const msg = event.reason.message || String(event.reason);
                 const source = event.reason.stack || '';
-                if (msg.includes('content.js') ||
-                    msg.includes('chrome-extension') ||
-                    source.includes('chrome-extension://')) {
+                if (isExtensionError(msg, source)) {
                     event.preventDefault(); // 阻止错误显示
                     return;
                 }
@@ -62,6 +94,21 @@
                 return originalOnUnhandled(event);
             }
         };
+
+        // 5. 拦截所有 console 方法（增强过滤）
+        ['log', 'info', 'debug'].forEach(method => {
+            const original = console[method];
+            console[method] = function(...args) {
+                const message = args[0];
+                if (isExtensionError(message)) {
+                    return; // 静默忽略
+                }
+                original.apply(console, args);
+            };
+        });
+
+        // 输出过滤系统启动日志
+        console.log('✅ 浏览器扩展错误过滤系统已启动');
     })();
     </script>
 
