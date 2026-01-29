@@ -7,6 +7,39 @@
     <meta http-equiv="Cache-Control" content="max-age=300, must-revalidate">
     <title>Chiengmai Activities v1.0.7</title>
 
+    <!-- 修复浏览器扩展引起的runtime.lastError -->
+    <script>
+    (function() {
+        // 捕获并抑制浏览器扩展引起的错误
+        const originalError = console.error;
+        console.error = function(...args) {
+            const message = args[0];
+            // 忽略浏览器扩展的错误
+            if (typeof message === 'string' &&
+                (message.includes('runtime.lastError') ||
+                 message.includes('message port closed') ||
+                 message.includes('extension'))) {
+                return; // 静默忽略
+            }
+            originalError.apply(console, args);
+        };
+
+        // 捕获 window.onerror 中的扩展错误
+        const originalOnError = window.onerror;
+        window.onerror = function(message, source, lineno, colno, error) {
+            if (typeof message === 'string' &&
+                (message.includes('runtime.lastError') ||
+                 message.includes('message port closed'))) {
+                return true; // 阻止默认错误处理
+            }
+            if (originalOnError) {
+                return originalOnError(message, source, lineno, colno, error);
+            }
+            return false;
+        };
+    })();
+    </script>
+
     <!-- H5模式检测 -->
     <script>
     (function() {
@@ -5246,16 +5279,11 @@
                 }
             });
 
-            console.log('📊 分组结果:', Object.keys(groupedByDay).map(day =>
-                `${dayNames[day]}: ${groupedByDay[day].length}个`
-            ).join(', '));
-
             // 2. 如果有选中日期，将其移到最前面
             let dayKeys = Object.keys(groupedByDay).map(Number).filter(day => !isNaN(day)).sort((a, b) => a - b);
             if (selectedDay !== null && groupedByDay[selectedDay]) {
                 dayKeys = dayKeys.filter(k => k !== selectedDay);
                 dayKeys.unshift(selectedDay);
-                console.log('⭐ 选中的日期移到最前:', dayNames[selectedDay]);
             }
 
             // 3. 渲染HTML
