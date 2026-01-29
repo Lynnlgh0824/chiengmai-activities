@@ -77,6 +77,40 @@
             }
         }
 
+        /* ========== XS 断点（小屏手机优化） ========== */
+        /* SeaStar 同款：374px 以上应用特定样式 */
+        @media (min-width: 374px) {
+            /* 在此处添加 xs 断点特有的样式 */
+        }
+
+        /* ========== 文本截断系统 ========== */
+        /* 单行截断 */
+        .line-clamp-1 {
+            display: -webkit-box;
+            -webkit-line-clamp: 1;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        /* 两行截断 */
+        .line-clamp-2 {
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        /* 三行截断 */
+        .line-clamp-3 {
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
         /* ========== 原有样式 ========== */
         * {
             margin: 0;
@@ -872,10 +906,12 @@
             color: #333;
             margin-bottom: 4px;
 
-            /* ✅ 标题防溢出 */
+            /* ✅ 标题防溢出 - 支持最多2行 */
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
             overflow: hidden;
             text-overflow: ellipsis;
-            white-space: nowrap; /* 单行显示，超出省略 */
             max-width: 100%;
             line-height: 1.4;
         }
@@ -2297,10 +2333,12 @@
                 font-size: 15px !important;
                 line-height: 1.4 !important;
 
-                /* ✅ 标题防溢出 */
+                /* ✅ 标题防溢出 - 支持最多2行显示 */
+                display: -webkit-box !important;
+                -webkit-line-clamp: 2 !important;
+                -webkit-box-orient: vertical !important;
                 overflow: hidden !important;
                 text-overflow: ellipsis !important;
-                white-space: nowrap !important;
                 max-width: 100% !important;
             }
 
