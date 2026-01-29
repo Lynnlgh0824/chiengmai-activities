@@ -661,12 +661,9 @@
             border: 2px solid #ffc107;
         }
 
-        .date-cell-header.today-header.selected-day {
-            background: #4080FF;
-            color: white !important;
-            border: 3px solid #ffc107;
-            box-shadow: 0 4px 16px rgba(64, 128, 255, 0.6), 0 0 0 2px rgba(255, 193, 7, 0.3);
-        }
+        /* ✅ 已删除 .today-header.selected-day 混合状态样式 */
+        /* 状态优先级：selected > today > normal */
+        /* 如果今天被选中，只表现为 selected，不显示 today 标记 */
 
         @keyframes selectPulse {
             0% { transform: scale(1); }
@@ -773,12 +770,9 @@
             border-width: 2px;
         }
 
-        /* 今天且被选中 - 蓝色选中 + 黄色外发光 */
-        .day-cell.today.selected-day {
-            background: linear-gradient(135deg, #eef2ff 0%, #e0e7ff 100%);
-            border: 2px solid #667eea;
-            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4), 0 0 0 2px rgba(255, 193, 7, 0.3);
-        }
+        /* ✅ 已删除 .today.selected-day 混合状态样式 */
+        /* 状态优先级：selected > today > normal */
+        /* 如果今天被选中，只表现为 selected，不显示 today 标记 */
 
         /* 点击提示 */
         .day-cell:not(.dimmed):hover::after {
@@ -811,9 +805,8 @@
             font-weight: 700;
         }
 
-        .day-cell.today.selected-day .day-name {
-            color: #667eea;
-        }
+        /* ✅ 已删除 .today.selected-day .day-name 混合状态样式 */
+        /* 状态优先级：selected > today > normal */
 
         .activity-chip {
             background: white;
@@ -2073,13 +2066,9 @@
                 border: 2px solid #ffc107 !important; /* ✅ 黄色边框表示"今天" */
             }
 
-            /* ✅ 今天且被选中 - 深蓝色选中 + 黄色边框 */
-            .date-cell-header.today-header.selected-day {
-                background: #4080FF !important; /* ✅ 选中状态：深蓝色背景 */
-                color: white !important; /* ✅ 选中状态：白色文字 */
-                border: 3px solid #ffc107 !important; /* ✅ 黄色边框表示"今天" */
-                box-shadow: 0 4px 16px rgba(64, 128, 255, 0.6), 0 0 0 2px rgba(255, 193, 7, 0.3) !important; /* ✅ 蓝色阴影 + 黄色外发光 */
-            }
+            /* ✅ 已删除 .today-header.selected-day 混合状态样式 */
+            /* 状态优先级：selected > today > normal */
+            /* 如果今天被选中，只表现为 selected，不显示 today 标记 */
 
             /* ========== 移动端数字和星期样式 ========== */
             .date-number {
@@ -6290,6 +6279,10 @@
             const isToday = isDayToday(day);
             const isDimmed = currentFilters.day !== null && currentFilters.day !== day;
 
+            // ✅ 状态优先级：selected > today > normal
+            // 如果今天被选中，只表现为 selected，不显示 today 标记
+            const shouldShowToday = isToday && !isSelectedDay;
+
             // 获取日期数字
             const weekDate = weekDates.find(d => d.day === day);
             const dateNumber = weekDate ? weekDate.date : '';
@@ -6325,7 +6318,7 @@
             }
 
             return `
-                <div class="day-cell ${isToday ? 'today' : ''} ${isSelectedDay ? 'selected-day' : ''} ${isDimmed ? 'dimmed' : ''}" data-day="${day}">
+                <div class="day-cell ${shouldShowToday ? 'today' : ''} ${isSelectedDay ? 'selected-day' : ''} ${isDimmed ? 'dimmed' : ''}" data-day="${day}">
                     ${chipsHtml}
                 </div>
             `;
@@ -7025,7 +7018,12 @@
 
             let html = '';
             weekDates.forEach(dateInfo => {
-                const todayClass = dateInfo.isToday ? ' today-header' : '';
+                // ✅ 状态优先级：selected > today > normal
+                // 如果今天被选中，不显示 today-header 标记
+                const isToday = dateInfo.isToday;
+                const isSelected = currentFilters.day === dateInfo.day;
+                const shouldShowToday = isToday && !isSelected;
+                const todayClass = shouldShowToday ? ' today-header' : '';
 
                 html += `
                     <div class="date-cell-header ${todayClass}"
