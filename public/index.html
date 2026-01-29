@@ -5905,36 +5905,6 @@
             // ✅ 立即更新日期高亮状态（修复核心问题）
             updateDateHighlight();
 
-            // 🆕 触发布局重新计算（防止布局抖动）
-            if (window.innerWidth <= 768) {
-                // 强制浏览器重新计算布局
-                requestAnimationFrame(() => {
-                    // 触发重排
-                    document.body.offsetHeight;
-
-                    // 检查并修复可能的布局问题
-                    const tabPane = document.querySelector('.tab-pane.active');
-                    if (tabPane) {
-                        const computedStyle = window.getComputedStyle(tabPane);
-                        const paddingTop = parseInt(computedStyle.paddingTop);
-
-                        // 确保padding-top正确（约200px，为固定元素留出空间）
-                        if (paddingTop < 200) {
-                            tabPane.style.paddingTop = '200px';
-                        }
-                    }
-
-                    // 检查固定元素是否有正确尺寸
-                    const fixedElements = document.querySelectorAll('[style*="position: fixed"]');
-                    fixedElements.forEach(el => {
-                        const rect = el.getBoundingClientRect();
-                        if (rect.width === 0 || rect.height === 0) {
-                            console.warn('⚠️ Fixed element has zero size:', el);
-                        }
-                    });
-                });
-            }
-
             // 移动端：将选中的日期滚动到视图中心
             if (window.innerWidth <= 768) {
                 const selectedHeader = document.querySelector(`.date-cell-header[data-day="${day}"]`);
