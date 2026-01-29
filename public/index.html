@@ -1273,65 +1273,6 @@
             }
         }
 
-        /* ========== 筛选状态横幅样式 ========== */
-        .filter-status-banner {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 12px 16px;
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            margin: 8px 0;
-            box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
-            animation: slideDown 0.3s ease;
-        }
-
-        @keyframes slideDown {
-            from {
-                opacity: 0;
-                transform: translateY(-10px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .status-icon {
-            font-size: 18px;
-        }
-
-        .status-text {
-            flex: 1;
-            font-size: 14px;
-            font-weight: 500;
-        }
-
-        .status-clear-btn {
-            background: rgba(255, 255, 255, 0.2);
-            border: none;
-            color: white;
-            width: 28px;
-            height: 28px;
-            border-radius: 50%;
-            font-size: 14px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.2s;
-            touch-action: manipulation;
-        }
-
-        .status-clear-btn:hover {
-            background: rgba(255, 255, 255, 0.3);
-        }
-
-        .status-clear-btn:active {
-            transform: scale(0.9);
-        }
-
         /* 筛选条件标签 */
         .active-filters {
             display: none;
@@ -3472,8 +3413,6 @@
 
             <!-- 灵活时间活动Tab -->
             <div id="tab-3" class="tab-pane">
-                <!-- ✅ 移除冗余的calendar-header，tab导航已标识 --><!-- 筛选状态提示 -->
-                <div id="filterStatus" style="display: none; padding: 0 16px;"></div>
                 <div class="schedule-list" id="flexibleList">
                     <!-- 动态生成列表内容 -->
                 </div>
@@ -5880,28 +5819,6 @@
         }
 
         /**
-         * 更新筛选状态提示（新增）
-         */
-        function updateFilterStatus() {
-            const statusContainer = document.getElementById('filterStatus');
-            if (!statusContainer) return;
-
-            if (currentFilters.day !== null) {
-                const dayName = dayNames[currentFilters.day];
-                statusContainer.innerHTML = `
-                    <div class="filter-status-banner">
-                        <span class="status-icon">🔍</span>
-                        <span class="status-text">显示 ${dayName} 的活动</span>
-                        <button class="status-clear-btn" onclick="toggleDayFilter(null)" aria-label="清除筛选">✕</button>
-                    </div>
-                `;
-                statusContainer.style.display = 'block';
-            } else {
-                statusContainer.style.display = 'none';
-            }
-        }
-
-        /**
          * 防抖动的布局更新函数
          * 用于在筛选后强制浏览器重新计算布局，防止布局抖动
          */
@@ -5987,9 +5904,6 @@
 
             // ✅ 立即更新日期高亮状态（修复核心问题）
             updateDateHighlight();
-
-            // ✅ 更新筛选状态提示
-            updateFilterStatus();
 
             // 🆕 触发布局重新计算（防止布局抖动）
             if (window.innerWidth <= 768) {
