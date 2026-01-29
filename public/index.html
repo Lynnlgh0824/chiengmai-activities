@@ -859,6 +859,116 @@
             color: #666;
         }
 
+        /* ========== H5日期分组样式 ========== */
+        /* 日期分组容器 */
+        .day-group {
+            margin-bottom: 16px;
+            border-radius: 12px;
+            background: #f8f9fa;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        /* 选中的日期组 - 固定在顶部 + 高亮 */
+        .day-group-selected {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            box-shadow: 0 4px 16px rgba(102, 126, 234, 0.3);
+            position: sticky;
+            top: 120px;
+            z-index: 100;
+            margin-bottom: 20px;
+        }
+
+        /* 日期组头部 */
+        .day-group-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 16px;
+            background: #fff;
+            border-left: 4px solid #667eea;
+            font-weight: 600;
+        }
+
+        .day-group-selected .day-group-header {
+            background: rgba(255, 255, 255, 0.95);
+            color: #667eea;
+            border-left-color: #ffd700;
+        }
+
+        .day-group-title {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .day-icon {
+            font-size: 18px;
+        }
+
+        .day-name {
+            font-size: 15px;
+            font-weight: 600;
+        }
+
+        .selected-badge {
+            background: #ffd700;
+            color: #333;
+            font-size: 11px;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-weight: 600;
+        }
+
+        .day-count {
+            font-size: 13px;
+            color: #666;
+        }
+
+        .day-group-selected .day-count {
+            color: #667eea;
+            font-weight: 600;
+        }
+
+        /* 日期组活动列表 */
+        .day-group-activities {
+            padding: 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        /* 高亮活动卡片 */
+        .activity-highlight {
+            background: #fff !important;
+            border: 2px solid #ffd700 !important;
+            box-shadow: 0 2px 12px rgba(255, 215, 0, 0.3) !important;
+            animation: slideInFromTop 0.3s ease;
+        }
+
+        @keyframes slideInFromTop {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* 选中日期组的脉冲动画 */
+        @keyframes pulseHighlight {
+            0%, 100% {
+                transform: scale(1);
+                box-shadow: 0 4px 16px rgba(102, 126, 234, 0.3);
+            }
+            50% {
+                transform: scale(1.02);
+                box-shadow: 0 6px 24px rgba(102, 126, 234, 0.5);
+            }
+        }
+
         /* 筛选条件标签 */
         .active-filters {
             display: none;
@@ -1778,6 +1888,29 @@
             .day-cell {
                 padding: var(--space-sm) !important;
                 margin-bottom: var(--space-sm) !important;
+            }
+
+            /* ========== H5日期分组移动端优化 ========== */
+            .day-group {
+                margin: 0 -8px 16px -8px;
+                border-radius: 12px;
+            }
+
+            .day-group-selected {
+                top: 120px;
+                margin: 0 -8px 20px -8px;
+            }
+
+            .day-group-header {
+                padding: 10px 12px;
+            }
+
+            .day-group-activities {
+                padding: 8px;
+            }
+
+            .schedule-item {
+                margin-bottom: 0;
             }
 
             /* 优化活动卡片间距 */
@@ -4353,6 +4486,195 @@
         }
 
         // =====================================================
+        // H5分组显示功能
+        // =====================================================
+
+        /**
+         * Tab与分类的映射配置（用户提供的准确分类）
+         */
+        const TAB_CATEGORIES = {
+            0: { // 兴趣班Tab
+                name: '兴趣班',
+                categories: ['运动', '健身', '冥想', '泰拳', '徒步', '文化艺术', '舞蹈', '瑜伽'],
+                hasCategoryFilter: true
+            },
+            1: { // 市集Tab
+                name: '市集',
+                categories: [],
+                hasCategoryFilter: false
+            },
+            2: { // 音乐Tab
+                name: '音乐',
+                categories: [],
+                hasCategoryFilter: false
+            },
+            3: { // 灵活时间Tab
+                name: '灵活时间',
+                categories: [],
+                hasCategoryFilter: false
+            },
+            4: { // 活动网站Tab
+                name: '活动网站',
+                categories: [],
+                hasCategoryFilter: false
+            }
+        };
+
+        /**
+         * 获取当前Tab的分类列表
+         */
+        function getCategoriesForTab(tabId) {
+            const tabConfig = TAB_CATEGORIES[tabId];
+            if (!tabConfig) {
+                console.warn('⚠️ 未找到Tab配置:', tabId);
+                return { categories: [], hasFilter: false };
+            }
+
+            console.log(`📋 获取Tab ${tabId}(${tabConfig.name})的分类`);
+
+            return {
+                categories: tabConfig.categories,
+                hasFilter: tabConfig.hasCategoryFilter
+            };
+        }
+
+        /**
+         * 按日期分组渲染活动列表（H5专用）
+         */
+        function renderGroupedActivitiesForH5(activities, selectedDay = null) {
+            console.log('📱 H5分组渲染开始，选中日期:', selectedDay);
+
+            const dayNames = ['周日', '周一', '周二', '周三', '周四', '周五', '周六'];
+
+            // 1. 按日期分组
+            const groupedByDay = {};
+            activities.forEach(act => {
+                if (!groupedByDay[act.day]) {
+                    groupedByDay[act.day] = [];
+                }
+                groupedByDay[act.day].push(act);
+            });
+
+            console.log('📊 分组结果:', Object.keys(groupedByDay).map(day =>
+                `${dayNames[day]}: ${groupedByDay[day].length}个`
+            ).join(', '));
+
+            // 2. 如果有选中日期，将其移到最前面
+            let dayKeys = Object.keys(groupedByDay).map(Number).sort((a, b) => a - b);
+            if (selectedDay !== null && groupedByDay[selectedDay]) {
+                dayKeys = dayKeys.filter(k => k !== selectedDay);
+                dayKeys.unshift(selectedDay);
+                console.log('⭐ 选中的日期移到最前:', dayNames[selectedDay]);
+            }
+
+            // 3. 渲染HTML
+            let html = '';
+            dayKeys.forEach((day, index) => {
+                const dayActivities = groupedByDay[day];
+                const isSelected = day === selectedDay;
+                const groupClass = isSelected ? 'day-group day-group-selected' : 'day-group';
+
+                html += `
+                    <div class="${groupClass}" data-day="${day}">
+                        <div class="day-group-header">
+                            <div class="day-group-title">
+                                <span class="day-icon">${getDayIcon(day)}</span>
+                                <span class="day-name">${dayNames[day]}</span>
+                                ${isSelected ? '<span class="selected-badge">当前</span>' : ''}
+                            </div>
+                            <span class="day-count">${dayActivities.length}个活动</span>
+                        </div>
+                        <div class="day-group-activities">
+                            ${dayActivities.map(act => createScheduleItemHTML(act, isSelected)).join('')}
+                        </div>
+                    </div>
+                `;
+            });
+
+            return html;
+        }
+
+        /**
+         * 获取日期图标
+         */
+        function getDayIcon(day) {
+            const icons = ['🌞', '📅', '📅', '📅', '📅', '📅', '🎉'];
+            return icons[day];
+        }
+
+        /**
+         * 创建活动卡片HTML（带高亮支持）
+         */
+        function createScheduleItemHTML(act, isHighlighted = false) {
+            const highlightClass = isHighlighted ? 'activity-highlight' : '';
+            const highlightStar = isHighlighted ? '⭐ ' : '';
+
+            return `
+                <div class="schedule-item ${highlightClass}" data-activity-id="${act.id}">
+                    <div class="schedule-item-header">
+                        <div class="schedule-item-title">${highlightStar}${cleanTitle(act.title)}</div>
+                    </div>
+                    <div class="schedule-item-meta">
+                        <span class="meta-time">⏰ ${act.time || '灵活时间'}</span>
+                        <span class="meta-location">📍 ${act.location}</span>
+                    </div>
+                    <div class="schedule-item-price">${act.price}</div>
+                </div>
+            `;
+        }
+
+        /**
+         * 更新筛选弹窗中的分类选项（基于当前Tab）
+         */
+        function updateFilterSheetCategories(tabId) {
+            console.log('🔄 更新筛选弹窗分类，Tab:', tabId);
+
+            const { categories, hasFilter } = getCategoriesForTab(tabId);
+            const categorySection = document.querySelector('.filter-group-section');
+            const container = document.getElementById('categoryOptions');
+
+            // 如果该Tab没有分类筛选，隐藏分类section
+            if (!hasFilter || categories.length === 0) {
+                if (categorySection) {
+                    categorySection.style.display = 'none';
+                }
+                console.log('  该Tab没有分类筛选，已隐藏');
+                return;
+            }
+
+            // 显示分类section并更新内容
+            if (categorySection) {
+                categorySection.style.display = 'block';
+            }
+
+            if (!container) {
+                console.error('❌ 找不到categoryOptions容器');
+                return;
+            }
+
+            console.log('  分类列表:', categories);
+
+            // 生成HTML
+            let html = '';
+            categories.forEach((cat, index) => {
+                const isSelected = index === 0;
+                const selectedClass = isSelected ? 'selected' : '';
+                const value = cat === '全部' ? 'all' : cat;
+
+                html += `
+                    <div class="filter-option-item ${selectedClass}"
+                         data-value="${value}"
+                         onclick="selectFilterOption(this, 'category')">
+                        ${cat}
+                    </div>
+                `;
+            });
+
+            container.innerHTML = html;
+            console.log('✅ 筛选弹窗分类已更新');
+        }
+
+        // =====================================================
         // 筛选功能
         // =====================================================
 
@@ -4820,6 +5142,28 @@
                 console.log('✅ 设置日期筛选:', day);
                 currentFilters.day = day;
                 lastSelectedDay = day;
+
+                // 🆕 H5端：自动滚动到该日期组
+                if (window.innerWidth <= 768) {
+                    setTimeout(() => {
+                        const dayGroup = document.querySelector(`.day-group[data-day="${day}"]`);
+                        if (dayGroup) {
+                            // 平滑滚动到目标
+                            dayGroup.scrollIntoView({
+                                behavior: 'smooth',
+                                block: 'start'
+                            });
+
+                            // 添加脉冲动画
+                            dayGroup.style.animation = 'pulseHighlight 0.6s ease';
+                            setTimeout(() => {
+                                dayGroup.style.animation = '';
+                            }, 600);
+
+                            console.log('✅ 已滚动并高亮日期组:', dayNames[day]);
+                        }
+                    }, 100);
+                }
             }
 
             console.log('🆕 新的筛选状态:', currentFilters);
@@ -5210,38 +5554,64 @@
                 return;
             }
 
-            // 按时间排序：早的时间排在前面 - 使用数字比较
-            const sortedFiltered = [...filtered].sort((a, b) => {
-                return compareTimes(a.time, b.time);
-            });
+            // 判断是否为H5端
+            const isH5 = window.innerWidth <= 768;
 
-            let html = sortedFiltered.map(act => {
-                const dayName = act.day !== null ? dayNames[act.day] : '灵活时间';
-                const isDaySelected = act.day === currentFilters.day;
-                const dayFilterHtml = act.day !== null
-                    ? `<span class="day-filter-chip ${isDaySelected ? 'highlight' : ''}" onclick="event.stopPropagation(); toggleDayFilter(${act.day});" title="点击筛选${dayName}">${dayName}</span>`
-                    : `<span style="color: #666;">${dayName}</span>`;
+            if (isH5) {
+                // H5端：使用分组显示
+                const selectedDay = currentFilters.day;
+                const groupedHtml = renderGroupedActivitiesForH5(filtered, selectedDay);
+                container.innerHTML = groupedHtml;
+                container.style.display = 'block';
 
-                return `
-                    <div class="schedule-item activity-card"
-                         data-day="${act.day !== null ? act.day : ''}"
-                         onclick='showActivityDetail("${act.id}")'
-                         style="cursor: pointer; transition: all 0.2s ease;">
-                        <div class="schedule-item-header">
-                            <span class="category-tag" style="background: ${categoryColors[act.category] || '#667eea'}">${act.category}</span>
-                            ${dayFilterHtml}
+                // 如果有选中日期，自动滚动到该日期组
+                if (selectedDay !== null) {
+                    setTimeout(() => {
+                        const selectedGroup = container.querySelector('.day-group-selected');
+                        if (selectedGroup) {
+                            selectedGroup.scrollIntoView({
+                                behavior: 'smooth',
+                                block: 'start'
+                            });
+                            console.log('✅ 滚动到选中日期组');
+                        }
+                    }, 100);
+                }
+            } else {
+                // PC端：保持原有网格布局
+                // 按时间排序：早的时间排在前面 - 使用数字比较
+                const sortedFiltered = [...filtered].sort((a, b) => {
+                    return compareTimes(a.time, b.time);
+                });
+
+                let html = sortedFiltered.map(act => {
+                    const dayName = act.day !== null ? dayNames[act.day] : '灵活时间';
+                    const isDaySelected = act.day === currentFilters.day;
+                    const dayFilterHtml = act.day !== null
+                        ? `<span class="day-filter-chip ${isDaySelected ? 'highlight' : ''}" onclick="event.stopPropagation(); toggleDayFilter(${act.day});" title="点击筛选${dayName}">${dayName}</span>`
+                        : `<span style="color: #666;">${dayName}</span>`;
+
+                    return `
+                        <div class="schedule-item activity-card"
+                             data-day="${act.day !== null ? act.day : ''}"
+                             onclick='showActivityDetail("${act.id}")'
+                             style="cursor: pointer; transition: all 0.2s ease;">
+                            <div class="schedule-item-header">
+                                <span class="category-tag" style="background: ${categoryColors[act.category] || '#667eea'}">${act.category}</span>
+                                ${dayFilterHtml}
+                            </div>
+                            <div class="schedule-item-title">${cleanTitle(act.title)}</div>
+                            <div class="schedule-item-meta">
+                                <div>📍 ${act.location}</div>
+                                <div>⏰ ${act.time || '灵活时间'}</div>
+                                <div>💰 ${act.price}</div>
+                            </div>
                         </div>
-                        <div class="schedule-item-title">${cleanTitle(act.title)}</div>
-                        <div class="schedule-item-meta">
-                            <div>📍 ${act.location}</div>
-                            <div>⏰ ${act.time || '灵活时间'}</div>
-                            <div>💰 ${act.price}</div>
-                        </div>
-                    </div>
-                `;
-            }).join('');
+                    `;
+                }).join('');
 
-            container.innerHTML = html;
+                container.innerHTML = `<div class="schedule-list">${html}</div>`;
+            }
         }
 
         // 更新活动网站视图 - 表格形式
