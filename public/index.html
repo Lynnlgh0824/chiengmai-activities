@@ -134,6 +134,20 @@
             }
         }
 
+        /* ========== 横向溢出兜底保护（移动端必选） ========== */
+        html, body {
+            max-width: 100vw;
+            overflow-x: hidden;
+            width: 100%;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        /* 确保所有容器不超出视口 */
+        #app {
+            max-width: 100vw;
+            overflow-x: hidden;
+        }
+
         /* ========== XS 断点（小屏手机优化） ========== */
         /* SeaStar 同款：374px 以上应用特定样式 */
         @media (min-width: 374px) {
@@ -1343,6 +1357,9 @@
             flex-wrap: wrap;
             gap: 8px;
             align-items: center;
+            max-width: 100%;
+            width: 100%;
+            box-sizing: border-box;
         }
 
         .filter-tag {
