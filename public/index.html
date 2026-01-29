@@ -5532,6 +5532,12 @@
          * @param {string} gridId - 网格容器ID
          */
         function initH5ScrollAutoSelect(gridId) {
+            // ✅ 防止页面加载或 Tab 切换时自动选中
+            if (isPageFirstLoad) {
+                console.log('⏸️ 页面加载中或 Tab 切换中，跳过滚动检测初始化');
+                return;
+            }
+
             // 清理旧的observer
             if (h5ScrollObserver) {
                 h5ScrollObserver.disconnect();
@@ -5553,6 +5559,12 @@
                     // 当卡片占据屏幕50%以上时
                     if (entry.isIntersecting && entry.intersectionRatio >= 0.5) {
                         const day = parseInt(entry.target.getAttribute('data-day'));
+
+                        // ✅ 再次检查 isPageFirstLoad，防止竞态条件
+                        if (isPageFirstLoad) {
+                            console.log('⏸️ 仍在加载中，跳过自动选中');
+                            return;
+                        }
 
                         // 避免重复选中同一天
                         if (day !== lastSelectedDay && day !== null && !isNaN(day)) {
@@ -5866,9 +5878,10 @@
                 if (window.innerWidth <= 768) {
                     console.log('🔄 重新启用H5滚动自动选中');
                     const gridId = currentTab === 1 ? 'dateGridMarket' : 'dateGrid';
+                    // ✅ 延迟 1000ms，确保足够的保护时间
                     setTimeout(() => {
                         initH5ScrollAutoSelect(gridId);
-                    }, 300);
+                    }, 1000);
                 }
             } else {
                 // 点击其他日期，选中该日期
@@ -6136,6 +6149,7 @@
             // 仅在移动端周视图模式下启用
             if (isMobile && currentFilters.day === null) {
                 // 等待DOM更新完成后初始化滚动检测
+                // ✅ 延迟 1000ms，确保在 Tab 切换保护（800ms）之后才初始化
                 setTimeout(() => {
                     initH5ScrollAutoSelect(gridId);
                     // 同时初始化滚动日期高亮功能
