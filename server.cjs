@@ -65,7 +65,7 @@ const fs = require('fs');
 const path = require('path');
 const multer = require('multer');
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 4000;
 
 const DATA_FILE = path.join(__dirname, 'data', 'items.json');
 const GUIDE_FILE = path.join(__dirname, 'data', 'guide.json');
@@ -816,7 +816,7 @@ app.use((req, res, next) => {
   // 允许的源：本地开发环境 + 所有 Vercel 部署
   const allowedOrigins = [
     'http://localhost:5173',
-    'http://localhost:3000',
+    'http://localhost:4000',
     'https://chiengmai-activities.vercel.app'
   ];
 

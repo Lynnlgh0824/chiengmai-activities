@@ -4,10 +4,10 @@
   "description": "清迈活动查询平台 - Pure HTML Version",
   "type": "module",
   "scripts": {
-    "start": "node server.cjs",
+    "start": "PORT=4000 node server.cjs",
     "dev": "concurrently \"npm run dev:server\" \"npm run dev:client\"",
-    "dev:server": "nodemon server.cjs",
-    "dev:client": "vite",
+    "dev:server": "PORT=4000 nodemon server.cjs",
+    "dev:client": "vite --port 5173",
     "test": "vitest",
     "test:ui": "vitest --ui",
     "test:e2e": "playwright test",
