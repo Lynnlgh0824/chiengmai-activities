@@ -24,7 +24,7 @@ if [ "$answer" = "y" ] || [ "$answer" = "Y" ]; then
     echo "🚀 开始部署..."
     vercel --prod
     echo "✅ 部署完成！"
-    echo "🌐 访问: https://chiengmai-activities.vercel.app"
+    echo "🌐 访问: https://chiangmai-guide.vercel.app"
 else
     echo "⏭️  跳过部署"
     echo "💡 提示: 数据已准备好，可以稍后手动提交到 Git"

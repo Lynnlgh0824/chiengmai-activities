@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>主页面数据加载测试</title>
+</head>
+<body>
+    <h1>主页面数据加载测试</h1>
+    <div id="results"></div>
+
+    <script>
+        async function testMainPage() {
+            const results = document.getElementById('results');
+            let output = '';
+
+            // 1. 测试 HTML 结构
+            output += '<h2>1. HTML 结构测试</h2>';
+            const calendarGrid = document.getElementById('calendarGrid');
+            if (calendarGrid) {
+                output += '<p>✅ calendarGrid 元素存在</p>';
+            } else {
+                output += '<p>❌ calendarGrid 元素不存在</p>';
+            }
+
+            const tabPanes = document.querySelectorAll('.tab-pane');
+            output += `<p>✅ 找到 ${tabPanes.length} 个 tab-pane</p>`;
+
+            // 2. 测试 API
+            output += '<h2>2. API 测试</h2>';
+            try {
+                const response = await fetch('/data/items.json');
+                const data = await response.json();
+                output += `<p>✅ API 响应成功，返回 ${data.length} 个活动</p>`;
+                output += `<p>第一个活动: ${data[0]?.title || 'N/A'}</p>`;
+            } catch (error) {
+                output += `<p>❌ API 调用失败: ${error.message}</p>`;
+            }
+
+            // 3. 测试 app.js 加载
+            output += '<h2>3. app.js 加载测试</h2>';
+            const script = document.createElement('script');
+            script.src = '/js/app.js';
+            script.onload = () => {
+                output += '<p>✅ app.js 加载完成</p>';
+
+                // 等待初始化
+                setTimeout(() => {
+                    output += '<h2>4. 初始化状态</h2>';
+                    if (typeof window.fetchActivities === 'function') {
+                        output += '<p>✅ fetchActivities 函数可用</p>';
+                    } else {
+                        output += '<p>❌ fetchActivities 函数不可用</p>';
+                    }
+
+                    results.innerHTML = output;
+                }, 1000);
+            };
+            script.onerror = () => {
+                output += '<p>❌ app.js 加载失败</p>';
+                results.innerHTML = output;
+            };
+            document.head.appendChild(script);
+
+            results.innerHTML = output;
+        }
+
+        testMainPage();
+    </script>
+</body>
+</html>

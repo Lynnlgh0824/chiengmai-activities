@@ -1,4 +1,4 @@
-# 清迈活动平台 - 主页问题诊断报告
+# 清迈指南 - 主页问题诊断报告
 
 ## 问题现状
 
@@ -22,7 +22,7 @@
 
 ### 测试结果
 ```
-页面标题: 清迈活动查询平台 - Chiengmai Activities ✅
+页面标题: 清迈活动查询平台 - Chiang Mai Guide ✅
 #root 元素存在: true ✅
 #root 元素可见: false ❌
 #root HTML 内容长度: 0 字符 ❌

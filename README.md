@@ -1,6 +1,6 @@
-# 🏝️ 清迈活动策划管理系统
+# 🏝️ 清迈指南 | Chiang Mai Guide
 
-> **智能活动管理与数据质量控制系统**
+> **发现清迈的每一天 - 瑜伽、泰拳、市集、社区活动一站式查询平台**
 
 [![GitHub stars](https://img.shields.io/github/stars/Lynnlgh0824/chiangmai-activities)](https://github.com/Lynnlgh0824/chiangmai-activities)
 [![GitHub license](https://img.shields.io/github/license/Lynnlgh0824/chiangmai-activities)](https://github.com/Lynnlgh0824/chiangmai-activities)

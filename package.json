@@ -1,7 +1,7 @@
 {
-  "name": "chiengmai-activities",
+  "name": "chiangmai-guide",
   "version": "2.0.0",
-  "description": "清迈活动查询平台 - Pure HTML Version",
+  "description": "清迈指南 | Chiang Mai Guide - 清迈本地活动查询平台",
   "homepage": "https://gocnx.vercel.app",
   "repository": {
     "type": "git",

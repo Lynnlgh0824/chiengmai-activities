@@ -1,6 +1,6 @@
 import { test, expect } from '@playwright/test'
 
-test.describe('清迈活动平台 - 后台管理页面', () => {
+test.describe('清迈指南 - 后台管理页面', () => {
   test.beforeEach(async ({ page }) => {
     // 访问后台管理页面
     await page.goto('/admin.html')
@@ -258,7 +258,7 @@ test.describe('清迈活动平台 - 后台管理页面', () => {
   })
 })
 
-test.describe('清迈活动平台 - 后台 API 集成', () => {
+test.describe('清迈指南 - 后台 API 集成', () => {
   test('应该能够加载数据', async ({ page }) => {
     // 监听 API 请求
     let apiCalled = false

@@ -90,10 +90,10 @@ Git历史中的早期版本可能包含：
 **操作**:
 ```bash
 # 备份仓库
-git clone --bare git@github.com:Lynnlgh0824/chiengmai-activities.git chiengmai-activities-backup
+git clone --bare git@github.com:Lynnlgh0824/chiangmai-guide.git chiangmai-guide-backup
 
 # 清理docs目录的历史
-cd chiengmai-activities-backup
+cd chiangmai-guide-backup
 git filter-repo --force --index \
   --path "docs/internal-archive/" \
   --invert
@@ -118,7 +118,7 @@ rm -rf .git
 git init
 git add .
 git commit -m "security: 初始化安全版本"
-git remote add origin git@github.com:Lynnlgh0824/chiengmai-activities.git
+git remote add origin git@github.com:Lynnlgh0824/chiangmai-guide.git
 git push -f origin main
 ```
 
@@ -158,7 +158,7 @@ cat .gitignore | grep internal-archive
 
 访问GitHub确认：
 ```
-https://github.com/Lynnlgh0824/chiengmai-activities
+https://github.com/Lynnlgh0824/chiangmai-guide
 ```
 
 **检查点**:

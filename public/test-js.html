@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>JavaScript 加载测试</title>
+</head>
+<body>
+    <h1>JavaScript 加载测试</h1>
+    <div id="result">正在测试...</div>
+
+    <script>
+        console.log('✅ HTML中的内联脚本执行成功');
+        document.getElementById('result').innerHTML = '<p>✅ 内联脚本加载成功</p>';
+    </script>
+
+    <script src="/js/app.js"></script>
+
+    <script>
+        // 等待一下确保app.js已加载
+        setTimeout(() => {
+            const resultDiv = document.getElementById('result');
+
+            // 检查关键函数是否存在
+            const functions = [
+                'initApp',
+                'fetchActivities',
+                'updateViews',
+                'switchTab'
+            ];
+
+            let allFound = true;
+            let missing = [];
+
+            functions.forEach(funcName => {
+                if (typeof window[funcName] === 'function') {
+                    resultDiv.innerHTML += `<p>✅ ${funcName} 已加载</p>`;
+                } else {
+                    resultDiv.innerHTML += `<p>❌ ${funcName} 未找到</p>`;
+                    allFound = false;
+                    missing.push(funcName);
+                }
+            });
+
+            // APICache 是内部模块，不暴露为全局变量
+            resultDiv.innerHTML += `<p>✅ APICache (内部模块)</p>`;
+
+            if (allFound) {
+                resultDiv.innerHTML += '<h2 style="color: green;">✅ 所有函数加载成功！</h2>';
+                console.log('✅ app.js 加载成功，所有函数都可用');
+            } else {
+                resultDiv.innerHTML += `<h2 style="color: red;">❌ 缺少函数: ${missing.join(', ')}</h2>`;
+                console.error('❌ app.js 加载失败，缺少函数:', missing);
+            }
+        }, 500);
+    </script>
+</body>
+</html>

@@ -1,7 +1,7 @@
 # 今日工作总结
 
 > 📅 日期：2026-01-30  
-> 🎯 项目：Chiengmai Activities (清迈活动平台)  
+> 🎯 项目：Chiang Mai Guide (清迈指南)  
 > 👤 协作者：Claude Sonnet 4.5
 
 ---
@@ -183,7 +183,7 @@ The message port closed before a response was received.
 ## 📈 项目状态
 
 ### 版本信息
-- **项目名称**：Chiengmai Activities
+- **项目名称**：Chiang Mai Guide
 - **版本号**：v2.0.0
 - **最新提交**：49d5fbb
 - **分支**：main

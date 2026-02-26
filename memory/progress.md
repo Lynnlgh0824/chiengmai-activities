@@ -1,6 +1,6 @@
 # 进度记录
 
-> **项目**: Chiengmai Activities Platform
+> **项目**: Chiang Mai Guide Platform
 > **追踪周期**: 2026-02 起
 
 ---

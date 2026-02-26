@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 /**
- * 清迈活动平台 - 每周优化自动检测脚本
+ * 清迈指南 - 每周优化自动检测脚本
  *
  * 检测内容：
  * 1. Suspended状态过滤功能
@@ -289,7 +289,7 @@ async function testDocumentationSync() {
 // ============================================
 async function main() {
   console.log(colors.cyan + '='.repeat(80));
-  console.log('🔍 清迈活动平台 - 每周优化自动检测');
+  console.log('🔍 清迈指南 - 每周优化自动检测');
   console.log('检测时间: ' + new Date().toLocaleString('zh-CN'));
   console.log('='.repeat(80) + colors.reset);
 

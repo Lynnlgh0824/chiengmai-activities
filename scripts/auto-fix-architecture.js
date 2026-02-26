@@ -24,8 +24,8 @@ try {
     let content = readFileSync(indexPath, 'utf-8');
 
     // 替换标题中的中文
-    const oldTitle = '<title>清迈活动平台 v1.0.7 - Chiengmai Activities Platform</title>';
-    const newTitle = '<title>Chiengmai Activities v1.0.7</title>';
+    const oldTitle = '<title>清迈指南 v1.0.7 - Chiang Mai Guide Platform</title>';
+    const newTitle = '<title>Chiang Mai Guide v1.0.7</title>';
 
     if (content.includes(oldTitle)) {
         content = content.replace(oldTitle, newTitle);

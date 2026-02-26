@@ -1,4 +1,4 @@
-# 清迈活动平台 - SEO 优化文档
+# 清迈指南 - SEO 优化文档
 
 **更新日期**: 2026-02-26
 **版本**: v1.0
@@ -12,12 +12,12 @@
 #### 1. 页面标题优化
 **优化前:**
 ```html
-<title>Chiengmai Activities v1.0.7</title>
+<title>Chiang Mai Guide v1.0.7</title>
 ```
 
 **优化后:**
 ```html
-<title>清迈活动平台 | Chiengmai Activities - 瑜伽冥想、泰拳训练、市集活动、音乐节、数字游民社区指南</title>
+<title>清迈指南 | Chiang Mai Guide - 瑜伽冥想、泰拳训练、市集活动、音乐节、数字游民社区指南</title>
 ```
 
 **改进点:**
@@ -32,7 +32,7 @@
 
 **新增内容:**
 ```html
-<meta name="description" content="清迈活动平台提供最全面的清迈本地活动信息：每日瑜伽课程、冥想静修、泰拳训练、夜市市集、音乐节、文化节等。专为数字游民、旅居者、游客打造的一站式活动查询平台。实时更新，免费参与！">
+<meta name="description" content="清迈指南提供最全面的清迈本地活动信息：每日瑜伽课程、冥想静修、泰拳训练、夜市市集、音乐节、文化节等。专为数字游民、旅居者、游客打造的一站式活动查询平台。实时更新，免费参与！">
 ```
 
 **优势:**
@@ -47,7 +47,7 @@
 
 **新增内容:**
 ```html
-<meta name="keywords" content="清迈活动, Chiengmai Activities, 清迈瑜伽, 清迈冥想, 清迈泰拳, 清迈市集, 清迈夜市, 清迈音乐节, 清迈数字游民, 清迈旅居, 清迈旅游, 清迈周末活动, 清迈免费活动, Chiang Mai yoga, Chiang Mai meditation, Chiang Muay Thai, 清迈宁曼路, 清迈尼曼">
+<meta name="keywords" content="清迈活动, Chiang Mai Guide, 清迈瑜伽, 清迈冥想, 清迈泰拳, 清迈市集, 清迈夜市, 清迈音乐节, 清迈数字游民, 清迈旅居, 清迈旅游, 清迈周末活动, 清迈免费活动, Chiang Mai yoga, Chiang Mai meditation, Chiang Muay Thai, 清迈宁曼路, 清迈尼曼">
 ```
 
 **关键词策略:**
@@ -64,7 +64,7 @@
 ```html
 <!-- Facebook, LinkedIn -->
 <meta property="og:type" content="website">
-<meta property="og:title" content="清迈活动平台 | Chiengmai Activities - 发现清迈最精彩的活动">
+<meta property="og:title" content="清迈指南 | Chiang Mai Guide - 发现清迈最精彩的活动">
 <meta property="og:description" content="探索清迈的瑜伽、冥想、泰拳、市集、音乐节等精彩活动。专为数字游民和旅居者打造的实时活动查询平台。">
 <meta property="og:image" content="https://gocnx.vercel.app/og-image.jpg">
 ```
@@ -81,7 +81,7 @@
 **新增内容:**
 ```html
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="清迈活动平台 | Chiengmai Activities">
+<meta name="twitter:title" content="清迈指南 | Chiang Mai Guide">
 <meta name="twitter:description" content="探索清迈的瑜伽、冥想、泰拳、市集、音乐节等精彩活动。">
 ```
 
@@ -100,7 +100,7 @@
 {
     "@context": "https://schema.org",
     "@type": "WebSite",
-    "name": "清迈活动平台",
+    "name": "清迈指南",
     "url": "https://gocnx.vercel.app/",
     "potentialAction": {
         "@type": "SearchAction",
@@ -318,7 +318,7 @@
 
 **主页:**
 ```
-清迈活动平台 | Chiengmai Activities - [活动类型]活动指南
+清迈指南 | Chiang Mai Guide - [活动类型]活动指南
 ```
 
 **分类页:**
@@ -328,14 +328,14 @@
 
 **活动详情页:**
 ```
-[活动名称] | 清迈[地点] | [价格] | [时间] - Chiengmai Activities
+[活动名称] | 清迈[地点] | [价格] | [时间] - Chiang Mai Guide
 ```
 
 ### Meta Description 模板
 
 **主页:**
 ```
-清迈活动平台：提供最新、最全的清迈[活动类型1]、[活动类型2]信息。[特色1]、[特色2]。实时更新，助力数字游民和游客探索清迈！
+清迈指南：提供最新、最全的清迈[活动类型1]、[活动类型2]信息。[特色1]、[特色2]。实时更新，助力数字游民和游客探索清迈！
 ```
 
 **分类页:**

@@ -12,7 +12,7 @@ import { test, expect } from '@playwright/test'
  * 5. 测试关闭功能
  */
 
-test.describe('清迈活动平台 - 移动端活动详情弹窗', () => {
+test.describe('清迈指南 - 移动端活动详情弹窗', () => {
   test.beforeEach(async ({ page }) => {
     // 设置移动端 viewport (iPhone 14 Pro)
     await page.setViewportSize({ width: 393, height: 852 })
@@ -242,7 +242,7 @@ test.describe('清迈活动平台 - 移动端活动详情弹窗', () => {
   })
 })
 
-test.describe('清迈活动平台 - 移动端性能和体验', () => {
+test.describe('清迈指南 - 移动端性能和体验', () => {
   test('应该快速响应点击', async ({ page }) => {
     // 设置移动端 viewport
     await page.setViewportSize({ width: 393, height: 852 })

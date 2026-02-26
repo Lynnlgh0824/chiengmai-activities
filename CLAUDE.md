@@ -6,7 +6,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Identity
 
-**Project Name:** Chiengmai Activities Platform (清迈活动策划管理系统)
+**Project Name:** Chiang Mai Guide Platform (清迈指南)
 
 This is an **independent project**.
 
@@ -100,4 +100,4 @@ This is a basic Express.js server with the following structure:
 
 1. Install dependencies: `npm install`
 2. Start in development: `npm run dev`
-3. Server will be available at `http://localhost:3000`
+3. Server will be available at `http://localhost:4000`

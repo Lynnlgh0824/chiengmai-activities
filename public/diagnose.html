@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>诊断页面</title>
+    <style>
+        body { font-family: monospace; padding: 20px; background: #f5f5f5; }
+        .success { color: green; }
+        .error { color: red; }
+        .info { color: blue; }
+        pre { background: white; padding: 10px; border: 1px solid #ddd; overflow-x: auto; }
+    </style>
+</head>
+<body>
+    <h1>🔍 系统诊断</h1>
+    <div id="output"></div>
+
+    <script>
+        const output = document.getElementById('output');
+        const logs = [];
+
+        function log(msg, type = 'info') {
+            logs.push({ msg, type, time: new Date().toLocaleTimeString() });
+        }
+
+        function render() {
+            let html = '';
+            logs.forEach(l => {
+                html += `<p class="${l.type}">[${l.time}] ${l.msg}</p>`;
+            });
+            output.innerHTML = html;
+        }
+
+        // 捕获所有错误
+        window.addEventListener('error', (e) => {
+            log(`❌ JavaScript 错误: ${e.message} at ${e.filename}:${e.lineno}`, 'error');
+            log(`   错误堆栈: ${e.error?.stack || 'N/A'}`, 'error');
+            render();
+        });
+
+        window.addEventListener('unhandledrejection', (e) => {
+            log(`❌ Promise 错误: ${e.reason}`, 'error');
+            render();
+        });
+
+        // 开始诊断
+        log('🚀 开始诊断...', 'info');
+        log(`📄 document.readyState: ${document.readyState}`, 'info');
+
+        // 1. 测试 HTML 结构
+        log('🔍 检查 HTML 结构...', 'info');
+
+        // 2. 测试 API
+        log('🌐 测试 API 端点...', 'info');
+        fetch('/data/items.json')
+            .then(r => {
+                log(`   API 响应状态: ${r.status}`, 'info');
+                return r.json();
+            })
+            .then(data => {
+                log(`   ✅ 成功获取 ${data.length} 个活动`, 'success');
+                log(`   第一个活动: ${data[0]?.title}`, 'info');
+            })
+            .catch(err => {
+                log(`   ❌ API 调用失败: ${err.message}`, 'error');
+            })
+            .finally(render);
+
+        // 3. 加载 app.js
+        log('📦 加载 app.js...', 'info');
+        const script = document.createElement('script');
+        script.src = '/js/app.js';
+        script.onload = () => {
+            log('   ✅ app.js 加载成功', 'success');
+            render();
+
+            setTimeout(() => {
+                // 4. 检查关键函数
+                log('🔍 检查关键函数...', 'info');
+
+                const funcs = ['fetchActivities', 'updateViews', 'filterActivities', 'initApp'];
+                funcs.forEach(f => {
+                    const exists = typeof window[f] === 'function';
+                    log(`   ${f}: ${exists ? '✅' : '❌'}`, exists ? 'success' : 'error');
+                });
+
+                // 5. 检查全局变量
+                log('🔍 检查全局变量...', 'info');
+                log(`   allActivities: ${typeof window.allActivities !== 'undefined' ? '✅' : '❌'}`, 'info');
+                log(`   currentTab: ${typeof window.currentTab !== 'undefined' ? '✅' : '❌'}`, 'info');
+                log(`   currentFilters: ${typeof window.currentFilters !== 'undefined' ? '✅' : '❌'}`, 'info');
+
+                render();
+
+                // 6. 尝试初始化
+                log('🎯 尝试手动初始化...', 'info');
+                if (typeof window.initApp === 'function') {
+                    window.initApp().then(() => {
+                        log('   ✅ initApp 执行成功', 'success');
+                        render();
+
+                        setTimeout(() => {
+                            // 7. 检查结果
+                            log('📊 检查初始化结果...', 'info');
+                            if (window.allActivities && window.allActivities.length > 0) {
+                                log(`   ✅ 成功加载 ${window.allActivities.length} 个活动`, 'success');
+                            } else {
+                                log('   ❌ 没有加载到活动数据', 'error');
+                            }
+                            render();
+                        }, 2000);
+                    }).catch(err => {
+                        log(`   ❌ initApp 执行失败: ${err.message}`, 'error');
+                        log(`   错误堆栈: ${err.stack}`, 'error');
+                        render();
+                    });
+                } else {
+                    log('   ❌ initApp 函数不存在', 'error');
+                    render();
+                }
+            }, 500);
+        };
+
+        script.onerror = () => {
+            log('   ❌ app.js 加载失败', 'error');
+            render();
+        };
+
+        document.head.appendChild(script);
+        render();
+    </script>
+</body>
+</html>

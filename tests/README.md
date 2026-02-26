@@ -1,3 +1,3 @@
 # Tests
 
-Test directory for Chiengmai Activities Platform
+Test directory for Chiang Mai Guide Platform

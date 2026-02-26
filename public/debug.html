@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>调试页面</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>调试页面</h1>
+        </div>
+
+        <div style="padding: 20px;">
+            <h2>调试信息</h2>
+            <div id="debug-output"></div>
+
+            <h2>日历网格</h2>
+            <div class="tab-content">
+                <div id="tab-0" class="tab-pane active">
+                    <div class="date-grid-header" id="dateGridHeader"></div>
+                    <div class="calendar-grid" id="calendarGrid">
+                        <div style="grid-column: 1/-1; text-align: center; padding: 40px;">等待数据加载...</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const debugOutput = document.getElementById('debug-output');
+
+        function log(message, type = 'info') {
+            const color = type === 'error' ? 'red' : type === 'success' ? 'green' : 'black';
+            debugOutput.innerHTML += `<p style="color: ${color};">[${new Date().toLocaleTimeString()}] ${message}</p>`;
+            console.log(`[Debug] ${message}`);
+        }
+
+        log('页面开始加载', 'info');
+        log('document.readyState = ' + document.readyState, 'info');
+
+        // 监听 DOMContentLoaded
+        document.addEventListener('DOMContentLoaded', () => {
+            log('DOMContentLoaded 事件触发', 'success');
+        });
+    </script>
+
+    <script src="/js/app.js"></script>
+
+    <script>
+        log('app.js script 标签已加载', 'info');
+
+        // 检查函数是否可用
+        setTimeout(() => {
+            if (typeof fetchActivities === 'function') {
+                log('fetchActivities 函数可用', 'success');
+            } else {
+                log('fetchActivities 函数不可用', 'error');
+            }
+
+            // 手动调用 fetchActivities 测试
+            log('尝试手动调用 fetchActivities...', 'info');
+            if (typeof fetchActivities === 'function') {
+                fetchActivities();
+            }
+
+            // 10秒后检查状态
+            setTimeout(() => {
+                const grid = document.getElementById('calendarGrid');
+                if (grid) {
+                    log('calendarGrid 的 innerHTML 长度: ' + grid.innerHTML.length, 'info');
+                    if (grid.innerHTML.includes('加载失败')) {
+                        log('检测到"加载失败"消息', 'error');
+                    } else if (grid.innerHTML.includes('等待数据') || grid.children.length === 0) {
+                        log('日历网格仍然为空', 'error');
+                    } else {
+                        log('日历网格有内容', 'success');
+                    }
+                }
+            }, 5000);
+        }, 500);
+    </script>
+</body>
+</html>

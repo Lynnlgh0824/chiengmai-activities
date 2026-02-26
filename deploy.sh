@@ -8,7 +8,7 @@
 #   2. 运行: bash deploy.sh
 # =================================================================
 
-echo "🚀 清迈活动平台 - 一键部署脚本"
+echo "🚀 清迈指南 - 一键部署脚本"
 echo "================================"
 
 # 颜色定义
@@ -63,7 +63,7 @@ esac
 # 询问 GitHub 仓库信息
 echo ""
 read -p "GitHub 用户名: " github_username
-read -p "仓库名称 (建议: chiengmai-activities): " repo_name
+read -p "仓库名称 (建议: chiangmai-guide): " repo_name
 
 if [ -z "$github_username" ] || [ -z "$repo_name" ]; then
     echo -e "${RED}❌ 用户名和仓库名不能为空${NC}"

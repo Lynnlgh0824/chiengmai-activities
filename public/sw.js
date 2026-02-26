@@ -1,4 +1,4 @@
-// Service Worker for Chiengmai Activities Platform
+// Service Worker for Chiang Mai Guide Platform
 // 提供离线支持和PWA功能
 
 const CACHE_NAME = 'chiangmai-activities-v1';
@@ -113,7 +113,7 @@ self.addEventListener('push', event => {
     };
 
     event.waitUntil(
-        self.registration.showNotification('清迈活动平台', options)
+        self.registration.showNotification('清迈指南', options)
     );
 });
 

@@ -1,7 +1,7 @@
 # 今日工作总结报告
 
 **日期**: 2025-01-24
-**项目**: 清迈活动管理平台 (Chiengmai Activities)
+**项目**: 清迈活动管理平台 (Chiang Mai Guide)
 **版本**: v2.2.0
 
 ---
@@ -304,7 +304,7 @@ uploads/" > .git
 # 2. 初始化 Git
 git init
 git add .
-git commit -m "Initial commit: Chiengmai Activities Platform"
+git commit -m "Initial commit: Chiang Mai Guide Platform"
 
 # 3. 推送到 GitHub
 # 在 GitHub 创建新仓库，然后：

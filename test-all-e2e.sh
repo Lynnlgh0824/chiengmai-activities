@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# 清迈活动平台 - 综合自动化测试脚本
+# 清迈指南 - 综合自动化测试脚本
 # 运行所有测试：单元测试、API 测试、E2E 测试
 
 set -e
@@ -105,7 +105,7 @@ generate_report() {
 
 # 主函数
 main() {
-    print_header "清迈活动平台 - 综合测试套件"
+    print_header "清迈指南 - 综合测试套件"
     echo "测试时间: $(date '+%Y-%m-%d %H:%M:%S')"
 
     # 解析命令行参数

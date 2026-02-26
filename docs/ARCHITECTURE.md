@@ -18,7 +18,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>清迈活动平台</title>
+    <title>清迈指南</title>
     <link rel="stylesheet" href="/src/styles/reset.css">
     <link rel="stylesheet" href="/src/styles/variables.css">
 </head>
@@ -861,7 +861,7 @@ src/
         <div class="container">
             <!-- 头部 -->
             <div class="header">
-                <h1>✨ 清迈活动探索</h1>
+                <h1>✨ 清迈指南</h1>
                 ...
             </div>
             <!-- 100+ 行业务 UI -->

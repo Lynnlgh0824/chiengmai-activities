@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>简单测试</title>
+</head>
+<body>
+    <h1>简单测试页面</h1>
+    <div id="output"></div>
+
+    <script>
+        const output = document.getElementById('output');
+
+        function addLog(msg) {
+            output.innerHTML += '<p>' + msg + '</p>';
+            console.log(msg);
+        }
+
+        addLog('1. 页面加载完成');
+        addLog('2. document.readyState = ' + document.readyState);
+        addLog('3. 准备加载 app.js...');
+    </script>
+
+    <script src="/js/app.js"></script>
+
+    <script>
+        setTimeout(() => {
+            addLog('4. app.js 已加载');
+            addLog('5. 检查全局变量...');
+
+            // 检查关键变量
+            const vars = ['allActivities', 'currentTab', 'currentFilters'];
+            vars.forEach(v => {
+                try {
+                    addLog(`   ${v}: ${typeof window[v] !== 'undefined' ? '存在' : '不存在'}`);
+                } catch(e) {
+                    addLog(`   ${v}: 错误 - ${e.message}`);
+                }
+            });
+
+            addLog('6. 测试 fetch /data/items.json...');
+
+            fetch('/data/items.json')
+                .then(r => r.json())
+                .then(data => {
+                    addLog(`   ✅ 成功获取 ${data.length} 个活动`);
+                    addLog(`   第一个活动: ${data[0]?.title}`);
+                })
+                .catch(err => {
+                    addLog(`   ❌ 错误: ${err.message}`);
+                });
+        }, 500);
+    </script>
+</body>
+</html>

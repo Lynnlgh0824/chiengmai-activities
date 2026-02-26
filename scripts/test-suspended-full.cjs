@@ -557,7 +557,7 @@ async function testDocumentation() {
 // 主测试执行
 // ============================================
 async function runAllTests() {
-    console.log('🧪 清迈活动平台 - suspended功能全链路测试');
+    console.log('🧪 清迈指南 - suspended功能全链路测试');
     console.log('测试时间:', new Date().toLocaleString('zh-CN'));
     console.log('测试目标: 验证suspended过滤功能在所有环节的完整性');
     console.log('');

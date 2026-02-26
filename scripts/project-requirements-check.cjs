@@ -22,7 +22,7 @@ function log(feature, message, status) {
 
 async function main() {
   console.log('='.repeat(80));
-  console.log('🔍 清迈活动平台 - 项目需求自动检测 v2.0');
+  console.log('🔍 清迈指南 - 项目需求自动检测 v2.0');
   console.log('版本: ' + appVersion.version);
   console.log('检测时间: ' + new Date().toLocaleString('zh-CN'));
   console.log('='.repeat(80));

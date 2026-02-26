@@ -18,10 +18,10 @@
     ============================================ -->
 
     <!-- 页面标题 - 包含核心关键词 -->
-    <title>清迈活动平台 | Chiengmai Activities - 瑜伽冥想、泰拳训练、市集活动、音乐节、数字游民社区指南</title>
+    <title>清迈指南 | Chiang Mai Guide - 发现清迈的每一天 | 瑜伽、泰拳、市集、社区活动</title>
 
     <!-- Meta Description - 吸引点击的描述，包含关键词 -->
-    <meta name="description" content="清迈活动平台提供最全面的清迈本地活动信息：每日瑜伽课程、冥想静修、泰拳训练、夜市市集、音乐节、文化节等。专为数字游民、旅居者、游客打造的一站式活动查询平台。实时更新，免费参与！">
+    <meta name="description" content="清迈指南提供最全面的清迈本地活动信息：每日瑜伽课程、冥想静修、泰拳训练、夜市市集、音乐节、文化节等。专为数字游民、旅居者、游客打造的一站式活动查询平台。实时更新，免费参与！">
 
     <!-- 发布和修改日期 - 帮助搜索引擎识别内容新鲜度 -->
     <meta name="publish_date" content="2024-01-01">
@@ -30,7 +30,7 @@
     <meta property="article:modified_time" content="2026-02-26T00:00:00+00:00">
 
     <!-- Author -->
-    <meta name="author" content="清迈活动平台 | Chiengmai Activities">
+    <meta name="author" content="清迈指南 | Chiang Mai Guide">
 
     <!-- Robots - 允许搜索引擎抓取 -->
     <meta name="robots" content="index, follow">
@@ -43,18 +43,18 @@
     ============================================ -->
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://go-cnx.vercel.app/">
-    <meta property="og:title" content="清迈活动平台 | Chiengmai Activities - 发现清迈最精彩的活动">
+    <meta property="og:title" content="清迈指南 | Chiang Mai Guide - 发现清迈的每一天">
     <meta property="og:description" content="探索清迈的瑜伽、冥想、泰拳、市集、音乐节等精彩活动。专为数字游民和旅居者打造的实时活动查询平台。">
     <meta property="og:image" content="https://go-cnx.vercel.app/og-image.jpg">
     <meta property="og:locale" content="zh_CN">
-    <meta property="og:site_name" content="清迈活动平台">
+    <meta property="og:site_name" content="清迈指南">
 
     <!-- ============================================
          Twitter Card - Twitter 分享优化
     ============================================ -->
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:url" content="https://go-cnx.vercel.app/">
-    <meta name="twitter:title" content="清迈活动平台 | Chiengmai Activities">
+    <meta name="twitter:title" content="清迈指南 | Chiang Mai Guide">
     <meta name="twitter:description" content="探索清迈的瑜伽、冥想、泰拳、市集、音乐节等精彩活动。">
     <meta name="twitter:image" content="https://go-cnx.vercel.app/twitter-image.jpg">
 
@@ -65,9 +65,9 @@
     {
         "@context": "https://schema.org",
         "@type": "WebSite",
-        "name": "清迈活动平台 | Chiengmai Activities",
+        "name": "清迈指南 | Chiang Mai Guide",
         "url": "https://go-cnx.vercel.app/",
-        "description": "清迈活动平台提供最全面的清迈本地活动信息：瑜伽、冥想、泰拳、市集、音乐节等",
+        "description": "清迈指南提供最全面的清迈本地活动信息：瑜伽、冥想、泰拳、市集、音乐节等",
         "potentialAction": {
             "@type": "SearchAction",
             "target": "https://go-cnx.vercel.app/?search={search_term_string}",
@@ -75,7 +75,7 @@
         },
         "publisher": {
             "@type": "Organization",
-            "name": "清迈活动平台",
+            "name": "清迈指南",
             "url": "https://go-cnx.vercel.app/"
         }
     }
@@ -113,7 +113,7 @@
     {
         "@context": "https://schema.org",
         "@type": "Organization",
-        "name": "清迈活动平台 | Chiengmai Activities",
+        "name": "清迈指南 | Chiang Mai Guide",
         "url": "https://go-cnx.vercel.app/",
         "logo": "https://go-cnx.vercel.app/favicon.ico",
         "description": "清迈地区最全面的活动信息平台 - 瑜伽、冥想、泰拳、市集、音乐节、文化节等一站式活动查询",
@@ -142,7 +142,7 @@
             {
                 "@type": "ListItem",
                 "position": 1,
-                "name": "清迈活动平台",
+                "name": "清迈指南",
                 "item": "https://go-cnx.vercel.app/"
             }
         ]
@@ -158,7 +158,7 @@
     <div class="container">
         <!-- 头部 -->
         <div class="header">
-            <h1>✨ 清迈活动探索</h1>
+            <h1>✨ 清迈指南</h1>
             <div class="search-section">
                 <div class="search-input-wrapper">
                     <span class="search-icon">🔍</span>
@@ -401,6 +401,51 @@
         </div>
     </div>
 
+
+    <!-- 移动端筛选切换按钮（仅移动端显示） -->
+    <button class="filter-toggle-btn" id="filterToggleBtn" onclick="toggleMobileFilter()" style="display: none;">
+        <span id="filterIcon">⚙️</span>
+    </button>
+
+    <!-- 移动端优化组件 -->
+
+    <!-- 1. Bottom Sheet 筛选组件 -->
+    <div class="bottom-sheet" id="filterSheet">
+        <div class="sheet-overlay" onclick="closeFilterSheet()"></div>
+        <div class="sheet-content">
+            <div class="sheet-handle" id="sheetHandle"></div>
+            <div class="sheet-header">
+                <h3 class="sheet-title">筛选条件</h3>
+            </div>
+            <div class="sheet-body">
+                <!-- 分类筛选 -->
+                <div class="filter-group-section">
+                    <div class="filter-group-title">分类</div>
+                    <div class="filter-option-grid" id="categoryOptions">
+                        <div class="filter-option-item selected" data-value="all" onclick="selectFilterOption(this, 'category')">全部</div>
+                        <div class="filter-option-item" data-value="class" onclick="selectFilterOption(this, 'category')">兴趣班</div>
+                        <div class="filter-option-item" data-value="market" onclick="selectFilterOption(this, 'category')">市集</div>
+                    </div>
+                </div>
+
+                <!-- 价格筛选 -->
+                <div class="filter-group-section">
+                    <div class="filter-group-title">价格</div>
+                    <div class="filter-option-grid" id="priceOptions">
+                        <div class="filter-option-item selected" data-value="all" onclick="selectFilterOption(this, 'price')">全部</div>
+                        <div class="filter-option-item" data-value="free" onclick="selectFilterOption(this, 'price')">免费</div>
+                        <div class="filter-option-item" data-value="paid" onclick="selectFilterOption(this, 'price')">付费</div>
+                    </div>
+                </div>
+            </div>
+            <div class="sheet-footer">
+                <button class="sheet-btn secondary" onclick="resetFilters()">重置</button>
+                <button class="sheet-btn primary" onclick="applyFilters()">
+                    应用 <span id="filterCount" class="filter-count">0</span>
+                </button>
+            </div>
+        </div>
+    </div>
 
     <!-- 引用应用脚本 -->
     <script src="/js/app.js"></script>

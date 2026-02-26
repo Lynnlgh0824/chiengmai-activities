@@ -107,7 +107,7 @@ src/js/
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <title>清迈活动平台</title>
+    <title>清迈指南</title>
 
     <!-- Boot脚本 -->
     <script>/* H5模式检测 */</script>

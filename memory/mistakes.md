@@ -1,6 +1,6 @@
 # 错误教训
 
-> **项目**: Chiengmai Activities Platform
+> **项目**: Chiang Mai Guide Platform
 > **目的**: 记录遇到的问题和解决方案，避免重复犯错
 
 ---

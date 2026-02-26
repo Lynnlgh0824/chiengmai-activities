@@ -1,4 +1,4 @@
-# Robots.txt for 清迈活动平台 | Chiengmai Activities
+# Robots.txt for 清迈指南 | Chiang Mai Guide
 
 # 允许所有搜索引擎爬虫抓取
 User-agent: *

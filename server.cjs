@@ -817,7 +817,7 @@ app.use((req, res, next) => {
   const allowedOrigins = [
     'http://localhost:5173',
     'http://localhost:4000',
-    'https://chiengmai-activities.vercel.app'
+    'https://chiangmai-guide.vercel.app'
   ];
 
   // 安全性：仅允许列表中的来源或Vercel子域名
@@ -1370,7 +1370,7 @@ app.delete('/api/upload/:filename', requireApiKey, (req, res) => {
 // 根路由 - 项目信息
 app.get('/', (req, res) => {
   res.json({
-    name: 'Chiengmai Activities',
+    name: 'Chiang Mai Guide',
     version: '2.0.0',
     description: '清迈活动管理平台 - 整合版',
     links: {
@@ -2652,7 +2652,7 @@ app.use(globalErrorHandler);
 app.listen(PORT, () => {
   console.log(`
 ╔════════════════════════════════════════════════════════════╗
-║   🏝️ Chiengmai Activities Platform v2.0                  ║
+║   🏝️ Chiang Mai Guide Platform v2.0                  ║
 ╠════════════════════════════════════════════════════════════╣
 ║   🚀 Server: http://localhost:${PORT}                          ║
 ║   🎨 Frontend (React): http://localhost:5173               ║

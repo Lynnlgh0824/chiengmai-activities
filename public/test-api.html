@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>API 测试</title>
+</head>
+<body>
+    <h1>API 测试页面</h1>
+    <div id="result">加载中...</div>
+    <script>
+        fetch('/api/activities?limit=5')
+            .then(res => res.json())
+            .then(data => {
+                document.getElementById('result').innerHTML = `
+                    <h2>✅ API 连接成功！</h2>
+                    <p>返回 ${data.data.length} 个活动</p>
+                    <pre>${JSON.stringify(data.data[0], null, 2)}</pre>
+                `;
+            })
+            .catch(err => {
+                document.getElementById('result').innerHTML = `
+                    <h2>❌ API 连接失败</h2>
+                    <p>${err.message}</p>
+                `;
+                console.error(err);
+            });
+    </script>
+</body>
+</html>

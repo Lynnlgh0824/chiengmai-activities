@@ -5,7 +5,7 @@
 ## 📊 实施概览
 
 **实施日期**: 2026-01-28
-**项目**: Chiengmai Activities Platform (清迈活动管理平台)
+**项目**: Chiang Mai Guide Platform (清迈活动管理平台)
 **测试框架**: Playwright E2E Testing
 
 ---

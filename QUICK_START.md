@@ -37,7 +37,7 @@ bash deploy.sh
 git init
 git add .
 git commit -m "Initial commit"
-git remote add origin https://github.com/你的用户名/chiengmai-activities.git
+git remote add origin https://github.com/你的用户名/chiangmai-guide.git
 git push -u origin main
 
 # 2. 访问 Cloudflare Pages
@@ -93,7 +93,7 @@ vercel --prod
 
 ```bash
 # 1. 推送代码到 Gitee
-git remote add origin https://gitee.com/你的用户名/chiengmai-activities.git
+git remote add origin https://gitee.com/你的用户名/chiangmai-guide.git
 git push -u origin main
 
 # 2. 在 Gitee 开启 Pages
@@ -113,7 +113,7 @@ git push -u origin main
 
 ```javascript
 // 找到这一行（约第 1485 行）
-const response = await fetch('http://localhost:3000/api/activities?limit=100');
+const response = await fetch('http://localhost:4000/api/activities?limit=100');
 
 // 改为你的后端地址
 const response = await fetch('https://your-backend.com/api/activities?limit=100');

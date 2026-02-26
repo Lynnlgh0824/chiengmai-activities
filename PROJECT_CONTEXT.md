@@ -1,6 +1,6 @@
 # PROJECT_CONTEXT.md - 项目上下文
 
-> **项目**: Chiengmai Activities Platform (清迈活动策划管理系统)
+> **项目**: Chiang Mai Guide Platform (清迈指南)
 > **版本**: v2.2.0
 > **最后更新**: 2026-02-25
 > **项目状态**: ✅ 活跃开发中
@@ -10,7 +10,7 @@
 ## 📖 项目概述
 
 ### 项目名称
-**Chiengmai Activities Platform** - 清迈活动策划管理系统
+**Chiang Mai Guide Platform** - 清迈指南
 
 ### 一句话描述
 一个面向清迈旅居者、数字游民和游客的本地活动信息聚合平台，提供智能活动管理与数据质量控制功能。
@@ -40,7 +40,7 @@
 
 ### 解决方案
 
-**Chiengmai Activities Platform** 提供：
+**Chiang Mai Guide Platform** 提供：
 
 - ✅ **统一管理** - 集中管理所有活动信息
 - ✅ **数据质量控制** - 自动检测和修复数据问题

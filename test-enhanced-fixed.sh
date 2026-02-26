@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-清迈活动平台 - 增强版自动化测试脚本（React应用适配版）
+清迈指南 - 增强版自动化测试脚本（React应用适配版）
 包含主页功能验证和自动修复建议
 """
 
@@ -328,7 +328,7 @@ def main():
     """主测试流程"""
     print(f"{Colors.BOLD}{Colors.BLUE}")
     print("╔════════════════════════════════════════════════════════════╗")
-    print("║      🏝️ Chiengmai Activities - 增强版自动化测试              ║")
+    print("║      🏝️ Chiang Mai Guide - 增强版自动化测试              ║")
     print("║      React应用适配 + 自动修复建议                             ║")
     print("╚════════════════════════════════════════════════════════════╝")
     print(f"{Colors.END}")

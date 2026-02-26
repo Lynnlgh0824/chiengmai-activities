@@ -2,7 +2,7 @@
 
 **检测时间**: 2026-01-30
 **检测工具**: architecture-check.js
-**项目**: 清迈活动平台
+**项目**: 清迈指南
 
 ---
 
@@ -34,10 +34,10 @@
 ### 建议
 ```html
 <!-- 当前 -->
-<title>清迈活动平台 v1.0.7 - Chiengmai Activities Platform</title>
+<title>清迈指南 v1.0.7 - Chiang Mai Guide Platform</title>
 
 <!-- 建议改为 -->
-<title>Chiengmai Activities v1.0.7</title>
+<title>Chiang Mai Guide v1.0.7</title>
 ```
 
 ---
@@ -299,4 +299,4 @@ class WeekdayPicker {
 
 **检测工具**: architecture-check.js
 **报告生成**: 2026-01-30
-**维护者**: 清迈活动平台开发团队
+**维护者**: 清迈指南开发团队

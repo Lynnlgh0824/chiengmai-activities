@@ -1,6 +1,6 @@
 # PROJECT_RULES.md - 项目规则和约定
 
-> **项目**: Chiengmai Activities Platform (清迈活动策划管理系统)
+> **项目**: Chiang Mai Guide Platform (清迈指南)
 > **版本**: v2.2.0
 > **最后更新**: 2026-02-25
 > **状态**: ✅ 活跃维护中
@@ -9,7 +9,7 @@
 
 ## 📖 概述
 
-本文档定义了 **Chiengmai Activities Platform** 项目的开发规范、代码标准和协作约定，确保团队成员能够高效、一致地进行开发工作。
+本文档定义了 **Chiang Mai Guide Platform** 项目的开发规范、代码标准和协作约定，确保团队成员能够高效、一致地进行开发工作。
 
 ---
 
@@ -102,7 +102,7 @@ async function saveActivity(activity) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>清迈活动策划管理系统</title>
+    <title>清迈指南</title>
 </head>
 <body>
     <div class="container">

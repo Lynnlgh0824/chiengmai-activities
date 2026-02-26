@@ -1,7 +1,7 @@
 # 清迈活动项目 - 当前会话完整总结
 
 **日期**: 2026-01-29
-**项目**: Chiengmai Activities Platform (清迈活动查询平台)
+**项目**: Chiang Mai Guide Platform (清迈活动查询平台)
 **版本**: v2.6.0
 **会话类型**: PC端与移动端测试增强 + 自动更新功能
 

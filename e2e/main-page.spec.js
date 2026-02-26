@@ -10,7 +10,7 @@ import { test, expect } from '@playwright/test'
  * 4. 失败时自动截图
  */
 
-test.describe('清迈活动平台 - 主页真实功能测试', () => {
+test.describe('清迈指南 - 主页真实功能测试', () => {
   test('页面应该加载并显示内容', async ({ page }) => {
     // 收集错误
     const errors = []
@@ -160,7 +160,7 @@ test.describe('清迈活动平台 - 主页真实功能测试', () => {
   })
 })
 
-test.describe('清迈活动平台 - 主页真实测试总结', () => {
+test.describe('清迈指南 - 主页真实测试总结', () => {
   test('完整功能检查', async ({ page }) => {
     const startTime = Date.now()
 

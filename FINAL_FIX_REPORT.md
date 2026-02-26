@@ -42,7 +42,7 @@
 3. **验证部署**
    ```bash
    curl -s http://localhost:3000 | grep "<title>"
-   # 输出: <title>清迈活动平台 v2.2 - Chiengmai Activities [2026-01-27 15:30]</title>
+   # 输出: <title>清迈指南 v2.2 - Chiang Mai Guide [2026-01-27 15:30]</title>
    ```
 
 ---

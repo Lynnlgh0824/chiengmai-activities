@@ -1,8 +1,8 @@
-# 清迈活动平台 - 上线工作计划
+# 清迈指南 - 上线工作计划
 
 ## 📋 项目概述
 
-**项目名称**: 清迈活动平台 (Chiengmai Activities)
+**项目名称**: 清迈指南 (Chiang Mai Guide)
 **当前状态**: 开发中，数据未完善
 **上线目标**: 尽快部署可用版本，后续迭代优化
 
@@ -244,7 +244,7 @@ sudo nano /etc/systemd/system/chiangmai-activities.service
 
 ```ini
 [Unit]
-Description=Chiengmai Activities Server
+Description=Chiang Mai Guide Server
 After=network.target
 
 [Service]

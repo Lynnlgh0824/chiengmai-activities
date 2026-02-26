@@ -1,6 +1,6 @@
 # PROJECT_STRUCTURE.md - 项目结构详解
 
-> **项目**: Chiengmai Activities Platform
+> **项目**: Chiang Mai Guide Platform
 > **版本**: v2.2.0
 > **最后更新**: 2026-02-25
 > **项目根目录**: `/Users/yuzhoudeshengyin/Documents/my_project/Chiengmai`

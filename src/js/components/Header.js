@@ -5,7 +5,7 @@
 
 export class Header {
     constructor(options = {}) {
-        this.title = options.title || '✨ 清迈活动探索';
+        this.title = options.title || '✨ 清迈指南';
         this.placeholder = options.placeholder || '搜索活动、地点、关键词...';
     }
 

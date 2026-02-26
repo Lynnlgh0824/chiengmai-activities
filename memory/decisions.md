@@ -1,6 +1,6 @@
 # 决策记录
 
-> **项目**: Chiengmai Activities Platform
+> **项目**: Chiang Mai Guide Platform
 > **目的**: 记录重要技术决策及其原因
 
 ---
