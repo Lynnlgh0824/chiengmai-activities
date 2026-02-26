@@ -82,8 +82,8 @@ git push
 
 ## 🌐 部署状态
 
-- **生产环境**: https://go-cnx.vercel.app
-- **数据文件**: https://go-cnx.vercel.app/data/items.json
+- **生产环境**: https://gocnx.vercel.app
+- **数据文件**: https://gocnx.vercel.app/data/items.json
 
 ## ⚠️ 注意事项
 

@@ -277,7 +277,7 @@ if (now > endDate) status = 'expired';
 ```
 ┌─────────────┐
 │  Vercel     │  ← 前端 (React + Vite)
-│  前端部署    │     https://go-cnx.vercel.app
+│  前端部署    │     https://gocnx.vercel.app
 └─────────────┘
         ↓
         ↓ API 调用
@@ -396,7 +396,7 @@ const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:3000';
 
 **3.6 获取前端 URL**
 ```
-前端地址: https://go-cnx.vercel.app
+前端地址: https://gocnx.vercel.app
 ```
 
 ---
@@ -408,7 +408,7 @@ const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:3000';
 app.use((req, res, next) => {
     const allowedOrigins = [
         'http://localhost:5173',
-        'https://go-cnx.vercel.app',
+        'https://gocnx.vercel.app',
         'https://your-custom-domain.com'
     ];
     const origin = req.headers.origin;
@@ -518,7 +518,7 @@ app.use('/api/', limiter);
 ### 相关链接
 
 - **GitHub**: https://github.com/YOUR_USERNAME/chiangmai-activities
-- **前端演示**: https://go-cnx.vercel.app
+- **前端演示**: https://gocnx.vercel.app
 - **API 文档**: https://chiangmai-api.railway.app/api
 - **Railway 控制台**: https://railway.app
 - **Vercel 控制台**: https://vercel.com

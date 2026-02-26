@@ -48,7 +48,7 @@ python3 -m http.server 8000
 
 ### 在线访问
 
-🌐 **生产环境**：https://go-cnx.vercel.app
+🌐 **生产环境**：https://gocnx.vercel.app
 
 直接访问线上部署版本，无需本地安装。
 
@@ -249,7 +249,7 @@ MIT License
 
 ## 🔗 相关链接
 
-- **🌐 在线访问**：https://go-cnx.vercel.app
+- **🌐 在线访问**：https://gocnx.vercel.app
 - **GitHub 仓库**：https://github.com/Lynnlgh0824/chiangmai-activities
 - **问题反馈**：https://github.com/Lynnlgh0824/chiangmai-activities/issues
 

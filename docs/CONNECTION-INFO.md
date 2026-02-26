@@ -45,10 +45,10 @@ http://192.168.1.133:3000/api/health
 **Vercel部署地址**:
 ```bash
 # 主页
-https://go-cnx.vercel.app
+https://gocnx.vercel.app
 
 # API端点
-https://go-cnx.vercel.app/api/health
+https://gocnx.vercel.app/api/health
 ```
 
 **GitHub仓库**:
