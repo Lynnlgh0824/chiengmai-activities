@@ -457,7 +457,7 @@ if ('ontouchstart' in window) {
 
 **新建文件**: `public/sw.js`
 ```javascript
-const CACHE_NAME = 'chiengmai-activities-v1';
+const CACHE_NAME = 'chiangmai-activities-v1';
 const urlsToCache = [
     '/',
     '/index.html',

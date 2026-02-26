@@ -66,7 +66,7 @@ res.header('Access-Control-Allow-Origin', '*');
 const allowedOrigins = [
     'http://localhost:5173',
     'http://localhost:3000',
-    'https://chiengmai-activities.vercel.app'
+    'https://chiangmai-activities.vercel.app'
 ];
 
 if (allowedOrigins.includes(origin) || origin?.endsWith('.vercel.app')) {

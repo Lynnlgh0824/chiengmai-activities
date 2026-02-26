@@ -66,7 +66,7 @@ git add .
 git commit -m "Add Chiengmai Activities"
 
 # 在 GitHub 创建新仓库，然后
-git remote add origin https://github.com/你的用户名/chiengmai-activities.git
+git remote add origin https://github.com/你的用户名/chiangmai-activities.git
 git branch -M main
 git push -u origin main
 ```

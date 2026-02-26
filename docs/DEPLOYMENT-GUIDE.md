@@ -80,8 +80,8 @@ npm --version
 ### 2. 克隆项目
 
 ```bash
-git clone https://github.com/Lynnlgh0824/chiengmai-activities.git
-cd chiengmai-activities
+git clone https://github.com/Lynnlgh0824/chiangmai-activities.git
+cd chiangmai-activities
 ```
 
 或下载并解压项目文件。
@@ -144,7 +144,7 @@ node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
 
 ```bash
 # 进入项目目录
-cd chiengmai-activities
+cd chiangmai-activities
 
 # 安装依赖
 npm install
@@ -162,7 +162,7 @@ npm list --depth=0
 
 应该看到类似输出：
 ```
-chiengmai-activities@2.0.0
+chiangmai-activities@2.0.0
 ├── axios@1.13.3
 ├── cors@2.8.5
 ├── dotenv@16.4.1
@@ -191,22 +191,22 @@ npm run dev:server
 
 ```bash
 # 启动应用
-pm2 start server.cjs --name "chiengmai-api"
+pm2 start server.cjs --name "chiangmai-api"
 
 # 查看状态
 pm2 status
 
 # 查看日志
-pm2 logs chiengmai-api
+pm2 logs chiangmai-api
 
 # 重启应用
-pm2 restart chiengmai-api
+pm2 restart chiangmai-api
 
 # 停止应用
-pm2 stop chiengmai-api
+pm2 stop chiangmai-api
 
 # 删除应用
-pm2 delete chiengmai-api
+pm2 delete chiangmai-api
 ```
 
 ### PM2开机自启动
@@ -242,7 +242,7 @@ brew install nginx
 
 #### 配置Nginx
 
-创建配置文件 `/etc/nginx/sites-available/chiengmai-activities`:
+创建配置文件 `/etc/nginx/sites-available/chiangmai-activities`:
 
 ```nginx
 server {
@@ -311,7 +311,7 @@ sudo certbot renew --dry-run
 
 ```bash
 # 创建符号链接
-sudo ln -s /etc/nginx/sites-available/chiengmai-activities /etc/nginx/sites-enabled/
+sudo ln -s /etc/nginx/sites-available/chiangmai-activities /etc/nginx/sites-enabled/
 
 # 测试配置
 sudo nginx -t
@@ -334,12 +334,12 @@ sudo a2enmod rewrite
 
 #### 配置虚拟主机
 
-编辑 `/etc/apache2/sites-available/chiengmai-activities.conf`:
+编辑 `/etc/apache2/sites-available/chiangmai-activities.conf`:
 
 ```apache
 <VirtualHost *:80>
     ServerName your-domain.com
-    DocumentRoot /path/to/chiengmai-activities/public
+    DocumentRoot /path/to/chiangmai-activities/public
 
     # 启用代理
     ProxyPreserveHost On
@@ -369,10 +369,10 @@ sudo a2enmod rewrite
 pm2 monit
 
 # 查看详细信息
-pm2 show chiengmai-api
+pm2 show chiangmai-api
 
 # 查看日志
-pm2 logs chiengmai-api --lines 100
+pm2 logs chiangmai-api --lines 100
 ```
 
 ### 日志文件位置
@@ -383,7 +383,7 @@ pm2 logs chiengmai-api --lines 100
 
 ### 配置日志轮转
 
-创建 `/etc/logrotate.d/chiengmai-activities`:
+创建 `/etc/logrotate.d/chiangmai-activities`:
 
 ```
 /home/user/.pm2/logs/*.log {
@@ -396,7 +396,7 @@ pm2 logs chiengmai-api --lines 100
     create 0640 www-data www-data
     sharedscripts
     postrotate
-        pm2 reload chiengmai-api > /dev/null 2>&1 || true
+        pm2 reload chiangmai-api > /dev/null 2>&1 || true
     endscript
 }
 ```
@@ -545,8 +545,8 @@ sudo apt-get install -y nodejs
 npm install -g pm2
 
 # 5. 克隆项目
-git clone https://github.com/Lynnlgh0824/chiengmai-activities.git
-cd chiengmai-activities
+git clone https://github.com/Lynnlgh0824/chiangmai-activities.git
+cd chiangmai-activities
 
 # 6. 安装依赖
 npm install
@@ -556,7 +556,7 @@ cp .env.example .env
 nano .env  # 编辑ADMIN_API_KEY
 
 # 8. 启动服务
-pm2 start server.cjs --name "chiengmai-api"
+pm2 start server.cjs --name "chiangmai-api"
 pm2 save
 pm2 startup
 
@@ -644,35 +644,35 @@ git pull origin main
 npm install
 
 # 3. 重启应用
-pm2 restart chiengmai-api
+pm2 restart chiangmai-api
 ```
 
 ### 零停机部署
 
 ```bash
 # 1. 拉取代码到新目录
-git clone https://github.com/Lynnlgh0824/chiengmai-activities.git chiengmai-new
+git clone https://github.com/Lynnlgh0824/chiangmai-activities.git chiangmai-new
 
 # 2. 安装依赖
-cd chiengmai-new
+cd chiangmai-new
 npm install
 
 # 3. 复制环境文件和数据
-cp ../chiengmai-activities/.env .
-cp -r ../chiengmai-activities/data .
-cp -r ../chiengmai-activities/uploads .
+cp ../chiangmai-activities/.env .
+cp -r ../chiangmai-activities/data .
+cp -r ../chiangmai-activities/uploads .
 
 # 4. 启动新版本
-pm2 start server.cjs --name "chiengmai-api-v2"
+pm2 start server.cjs --name "chiangmai-api-v2"
 
 # 5. 切换流量（更新Nginx配置指向新端口）
 # 6. 停止旧版本
-pm2 stop chiengmai-api
-pm2 delete chiengmai-api
+pm2 stop chiangmai-api
+pm2 delete chiangmai-api
 
 # 7. 重命名新版本
-pm2 restart chiengmai-api-v2
-pm2 delete chiengmai-api-v2
+pm2 restart chiangmai-api-v2
+pm2 delete chiangmai-api-v2
 ```
 
 ---
@@ -695,7 +695,7 @@ lsof -ti :3000
 kill -9 $(lsof -ti :3000)
 
 # 或使用PM2
-pm2 stop chiengmai-api
+pm2 stop chiangmai-api
 ```
 
 ### 问题2: 权限错误
@@ -740,10 +740,10 @@ npm install
 ls -la .env
 
 # 检查PM2是否加载了环境变量
-pm2 env chiengmai-api
+pm2 env chiangmai-api
 
 # 重启PM2以加载新的环境变量
-pm2 restart chiengmai-api --update-env
+pm2 restart chiangmai-api --update-env
 ```
 
 ---

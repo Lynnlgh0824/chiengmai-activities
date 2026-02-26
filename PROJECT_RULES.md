@@ -25,7 +25,7 @@
 
 ```javascript
 // ✅ 正确示例
-const STORAGE_KEY = 'chiengmai_activities';
+const STORAGE_KEY = 'chiangmai_activities';
 
 function saveActivity(activity) {
     const data = loadActivities();
@@ -34,7 +34,7 @@ function saveActivity(activity) {
 }
 
 // ❌ 错误示例
-const storageKey = "chiengmai_activities"
+const storageKey = "chiangmai_activities"
 function saveActivity(activity) {
     const data = loadActivities()
     data.push(activity)

@@ -2,8 +2,8 @@
 
 > **智能活动管理与数据质量控制系统**
 
-[![GitHub stars](https://img.shields.io/github/stars/Lynnlgh0824/chiengmai-activities)](https://github.com/Lynnlgh0824/chiengmai-activities)
-[![GitHub license](https://img.shields.io/github/license/Lynnlgh0824/chiengmai-activities)](https://github.com/Lynnlgh0824/chiengmai-activities)
+[![GitHub stars](https://img.shields.io/github/stars/Lynnlgh0824/chiangmai-activities)](https://github.com/Lynnlgh0824/chiangmai-activities)
+[![GitHub license](https://img.shields.io/github/license/Lynnlgh0824/chiangmai-activities)](https://github.com/Lynnlgh0824/chiangmai-activities)
 
 ---
 
@@ -34,8 +34,8 @@
 
 ```bash
 # 克隆仓库
-git clone https://github.com/Lynnlgh0824/chiengmai-activities.git
-cd chiengmai-activities
+git clone https://github.com/Lynnlgh0824/chiangmai-activities.git
+cd chiangmai-activities
 ```
 
 ### 本地运行
@@ -55,7 +55,7 @@ python3 -m http.server 8000
 ## 📂 项目结构
 
 ```
-chiengmai-activities/
+chiangmai-activities/
 ├── data/                         # 数据目录
 │   ├── items.json               # 活动数据（主文件）
 │   └── items.json.backup.*      # 自动备份文件
@@ -150,7 +150,7 @@ node scripts/test-cases.mjs
 
 ### 查看运行结果
 
-访问：https://github.com/Lynnlgh0824/chiengmai-activities/actions
+访问：https://github.com/Lynnlgh0824/chiangmai-activities/actions
 
 ---
 
@@ -243,7 +243,7 @@ MIT License
 
 ## 🔗 相关链接
 
-- **GitHub 仓库**：[https://github.com/Lynnlgh0824/chiengmai-activities](https://github.com/Lynnlgh0824/chiengmai-activities)
+- **GitHub 仓库**：[https://github.com/Lynnlgh0824/chiangmai-activities](https://github.com/Lynnlgh0824/chiangmai-activities)
 - **项目日志**：[../PROJECT-LOG.md](../PROJECT-LOG.md)
 
 ---

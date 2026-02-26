@@ -74,7 +74,7 @@
 
 **访问地址**:
 - 本地: http://localhost:5173
-- 生产: https://chiengmai-activities.vercel.app
+- 生产: https://chiangmai-activities.vercel.app
 
 #### 功能模块
 
@@ -496,7 +496,7 @@ npm run watch-excel
 ## 📂 文件结构
 
 ```
-chiengmai-activities/
+chiangmai-activities/
 ├── index.html              # 首页（用户端）~3500行
 ├── server.cjs              # 后端服务器 ~1000行
 ├── package.json            # 项目配置
@@ -616,7 +616,7 @@ npm run dev
 1. **克隆项目**
 ```bash
 git clone <repository-url>
-cd chiengmai-activities
+cd chiangmai-activities
 ```
 
 2. **安装依赖**

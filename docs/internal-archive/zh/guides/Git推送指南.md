@@ -7,7 +7,7 @@
 1. 访问 GitHub: https://github.com/settings/tokens
 2. 点击 **Generate new token** → **Generate new token (classic)**
 3. 配置 Token:
-   - **Name**: `chiengmai-activities`
+   - **Name**: `chiangmai-activities`
    - **Expiration**: 选择过期时间（建议 90 天）
    - **Scopes**: 勾选 `repo` (完整的仓库访问权限)
 4. 点击 **Generate token**
@@ -45,7 +45,7 @@ git config --global credential.helper osxkeychain
 
 推送成功后，Vercel 会自动部署：
 - 等待 1-2 分钟
-- 访问: https://chiengmai-activities.vercel.app
+- 访问: https://chiangmai-activities.vercel.app
 - 更新内容会自动上线
 
 ---

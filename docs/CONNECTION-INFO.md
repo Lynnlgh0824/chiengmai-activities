@@ -45,15 +45,15 @@ http://192.168.1.133:3000/api/health
 **Vercel部署地址**:
 ```bash
 # 主页
-https://chiengmai-activities.vercel.app
+https://chiangmai-activities.vercel.app
 
 # API端点
-https://chiengmai-activities.vercel.app/api/health
+https://chiangmai-activities.vercel.app/api/health
 ```
 
 **GitHub仓库**:
 ```bash
-https://github.com/Lynnlgh0824/chiengmai-activities
+https://github.com/Lynnlgh0824/chiangmai-activities
 ```
 
 ---
@@ -156,20 +156,20 @@ curl http://localhost:3000/api/categories
 POST /api/activities
 curl -X POST http://localhost:3000/api/activities \
   -H "Content-Type: application/json" \
-  -H "X-API-Key: chiengmai-2024-activities-api-key" \
+  -H "X-API-Key: chiangmai-2024-activities-api-key" \
   -d '{"title":"测试活动","category":"测试","location":"测试"}'
 
 # 更新活动
 PUT /api/activities/:id
 curl -X PUT http://localhost:3000/api/activities/0016 \
   -H "Content-Type: application/json" \
-  -H "X-API-Key: chiengmai-2024-activities-api-key" \
+  -H "X-API-Key: chiangmai-2024-activities-api-key" \
   -d '{"title":"更新后的标题"}'
 
 # 删除活动
 DELETE /api/activities/:id
 curl -X DELETE http://localhost:3000/api/activities/0016 \
-  -H "X-API-Key: chiengmai-2024-activities-api-key"
+  -H "X-API-Key: chiangmai-2024-activities-api-key"
 ```
 
 ---
@@ -194,7 +194,7 @@ curl -X DELETE http://localhost:3000/api/activities/0016 \
 当前分支: main
 最新Commit: b1836bf
 Commit信息: "feat: PC端与移动端增强测试系统 + 自动更新功能 (v2.6.0)"
-远程仓库: github.com:Lynnlgh0824/chiengmai-activities
+远程仓库: github.com:Lynnlgh0824/chiangmai-activities
 同步状态: ✅ 已同步最新版本
 ```
 
@@ -252,7 +252,7 @@ npm run test:e2e
 ## 📂 项目结构
 
 ```
-chiengmai-activities/
+chiangmai-activities/
 ├── public/                    # 前端文件
 │   ├── index.html           # 主应用页面 ⭐
 │   ├── admin.html           # 后台管理 ⭐
@@ -280,7 +280,7 @@ chiengmai-activities/
 
 ```bash
 # API密钥（用于管理端点）
-X-API-Key: chiengmai-2024-activities-api-key
+X-API-Key: chiangmai-2024-activities-api-key
 ```
 
 ⚠️ **注意**: 请勿在公开代码中暴露API密钥

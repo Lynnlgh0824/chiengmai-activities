@@ -273,7 +273,7 @@ The message port closed before a response was received.
 ## 🔗 相关资源
 
 **项目链接**：
-- GitHub：https://github.com/Lynnlgh0824/chiengmai-activities
+- GitHub：https://github.com/Lynnlgh0824/chiangmai-activities
 - 本地：http://localhost:3000
 
 **关键文档**：

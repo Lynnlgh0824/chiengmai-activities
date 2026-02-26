@@ -179,7 +179,7 @@ git tag -a pre-deployment-$(date +%Y%m%d) -m "部署前备份"
 git push origin pre-deployment-$(date +%Y%m%d)
 
 # 或手动备份
-cp -r . ../backup-chiengmai-$(date +%Y%m%d)
+cp -r . ../backup-chiangmai-$(date +%Y%m%d)
 ```
 
 **行动项**:
@@ -226,7 +226,7 @@ cp -r data public/data
 npm install -g pm2
 
 # 启动应用
-pm2 start server.cjs --name chiengmai-activities
+pm2 start server.cjs --name chiangmai-activities
 
 # 保存 PM2 配置
 pm2 save
@@ -239,7 +239,7 @@ pm2 startup
 
 ```bash
 # 创建服务文件
-sudo nano /etc/systemd/system/chiengmai-activities.service
+sudo nano /etc/systemd/system/chiangmai-activities.service
 ```
 
 ```ini
@@ -260,8 +260,8 @@ WantedBy=multi-user.target
 
 ```bash
 # 启动服务
-sudo systemctl start chiengmai-activities
-sudo systemctl enable chiengmai-activities
+sudo systemctl start chiangmai-activities
+sudo systemctl enable chiangmai-activities
 ```
 
 **行动项**:
@@ -275,7 +275,7 @@ sudo systemctl enable chiengmai-activities
 # 检查服务状态
 pm2 status
 # 或
-sudo systemctl status chiengmai-activities
+sudo systemctl status chiangmai-activities
 
 # 检查端口
 lsof -ti:3000
@@ -284,9 +284,9 @@ lsof -ti:3000
 curl http://localhost:3000/api/activities
 
 # 查看日志
-pm2 logs chiengmai-activities
+pm2 logs chiangmai-activities
 # 或
-sudo journalctl -u chiengmai-activities -f
+sudo journalctl -u chiangmai-activities -f
 ```
 
 **浏览器测试**:
@@ -306,7 +306,7 @@ sudo journalctl -u chiengmai-activities -f
 
 ```bash
 # 使用 Nginx 反向代理
-sudo nano /etc/nginx/sites-available/chiengmai-activities
+sudo nano /etc/nginx/sites-available/chiangmai-activities
 ```
 
 ```nginx
@@ -327,7 +327,7 @@ server {
 
 ```bash
 # 启用配置
-sudo ln -s /etc/nginx/sites-available/chiengmai-activities /etc/nginx/sites-enabled/
+sudo ln -s /etc/nginx/sites-available/chiangmai-activities /etc/nginx/sites-enabled/
 
 # 测试配置
 sudo nginx -t
@@ -568,18 +568,18 @@ sudo certbot --nginx -d your-domain.com
 **代码回滚**:
 ```bash
 # 如果部署出现问题，快速回滚
-pm2 revert chiengmai-activities
+pm2 revert chiangmai-activities
 
 # 或使用 Git 回滚
 git checkout pre-deployment-$(date +%Y%m%d)
-pm2 restart chiengmai-activities
+pm2 restart chiangmai-activities
 ```
 
 **数据回滚**:
 ```bash
 # 恢复备份数据
 cp data/items.json.backup data/items.json
-pm2 restart chiengmai-activities
+pm2 restart chiangmai-activities
 ```
 
 ---

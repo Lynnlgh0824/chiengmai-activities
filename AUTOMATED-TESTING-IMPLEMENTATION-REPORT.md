@@ -268,7 +268,7 @@
 
 ### 下次 GitHub Actions
 - 📅 **时间**: UTC 16:00 (泰国时间 0:00)
-- 📍 **链接**: https://github.com/Lynnlgh0824/chiengmai-activities/actions
+- 📍 **链接**: https://github.com/Lynnlgh0824/chiangmai-activities/actions
 - ✅ **预期**: 全部测试通过
 
 ---

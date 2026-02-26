@@ -23,8 +23,8 @@ npm --version
 ### 2. 克隆项目
 
 ```bash
-git clone https://github.com/Lynnlgh0824/chiengmai-activities.git
-cd chiengmai-activities
+git clone https://github.com/Lynnlgh0824/chiangmai-activities.git
+cd chiangmai-activities
 ```
 
 ### 3. 安装依赖
@@ -70,7 +70,7 @@ npm start
 ## 📁 项目结构速览
 
 ```
-chiengmai-activities/
+chiangmai-activities/
 ├── public/
 │   ├── index.html          # 主页（核心前端代码，~5000行）
 │   ├── admin.html         # 后台管理
@@ -353,7 +353,7 @@ headers: {
 
 **A**: 检查CORS配置是否允许你的域名：
 - 开发: `http://localhost:5173`, `http://localhost:3000`
-- 生产: `https://chiengmai-activities.vercel.app`
+- 生产: `https://chiangmai-activities.vercel.app`
 
 ### Q: 端口被占用？
 
@@ -382,8 +382,8 @@ kill -9 $(lsof -ti :3000)
 
 ## 🔗 相关链接
 
-- **GitHub**: https://github.com/Lynnlgh0824/chiengmai-activities
-- **在线Demo**: https://chiengmai-activities.vercel.app
+- **GitHub**: https://github.com/Lynnlgh0824/chiangmai-activities
+- **在线Demo**: https://chiangmai-activities.vercel.app
 - **文档中心**: [./docs/](./docs/)
 
 ---

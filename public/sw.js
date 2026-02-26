@@ -1,7 +1,7 @@
 // Service Worker for Chiengmai Activities Platform
 // 提供离线支持和PWA功能
 
-const CACHE_NAME = 'chiengmai-activities-v1';
+const CACHE_NAME = 'chiangmai-activities-v1';
 const urlsToCache = [
     '/',
     '/index.html',

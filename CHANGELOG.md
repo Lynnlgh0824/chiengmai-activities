@@ -277,14 +277,14 @@ if (now > endDate) status = 'expired';
 ```
 ┌─────────────┐
 │  Vercel     │  ← 前端 (React + Vite)
-│  前端部署    │     https://chiengmai-activities.vercel.app
+│  前端部署    │     https://chiangmai-activities.vercel.app
 └─────────────┘
         ↓
         ↓ API 调用
         ↓
 ┌─────────────┐
 │  Railway    │  ← 后端 (Express + Node.js)
-│  后端部署    │     https://chiengmai-api.railway.app
+│  后端部署    │     https://chiangmai-api.railway.app
 └─────────────┘
 ```
 
@@ -308,7 +308,7 @@ git commit -m "Initial commit: Chiengmai Activities Platform"
 
 # 3. 推送到 GitHub
 # 在 GitHub 创建新仓库，然后：
-git remote add origin https://github.com/YOUR_USERNAME/chiengmai-activities.git
+git remote add origin https://github.com/YOUR_USERNAME/chiangmai-activities.git
 git branch -M main
 git push -u origin main
 ```
@@ -356,8 +356,8 @@ app.listen(PORT, () => {
 
 **2.6 获取后端 URL**
 ```
-后端地址: https://chiengmai-api.railway.app
-API地址: https://chiengmai-api.railway.app/api
+后端地址: https://chiangmai-api.railway.app
+API地址: https://chiangmai-api.railway.app/api
 ```
 
 ---
@@ -378,7 +378,7 @@ API地址: https://chiengmai-api.railway.app/api
 **3.3 配置环境变量**
 ```bash
 # 在 Vercel 项目设置中添加：
-VITE_API_URL=https://chiengmai-api.railway.app
+VITE_API_URL=https://chiangmai-api.railway.app
 ```
 
 **3.4 修改前端 API 地址**
@@ -396,7 +396,7 @@ const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:3000';
 
 **3.6 获取前端 URL**
 ```
-前端地址: https://chiengmai-activities.vercel.app
+前端地址: https://chiangmai-activities.vercel.app
 ```
 
 ---
@@ -408,7 +408,7 @@ const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:3000';
 app.use((req, res, next) => {
     const allowedOrigins = [
         'http://localhost:5173',
-        'https://chiengmai-activities.vercel.app',
+        'https://chiangmai-activities.vercel.app',
         'https://your-custom-domain.com'
     ];
     const origin = req.headers.origin;
@@ -517,9 +517,9 @@ app.use('/api/', limiter);
 
 ### 相关链接
 
-- **GitHub**: https://github.com/YOUR_USERNAME/chiengmai-activities
-- **前端演示**: https://chiengmai-activities.vercel.app
-- **API 文档**: https://chiengmai-api.railway.app/api
+- **GitHub**: https://github.com/YOUR_USERNAME/chiangmai-activities
+- **前端演示**: https://chiangmai-activities.vercel.app
+- **API 文档**: https://chiangmai-api.railway.app/api
 - **Railway 控制台**: https://railway.app
 - **Vercel 控制台**: https://vercel.com
 

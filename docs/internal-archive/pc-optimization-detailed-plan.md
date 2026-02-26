@@ -557,7 +557,7 @@ function openModal(itemId) {
 **步骤3**: 添加JavaScript功能
 ```javascript
 // 搜索历史管理
-const SEARCH_HISTORY_KEY = 'chiengmai_search_history';
+const SEARCH_HISTORY_KEY = 'chiangmai_search_history';
 const MAX_HISTORY = 5;
 
 let searchTimeout = null;

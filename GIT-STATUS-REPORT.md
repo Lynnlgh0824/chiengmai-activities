@@ -12,7 +12,7 @@
 ```bash
 当前分支: main
 工作区: 干净（无未提交更改）
-远程连接: 正常（git@github.com:Lynnlgh0824/chiengmai-activities.git）
+远程连接: 正常（git@github.com:Lynnlgh0824/chiangmai-activities.git）
 ```
 
 ### 分支同步状态

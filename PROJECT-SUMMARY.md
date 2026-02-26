@@ -3,7 +3,7 @@
 **项目名称**: Chiengmai Activities Platform
 **版本**: v2.6.0
 **最后更新**: 2026-02-25
-**仓库**: https://github.com/Lynnlgh0824/chiengmai-activities
+**仓库**: https://github.com/Lynnlgh0824/chiangmai-activities
 
 ---
 
@@ -109,8 +109,8 @@
 
 ### 部署
 - **本地**: http://localhost:4000
-- **Vercel**: https://chiengmai-activities.vercel.app
-- **GitHub**: https://github.com/Lynnlgh0824/chiengmai-activities
+- **Vercel**: https://chiangmai-activities.vercel.app
+- **GitHub**: https://github.com/Lynnlgh0824/chiangmai-activities
 
 ---
 
@@ -185,15 +185,15 @@ d9f3ab4 - docs: add data sync guide
 - **本地访问**: http://localhost:4000
 - **管理后台**: http://localhost:4000/admin.html
 - **API健康检查**: http://localhost:4000/api/health
-- **GitHub仓库**: https://github.com/Lynnlgh0824/chiengmai-activities
-- **Vercel部署**: https://chiengmai-activities.vercel.app
+- **GitHub仓库**: https://github.com/Lynnlgh0824/chiangmai-activities
+- **Vercel部署**: https://chiangmai-activities.vercel.app
 
 ---
 
 ## 📂 项目结构
 
 ```
-chiengmai-activities/
+chiangmai-activities/
 ├── public/                    # 前端文件
 │   ├── index.html           # 主应用页面 ⭐
 │   ├── admin.html           # 后台管理 ⭐

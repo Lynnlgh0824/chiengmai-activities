@@ -210,7 +210,7 @@ node test-core-functions.cjs     # 核心功能 (12个测试)
   - 测试报告自动生成
 
 - **最新状态**:
-  https://github.com/Lynnlgh0824/chiengmai-activities/actions
+  https://github.com/Lynnlgh0824/chiangmai-activities/actions
 
 ---
 

@@ -99,7 +99,7 @@ const categories = [...new Set(allActivities.map(a => a.category))].filter(cat =
 
 1. **GitHub Actions 监控**
    - 查看下次每日测试是否通过
-   - 链接: https://github.com/Lynnlgh0824/chiengmai-activities/actions
+   - 链接: https://github.com/Lynnlgh0824/chiangmai-activities/actions
 
 2. **Vitest 配置优化**（可选）
    - 创建 `src/test/setup.js` 或更新 `vitest.config.js`

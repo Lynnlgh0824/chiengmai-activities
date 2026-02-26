@@ -89,10 +89,10 @@ sudo systemctl mask sleep.target suspend.target hibernate.target hybrid-sleep.ta
 ssh user@your-server.com
 
 # 克隆项目
-git clone https://github.com/your-repo/chiengmai.git
+git clone https://github.com/your-repo/chiangmai.git
 
 # 运行自动化脚本
-cd chiengmai
+cd chiangmai
 ./auto-complete-tasks.sh
 ```
 

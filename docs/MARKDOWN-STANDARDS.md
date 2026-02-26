@@ -251,7 +251,7 @@ my#file.md  ❌
 
 ```markdown
 # GitHub链接
-访问 [GitHub](https://github.com/Lynnlgh0824/chiengmai-activities)
+访问 [GitHub](https://github.com/Lynnlgh0824/chiangmai-activities)
 
 # 带标题的链接
 [Markdown Guide](https://www.markdownguide.org/ "Markdown官方指南")

@@ -57,11 +57,11 @@ Password: ghp_你的token
 Enumerating objects: 11, done.
 Counting objects: 100% (11/11), done.
 Writing objects: 100% (10/10), done.
-To github.com:Lynnlgh0824/chiengmai-activities.git
+To github.com:Lynnlgh0824/chiangmai-activities.git
  * [new branch]      main -> main
 ```
 
-然后访问 https://github.com/Lynnlgh0824/chiengmai-activities 就能看到你的代码了！
+然后访问 https://github.com/Lynnlgh0824/chiangmai-activities 就能看到你的代码了！
 
 ---
 
